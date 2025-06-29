@@ -97,7 +97,9 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- June 28, 2025. Initial setup
+- June 29, 2025: Updated application branding from "Inventory Tracker Pro" to "Mynx Inventory"
+- June 29, 2025: Simplified dashboard title from "Inventory Dashboard" to "Dashboard"
+- June 28, 2025: Initial setup
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.

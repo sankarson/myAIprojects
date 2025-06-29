@@ -5,7 +5,7 @@ import { queryClient } from "@/lib/queryClient";
 
 const pageConfig = {
   "/": {
-    title: "Inventory Dashboard",
+    title: "Dashboard",
     breadcrumb: ["Dashboard", "Overview"],
   },
   "/warehouses": {
