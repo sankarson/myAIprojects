@@ -9,19 +9,19 @@ const pageConfig = {
     breadcrumb: ["Dashboard", "Overview"],
   },
   "/warehouses": {
-    title: "Warehouse Management",
+    title: "Warehouses",
     breadcrumb: ["Inventory", "Warehouses"],
   },
   "/pallets": {
-    title: "Pallet Management",
+    title: "Pallets",
     breadcrumb: ["Inventory", "Pallets"],
   },
   "/bins": {
-    title: "Bin Management",
+    title: "Bins",
     breadcrumb: ["Inventory", "Bins"],
   },
   "/skus": {
-    title: "SKU Management",
+    title: "SKUs",
     breadcrumb: ["Inventory", "SKUs"],
   },
 };
