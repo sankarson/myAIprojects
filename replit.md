@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 29, 2025: Fixed SelectItem error by replacing empty string values with "none" in dropdown components
 - June 29, 2025: Removed "Management" from all section titles for cleaner UI
 - June 29, 2025: Removed duplicate titles from all section pages for cleaner layout
 - June 29, 2025: Made dashboard panels clickable with navigation to appropriate sections

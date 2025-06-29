@@ -150,7 +150,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
                   <FormLabel>Warehouse</FormLabel>
                   <Select
                     value={field.value?.toString() || ""}
-                    onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
+                    onValueChange={(value) => field.onChange(value && value !== "none" ? parseInt(value) : undefined)}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -158,7 +158,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="">No warehouse assigned</SelectItem>
+                      <SelectItem value="none">No warehouse assigned</SelectItem>
                       {warehouses?.map((warehouse) => (
                         <SelectItem key={warehouse.id} value={warehouse.id.toString()}>
                           {warehouse.name}
