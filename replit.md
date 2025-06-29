@@ -1,4 +1,4 @@
-# Inventory Tracker Pro
+# Mynx Inventory
 
 ## Overview
 

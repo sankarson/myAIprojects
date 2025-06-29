@@ -22,7 +22,7 @@ export function Sidebar() {
       <div className="p-6 border-b border-gray-200">
         <h1 className="text-xl font-semibold text-gray-900 flex items-center">
           <Warehouse className="text-primary mr-2" />
-          Inventory Tracker Pro
+          Mynx Inventory
         </h1>
       </div>
       
