@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Building, Package, Box, Warehouse, Plus, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Link } from "wouter";
 
 interface Stats {
   warehouses: number;
@@ -42,69 +43,77 @@ export default function Dashboard() {
     <div className="space-y-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="shadow-md">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="p-3 rounded-lg bg-blue-100">
-                <Building className="text-primary text-xl" />
+        <Link href="/warehouses">
+          <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-blue-100">
+                  <Building className="text-primary text-xl" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">Warehouses</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {stats?.warehouses || 0}
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-500">Warehouses</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {stats?.warehouses || 0}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="shadow-md">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="p-3 rounded-lg bg-green-100">
-                <Package className="text-green-600 text-xl" />
+        <Link href="/pallets">
+          <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-green-100">
+                  <Package className="text-green-600 text-xl" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">Pallets</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {stats?.pallets || 0}
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-500">Pallets</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {stats?.pallets || 0}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="shadow-md">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="p-3 rounded-lg bg-orange-100">
-                <Box className="text-orange-600 text-xl" />
+        <Link href="/bins">
+          <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-orange-100">
+                  <Box className="text-orange-600 text-xl" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">Bins</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {stats?.bins || 0}
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-500">Bins</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {stats?.bins || 0}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card className="shadow-md">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <div className="p-3 rounded-lg bg-purple-100">
-                <Warehouse className="text-purple-600 text-xl" />
+        <Link href="/skus">
+          <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+            <CardContent className="p-6">
+              <div className="flex items-center">
+                <div className="p-3 rounded-lg bg-purple-100">
+                  <Warehouse className="text-purple-600 text-xl" />
+                </div>
+                <div className="ml-4">
+                  <p className="text-sm text-gray-500">Total SKUs</p>
+                  <p className="text-2xl font-semibold text-gray-900">
+                    {stats?.skus || 0}
+                  </p>
+                </div>
               </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-500">Total SKUs</p>
-                <p className="text-2xl font-semibold text-gray-900">
-                  {stats?.skus || 0}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Quick Actions */}
