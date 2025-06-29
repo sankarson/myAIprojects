@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,11 +14,12 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
-const formSchema = insertSkuSchema.extend({
-  price: z.string().optional().transform((val) => val ? parseFloat(val) : undefined),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type SkuFormData = {
+  name: string;
+  description: string;
+  price: string;
+  imageUrl: string;
+};
 
 interface SkuModalProps {
   isOpen: boolean;
@@ -30,8 +31,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
   const { toast } = useToast();
   const isEditing = !!sku;
 
-  const form = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SkuFormData>({
     defaultValues: {
       name: "",
       description: "",
@@ -103,7 +103,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
     },
   });
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = (data: SkuFormData) => {
     const submitData: InsertSku = {
       name: data.name,
       description: data.description || null,
@@ -125,6 +125,11 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
           <DialogTitle>
             {isEditing ? "Edit SKU" : "Add New SKU"}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing 
+              ? "Update the SKU details including name, description, price, and image." 
+              : "Create a new SKU with product information and optional pricing."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -162,7 +167,14 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea rows={3} {...field} />
+                    <Textarea 
+                      rows={3} 
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,7 +213,14 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
                 <FormItem>
                   <FormLabel>Image URL</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="https://example.com/image.jpg" />
+                    <Input 
+                      placeholder="https://example.com/image.jpg"
+                      value={field.value || ""}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

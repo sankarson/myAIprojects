@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -104,6 +104,11 @@ export function WarehouseModal({ isOpen, onClose, warehouse }: WarehouseModalPro
           <DialogTitle>
             {isEditing ? "Edit Warehouse" : "Add New Warehouse"}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing 
+              ? "Update the warehouse information below." 
+              : "Create a new warehouse by providing a name and address."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>

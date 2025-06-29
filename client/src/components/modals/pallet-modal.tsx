@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -121,6 +121,11 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
           <DialogTitle>
             {isEditing ? "Edit Pallet" : "Add New Pallet"}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing 
+              ? "Update the pallet information and warehouse assignment." 
+              : "Create a new pallet and optionally assign it to a warehouse."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -174,10 +179,14 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
                   <FormLabel>Location Code</FormLabel>
                   <FormControl>
                     <Input
-                      {...field}
                       maxLength={6}
                       placeholder="A1-001"
                       className="font-mono"
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value || null)}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
                     />
                   </FormControl>
                   <p className="text-xs text-gray-500">6-character location code within the warehouse</p>

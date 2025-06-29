@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -236,6 +236,11 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
           <DialogTitle>
             {isEditing ? "Edit Bin" : "Create New Bin"}
           </DialogTitle>
+          <DialogDescription>
+            {isEditing 
+              ? "Update bin information, pallet assignment, and manage SKU inventory." 
+              : "Create a new bin, assign it to a pallet, and add SKUs with quantities."}
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -289,7 +294,14 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                   <FormItem>
                     <FormLabel>Image URL</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="https://example.com/bin-image.jpg" />
+                      <Input 
+                        placeholder="https://example.com/bin-image.jpg"
+                        value={field.value ?? ""}
+                        onChange={(e) => field.onChange(e.target.value || null)}
+                        onBlur={field.onBlur}
+                        name={field.name}
+                        ref={field.ref}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

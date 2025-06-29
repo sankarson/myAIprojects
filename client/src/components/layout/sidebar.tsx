@@ -34,8 +34,8 @@ export function Sidebar() {
             
             return (
               <Link key={item.path} href={item.path}>
-                <a
-                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                <div
+                  className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                     isActive
                       ? "bg-blue-50 text-primary"
                       : "text-gray-700 hover:text-gray-900 hover:bg-blue-50/50"
@@ -43,7 +43,7 @@ export function Sidebar() {
                 >
                   <Icon className="mr-3 h-4 w-4" />
                   {item.name}
-                </a>
+                </div>
               </Link>
             );
           })}
@@ -58,10 +58,10 @@ export function Sidebar() {
                 
                 return (
                   <Link key={item.path} href={item.path}>
-                    <a className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-blue-50/50 transition-colors">
+                    <div className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-blue-50/50 transition-colors cursor-pointer">
                       <Icon className="mr-3 h-4 w-4" />
                       {item.name}
-                    </a>
+                    </div>
                   </Link>
                 );
               })}
