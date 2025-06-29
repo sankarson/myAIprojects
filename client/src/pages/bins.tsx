@@ -80,7 +80,6 @@ export default function Bins() {
       <Card className="shadow-md">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-medium text-gray-900">Bin Management</h3>
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
