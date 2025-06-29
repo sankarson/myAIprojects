@@ -58,10 +58,6 @@ export function Header() {
               <RefreshCw className="mr-2 h-4 w-4" />
               Refresh
             </Button>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Quick Add
-            </Button>
           </div>
         </div>
       </div>

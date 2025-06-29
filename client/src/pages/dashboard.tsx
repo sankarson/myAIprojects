@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building, Package, Box, Warehouse, Plus, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Building, Package, Box, Warehouse } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 
@@ -116,58 +115,25 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <Card className="shadow-md">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Getting Started</h3>
-            </div>
-            <CardContent className="p-6">
-              <div className="space-y-4">
-                <div className="text-center py-8">
-                  <Warehouse className="mx-auto h-12 w-12 text-gray-400" />
-                  <h3 className="mt-2 text-sm font-medium text-gray-900">
-                    Start building your inventory
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-500">
-                    Create warehouses, add pallets, organize bins, and track your SKUs.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+      {/* Getting Started */}
+      <Card className="shadow-md">
+        <div className="p-6 border-b border-gray-200">
+          <h3 className="text-lg font-medium text-gray-900">Getting Started</h3>
         </div>
-
-        <Card className="shadow-md">
-          <div className="p-6 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">Quick Actions</h3>
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="text-center py-8">
+              <Warehouse className="mx-auto h-12 w-12 text-gray-400" />
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                Start building your inventory
+              </h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Create warehouses, add pallets, organize bins, and track your SKUs.
+              </p>
+            </div>
           </div>
-          <CardContent className="p-6 space-y-3">
-            <Button className="w-full justify-start" variant="outline">
-              <Warehouse className="mr-2 h-4 w-4" />
-              Add New SKU
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Box className="mr-2 h-4 w-4" />
-              Create Bin
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Package className="mr-2 h-4 w-4" />
-              Create Pallet
-            </Button>
-            <Button className="w-full justify-start" variant="outline">
-              <Building className="mr-2 h-4 w-4" />
-              Add Warehouse
-            </Button>
-            <hr className="my-4" />
-            <Button className="w-full justify-start">
-              <Search className="mr-2 h-4 w-4" />
-              Search Inventory
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }
