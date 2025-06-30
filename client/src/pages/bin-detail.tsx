@@ -1,14 +1,27 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Package, MapPin, Edit, Trash2, Check, X } from "lucide-react";
-import { type BinWithSkus } from "@shared/schema";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { ArrowLeft, Package, MapPin, Edit, Trash2, Check, X, Plus } from "lucide-react";
+import { type BinWithSkus, type Sku, insertBinSkuSchema } from "@shared/schema";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { z } from "zod";
+
+const addSkuFormSchema = z.object({
+  skuId: z.number().min(1, "Please select an SKU"),
+  quantity: z.number().min(1, "Quantity must be at least 1"),
+});
+
+type AddSkuFormData = z.infer<typeof addSkuFormSchema>;
 
 export default function BinDetail() {
   const [location, setLocation] = useLocation();
@@ -18,10 +31,26 @@ export default function BinDetail() {
   // State for editing quantities
   const [editingSkuId, setEditingSkuId] = useState<number | null>(null);
   const [editQuantity, setEditQuantity] = useState<string>("");
+  
+  // State for Add SKU dialog
+  const [isAddSkuDialogOpen, setIsAddSkuDialogOpen] = useState(false);
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
     queryKey: [`/api/bins/${binId}`],
     enabled: !!binId,
+  });
+
+  const { data: skus } = useQuery<Sku[]>({
+    queryKey: ["/api/skus"],
+  });
+
+  // Form for adding SKUs
+  const addSkuForm = useForm<AddSkuFormData>({
+    resolver: zodResolver(addSkuFormSchema),
+    defaultValues: {
+      skuId: 0,
+      quantity: 1,
+    },
   });
 
   // Mutation for updating bin-sku quantity
@@ -68,6 +97,29 @@ export default function BinDetail() {
     },
   });
 
+  // Mutation for adding SKU to bin
+  const addSkuToBinMutation = useMutation({
+    mutationFn: async ({ binId, skuId, quantity }: { binId: number; skuId: number; quantity: number }) => {
+      await apiRequest("POST", `/api/bins/${binId}/skus`, { skuId, quantity });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/bins/${binId}`] });
+      toast({
+        title: "Success",
+        description: "SKU added to bin successfully",
+      });
+      setIsAddSkuDialogOpen(false);
+      addSkuForm.reset();
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to add SKU to bin",
+        variant: "destructive",
+      });
+    },
+  });
+
   const handleEditQuantity = (skuId: number, currentQuantity: number) => {
     setEditingSkuId(skuId);
     setEditQuantity(currentQuantity.toString());
@@ -96,6 +148,23 @@ export default function BinDetail() {
       removeSkuMutation.mutate({ binId, skuId });
     }
   };
+
+  const handleAddSku = (data: AddSkuFormData) => {
+    if (!binId) return;
+    addSkuToBinMutation.mutate({
+      binId: parseInt(binId),
+      skuId: data.skuId,
+      quantity: data.quantity,
+    });
+  };
+
+  const handleCloseAddSkuDialog = () => {
+    setIsAddSkuDialogOpen(false);
+    addSkuForm.reset();
+  };
+
+  // Show all SKUs in the dropdown since adding existing SKUs will now add to quantity
+  const availableSkus = skus || [];
 
 
 
@@ -152,6 +221,14 @@ export default function BinDetail() {
                   {bin.pallet.name || bin.pallet.palletNumber}
                 </Badge>
               )}
+              <Button
+                onClick={() => setIsAddSkuDialogOpen(true)}
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                Add SKU
+              </Button>
             </div>
           </div>
         </div>
@@ -318,6 +395,85 @@ export default function BinDetail() {
           </div>
         </div>
       </div>
+
+      {/* Add SKU Dialog */}
+      <Dialog open={isAddSkuDialogOpen} onOpenChange={setIsAddSkuDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add SKU to Bin</DialogTitle>
+          </DialogHeader>
+          
+          <Form {...addSkuForm}>
+            <form onSubmit={addSkuForm.handleSubmit(handleAddSku)} className="space-y-4">
+              <FormField
+                control={addSkuForm.control}
+                name="skuId"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>SKU</FormLabel>
+                    <Select
+                      value={field.value?.toString() || "none"}
+                      onValueChange={(value) => field.onChange(value === "none" ? 0 : parseInt(value))}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an SKU" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="none" disabled>
+                          {availableSkus.length === 0 ? "No SKUs available" : "Select an SKU"}
+                        </SelectItem>
+                        {availableSkus.map((sku) => (
+                          <SelectItem key={sku.id} value={sku.id.toString()}>
+                            {sku.name} ({sku.skuNumber})
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={addSkuForm.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Quantity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        min="1"
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCloseAddSkuDialog}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={addSkuToBinMutation.isPending || availableSkus.length === 0}
+                >
+                  Add SKU
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
