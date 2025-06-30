@@ -14,6 +14,7 @@ export const warehouses = pgTable("warehouses", {
 export const pallets = pgTable("pallets", {
   id: serial("id").primaryKey(),
   palletNumber: varchar("pallet_number", { length: 20 }).notNull().unique(),
+  name: text("name"),
   warehouseId: integer("warehouse_id").references(() => warehouses.id),
   locationCode: varchar("location_code", { length: 6 }),
 });
@@ -22,6 +23,7 @@ export const pallets = pgTable("pallets", {
 export const bins = pgTable("bins", {
   id: serial("id").primaryKey(),
   binNumber: varchar("bin_number", { length: 20 }).notNull().unique(),
+  name: text("name"),
   palletId: integer("pallet_id").references(() => pallets.id),
   imageUrl: text("image_url"),
 });

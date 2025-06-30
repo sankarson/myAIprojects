@@ -18,6 +18,7 @@ import { z } from "zod";
 
 const formSchema = insertBinSchema.extend({
   palletId: z.number().optional(),
+  name: z.string().min(1, "Name is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -55,6 +56,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       palletId: undefined,
       imageUrl: "",
     },
@@ -63,11 +65,13 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
   useEffect(() => {
     if (bin) {
       form.reset({
+        name: bin.name || bin.binNumber,
         palletId: bin.palletId || undefined,
         imageUrl: bin.imageUrl || "",
       });
     } else {
       form.reset({
+        name: "",
         palletId: undefined,
         imageUrl: "",
       });
@@ -218,6 +222,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
 
   const onSubmit = (data: FormData) => {
     const submitData: InsertBin = {
+      name: data.name,
       palletId: data.palletId || null,
       imageUrl: data.imageUrl || null,
     };
@@ -246,17 +251,19 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {isEditing && (
-                <div>
-                  <Label className="text-sm font-medium text-gray-700">Bin ID</Label>
-                  <Input
-                    value={bin?.binNumber || ""}
-                    disabled
-                    className="bg-gray-50 text-gray-500"
-                  />
-                  <p className="mt-1 text-xs text-gray-500">Auto-generated sequential ID</p>
-                </div>
-              )}
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Enter bin name" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

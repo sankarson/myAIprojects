@@ -145,7 +145,11 @@ export class DatabaseStorage implements IStorage {
         warehouse: true,
       },
     });
-    return pallet;
+    if (!pallet) return undefined;
+    return {
+      ...pallet,
+      warehouse: pallet.warehouse || undefined,
+    };
   }
 
   async createPallet(pallet: InsertPallet): Promise<Pallet> {
@@ -156,9 +160,12 @@ export class DatabaseStorage implements IStorage {
     const nextNum = (result.rows[0] as any).next_num;
     const palletNumber = `PLT${nextNum.toString().padStart(7, "0")}`;
 
+    // Use provided name or default to pallet number
+    const name = pallet.name || palletNumber;
+
     const [newPallet] = await db
       .insert(pallets)
-      .values({ ...pallet, palletNumber })
+      .values({ ...pallet, palletNumber, name })
       .returning();
     return newPallet;
   }
@@ -196,7 +203,11 @@ export class DatabaseStorage implements IStorage {
         pallet: true,
       },
     });
-    return bin;
+    if (!bin) return undefined;
+    return {
+      ...bin,
+      pallet: bin.pallet || undefined,
+    };
   }
 
   async createBin(bin: InsertBin): Promise<Bin> {
@@ -207,9 +218,12 @@ export class DatabaseStorage implements IStorage {
     const nextNum = (result.rows[0] as any).next_num;
     const binNumber = `BIN${nextNum.toString().padStart(7, "0")}`;
 
+    // Use provided name or default to bin number
+    const name = bin.name || binNumber;
+
     const [newBin] = await db
       .insert(bins)
-      .values({ ...bin, binNumber })
+      .values({ ...bin, binNumber, name })
       .returning();
     return newBin;
   }
@@ -251,7 +265,20 @@ export class DatabaseStorage implements IStorage {
         },
       },
     });
-    return sku;
+    if (!sku) return undefined;
+    return {
+      ...sku,
+      binSkus: sku.binSkus.map(binSku => ({
+        ...binSku,
+        bin: {
+          ...binSku.bin,
+          pallet: binSku.bin.pallet ? {
+            ...binSku.bin.pallet,
+            warehouse: binSku.bin.pallet.warehouse || undefined,
+          } : undefined,
+        },
+      })),
+    };
   }
 
   async createSku(sku: InsertSku): Promise<Sku> {

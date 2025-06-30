@@ -50,13 +50,14 @@ export default function Bins() {
 
   const filteredBins = bins?.filter(
     (bin) =>
+      (bin.name || bin.binNumber).toLowerCase().includes(searchQuery.toLowerCase()) ||
       bin.binNumber.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
 
-  const getPalletNumber = (palletId: number | null) => {
+  const getPalletName = (palletId: number | null) => {
     if (!palletId) return "Unassigned";
     const pallet = pallets?.find(p => p.id === palletId);
-    return pallet?.palletNumber || "Unknown";
+    return pallet?.name || pallet?.palletNumber || "Unknown";
   };
 
   const handleEdit = (bin: Bin) => {
@@ -133,7 +134,7 @@ export default function Bins() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Bin ID</TableHead>
+                    <TableHead>Name</TableHead>
                     <TableHead>Pallet</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
@@ -145,14 +146,14 @@ export default function Bins() {
                       <TableCell>
                         <div className="flex items-center">
                           <Box className="h-5 w-5 text-orange-600 mr-3" />
-                          <span className="font-mono text-sm font-medium">
-                            {bin.binNumber}
+                          <span className="text-sm font-medium">
+                            {bin.name || bin.binNumber}
                           </span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <span className="text-sm text-gray-900">
-                          {getPalletNumber(bin.palletId)}
+                          {getPalletName(bin.palletId)}
                         </span>
                       </TableCell>
                       <TableCell>

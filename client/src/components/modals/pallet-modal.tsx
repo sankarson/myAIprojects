@@ -16,6 +16,7 @@ import { z } from "zod";
 
 const formSchema = insertPalletSchema.extend({
   warehouseId: z.number().optional(),
+  name: z.string().min(1, "Name is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -37,6 +38,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      name: "",
       warehouseId: undefined,
       locationCode: "",
     },
@@ -45,11 +47,13 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
   useEffect(() => {
     if (pallet) {
       form.reset({
+        name: pallet.name || pallet.palletNumber,
         warehouseId: pallet.warehouseId || undefined,
         locationCode: pallet.locationCode || "",
       });
     } else {
       form.reset({
+        name: "",
         warehouseId: undefined,
         locationCode: "",
       });
@@ -103,6 +107,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
 
   const onSubmit = (data: FormData) => {
     const submitData: InsertPallet = {
+      name: data.name,
       warehouseId: data.warehouseId || null,
       locationCode: data.locationCode || null,
     };
@@ -130,17 +135,26 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {isEditing && (
-              <div>
-                <Label className="text-sm font-medium text-gray-700">Pallet ID</Label>
-                <Input
-                  value={pallet?.palletNumber || ""}
-                  disabled
-                  className="bg-gray-50 text-gray-500"
-                />
-                <p className="mt-1 text-xs text-gray-500">Auto-generated sequential ID</p>
-              </div>
-            )}
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Pallet Name</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={isEditing ? "Enter pallet name" : "Pallet name (auto-generated if empty)"}
+                      value={field.value}
+                      onChange={field.onChange}
+                      onBlur={field.onBlur}
+                      name={field.name}
+                      ref={field.ref}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
