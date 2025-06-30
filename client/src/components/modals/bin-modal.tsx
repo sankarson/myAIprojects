@@ -249,10 +249,11 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
     
     console.log('Adding new SKU:', newBinSku);
     
-    setBinSkus([
-      ...binSkus,
-      newBinSku,
-    ]);
+    setBinSkus(prevBinSkus => {
+      const updated = [...prevBinSkus, newBinSku];
+      console.log('Updated binSkus state:', updated);
+      return updated;
+    });
     
     toast({
       title: "SKU Added",
@@ -423,7 +424,10 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                 </Button>
               </div>
 
-              {binSkus.length === 0 ? (
+              {(() => {
+                console.log('Rendering SKU section, binSkus.length:', binSkus.length, 'binSkus:', binSkus);
+                return binSkus.length === 0;
+              })() ? (
                 <div className="border border-gray-200 rounded-lg p-8 text-center">
                   <div className="text-gray-400 mb-2">
                     <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
