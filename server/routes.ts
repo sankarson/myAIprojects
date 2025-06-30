@@ -64,7 +64,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const fileUrl = `/uploads/${req.file.filename}`;
-      res.json({ url: fileUrl });
+      res.json({ imageUrl: fileUrl });
     } catch (error) {
       console.error("Error uploading file:", error);
       res.status(500).json({ error: "Failed to upload file" });

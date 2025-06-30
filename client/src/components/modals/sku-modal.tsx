@@ -50,8 +50,8 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
       }
       
       const result = await response.json();
-      setUploadedImage(result.url);
-      form.setValue('imageUrl', result.url);
+      setUploadedImage(result.imageUrl);
+      form.setValue('imageUrl', result.imageUrl);
       
       toast({
         title: "Success",
