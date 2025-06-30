@@ -60,10 +60,12 @@ export function Sidebar() {
             {/* Mobile Sidebar */}
             <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
               <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-gray-900 flex items-center">
-                  <Warehouse className="text-primary mr-2" />
-                  Mynx Inventory
-                </h1>
+                <Link href="/" onClick={() => setIsMobileOpen(false)}>
+                  <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
+                    <Warehouse className="text-primary mr-2" />
+                    Mynx Inventory
+                  </h1>
+                </Link>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -108,13 +110,17 @@ export function Sidebar() {
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg flex-shrink-0 transition-all duration-300 hidden md:block`}>
       <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-gray-200 flex items-center justify-between`}>
         {!isCollapsed && (
-          <h1 className="text-xl font-semibold text-gray-900 flex items-center">
-            <Warehouse className="text-primary mr-2" />
-            Mynx Inventory
-          </h1>
+          <Link href="/">
+            <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
+              <Warehouse className="text-primary mr-2" />
+              Mynx Inventory
+            </h1>
+          </Link>
         )}
         {isCollapsed && (
-          <Warehouse className="text-primary mx-auto" />
+          <Link href="/">
+            <Warehouse className="text-primary mx-auto cursor-pointer hover:text-blue-600 transition-colors" />
+          </Link>
         )}
         <Button
           variant="ghost"

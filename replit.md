@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Made "Mynx Inventory" title clickable for dashboard navigation in both desktop and mobile views
 - June 30, 2025: Made SKU images clickable in bin detail view to show fullscreen image modal with proper accessibility
 - June 30, 2025: Replaced SKU number with description in bin detail view for better product information display
 - June 30, 2025: Made bin detail view more compact with reduced spacing, smaller images, condensed cards, and smaller buttons
