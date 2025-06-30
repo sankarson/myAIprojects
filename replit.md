@@ -97,6 +97,8 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Extended name field functionality to bins with editable names, search integration, and proper display in listings
+- June 30, 2025: Enhanced pallets and bins with user-friendly name fields that default to auto-generated numbers but can be customized
 - June 30, 2025: Implemented comprehensive mobile responsiveness with overlay sidebar, responsive grids, and touch-friendly interfaces
 - June 30, 2025: Made sidebar collapsible with smooth animations and icon-only collapsed state
 - June 29, 2025: Removed all quick add buttons from dashboard and header for cleaner interface

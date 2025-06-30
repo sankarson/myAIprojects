@@ -136,7 +136,6 @@ export default function Bins() {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Pallet</TableHead>
-                    <TableHead>Status</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -155,14 +154,6 @@ export default function Bins() {
                         <span className="text-sm text-gray-900">
                           {getPalletName(bin.palletId)}
                         </span>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={bin.palletId ? "default" : "secondary"}
-                          className={bin.palletId ? "bg-green-100 text-green-800" : ""}
-                        >
-                          {bin.palletId ? "Assigned" : "Unassigned"}
-                        </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
