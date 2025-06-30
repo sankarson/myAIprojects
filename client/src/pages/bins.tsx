@@ -209,7 +209,7 @@ export default function Bins() {
                           <span 
                             className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
                             onClick={() => {
-                              window.location.href = `/skus?bin=${bin.id}`;
+                              window.location.href = `/bin-detail?id=${bin.id}`;
                             }}
                           >
                             {bin.name || bin.binNumber}
