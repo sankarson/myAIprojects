@@ -104,7 +104,7 @@ export default function Dashboard() {
                   <Warehouse className="text-purple-600 text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-gray-500">Total SKUs</p>
+                  <p className="text-sm text-gray-500">SKUs</p>
                   <p className="text-2xl font-semibold text-gray-900">
                     {stats?.skus || 0}
                   </p>
