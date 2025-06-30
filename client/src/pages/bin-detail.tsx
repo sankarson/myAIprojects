@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Package, MapPin, Edit, Trash2, Check, X, Plus } from "lucide-react";
 import { type BinWithSkus, type Sku, insertBinSkuSchema } from "@shared/schema";
@@ -382,6 +382,9 @@ export default function BinDetail() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add SKU to Bin</DialogTitle>
+            <DialogDescription>
+              Select an SKU and specify the quantity to add to this bin.
+            </DialogDescription>
           </DialogHeader>
           
           <Form {...addSkuForm}>
@@ -459,7 +462,13 @@ export default function BinDetail() {
       {/* Fullscreen Image Modal */}
       {bin.imageUrl && (
         <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
-          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/90">
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/90" aria-describedby="image-description">
+            <DialogHeader className="sr-only">
+              <DialogTitle>Bin Image - {bin.name || bin.binNumber}</DialogTitle>
+              <DialogDescription id="image-description">
+                Full size view of the bin image. Press Escape or click the X button to close.
+              </DialogDescription>
+            </DialogHeader>
             <div className="relative w-full h-full flex items-center justify-center">
               <img
                 src={bin.imageUrl}
@@ -471,6 +480,7 @@ export default function BinDetail() {
                 size="sm"
                 className="absolute top-4 right-4 text-white hover:bg-white/20"
                 onClick={() => setIsImageModalOpen(false)}
+                aria-label="Close image"
               >
                 <X className="h-6 w-6" />
               </Button>

@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Fixed accessibility errors by adding DialogTitle, DialogDescription, and proper ARIA attributes to modals
 - June 30, 2025: Made bin image icon clickable to show fullscreen image modal with close button
 - June 30, 2025: Moved bin image from large card to small icon beside bin name in header, removed dedicated image card
 - June 30, 2025: Removed "Back to Bins" navigation link from bin detail view for cleaner interface
