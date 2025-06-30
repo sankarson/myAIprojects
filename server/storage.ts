@@ -142,6 +142,16 @@ export class DatabaseStorage implements IStorage {
       .set(warehouse)
       .where(eq(warehouses.id, id))
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "UPDATE",
+      entityType: "warehouse",
+      entityId: updated.id,
+      entityName: updated.name,
+      description: `Updated warehouse "${updated.name}"`
+    });
+    
     return updated;
   }
 
@@ -206,6 +216,16 @@ export class DatabaseStorage implements IStorage {
       .set(pallet)
       .where(eq(pallets.id, id))
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "UPDATE",
+      entityType: "pallet",
+      entityId: updated.id,
+      entityName: updated.name || updated.palletNumber,
+      description: `Updated pallet "${updated.name || updated.palletNumber}"`
+    });
+    
     return updated;
   }
 
@@ -285,6 +305,16 @@ export class DatabaseStorage implements IStorage {
       .set(bin)
       .where(eq(bins.id, id))
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "UPDATE",
+      entityType: "bin",
+      entityId: updated.id,
+      entityName: updated.name || updated.binNumber,
+      description: `Updated bin "${updated.name || updated.binNumber}"`
+    });
+    
     return updated;
   }
 
@@ -363,6 +393,16 @@ export class DatabaseStorage implements IStorage {
       .set(sku)
       .where(eq(skus.id, id))
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "UPDATE",
+      entityType: "sku",
+      entityId: updated.id,
+      entityName: updated.name,
+      description: `Updated SKU "${updated.name}"`
+    });
+    
     return updated;
   }
 
@@ -391,10 +431,38 @@ export class DatabaseStorage implements IStorage {
           sql`${binSkus.binId} = ${binSku.binId} AND ${binSkus.skuId} = ${binSku.skuId}`
         )
         .returning();
+      
+      // Get SKU and Bin names for logging
+      const [sku] = await db.select().from(skus).where(eq(skus.id, binSku.skuId));
+      const [bin] = await db.select().from(bins).where(eq(bins.id, binSku.binId));
+      
+      // Log activity
+      await this.logActivity({
+        action: "UPDATE",
+        entityType: "inventory",
+        entityId: binSku.binId,
+        entityName: `${sku?.name || 'Unknown SKU'} in ${bin?.name || bin?.binNumber || 'Unknown Bin'}`,
+        description: `Added ${binSku.quantity} units of "${sku?.name || 'Unknown SKU'}" to bin "${bin?.name || bin?.binNumber || 'Unknown Bin'}" (total: ${newQuantity})`
+      });
+      
       return updated;
     } else {
       // If it doesn't exist, create a new record
       const [newBinSku] = await db.insert(binSkus).values(binSku).returning();
+      
+      // Get SKU and Bin names for logging
+      const [sku] = await db.select().from(skus).where(eq(skus.id, binSku.skuId));
+      const [bin] = await db.select().from(bins).where(eq(bins.id, binSku.binId));
+      
+      // Log activity
+      await this.logActivity({
+        action: "CREATE",
+        entityType: "inventory",
+        entityId: binSku.binId,
+        entityName: `${sku?.name || 'Unknown SKU'} in ${bin?.name || bin?.binNumber || 'Unknown Bin'}`,
+        description: `Added ${binSku.quantity} units of "${sku?.name || 'Unknown SKU'}" to bin "${bin?.name || bin?.binNumber || 'Unknown Bin'}"`
+      });
+      
       return newBinSku;
     }
   }

@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Added activity logging for all edit operations (UPDATE actions) across warehouses, pallets, bins, SKUs, and inventory movements
 - June 30, 2025: Replaced getting started section with comprehensive activity log showing last 20 CRUD operations with timestamps and icons
 - June 30, 2025: Made "Mynx Inventory" title clickable for dashboard navigation in both desktop and mobile views
 - June 30, 2025: Made SKU images clickable in bin detail view to show fullscreen image modal with proper accessibility
