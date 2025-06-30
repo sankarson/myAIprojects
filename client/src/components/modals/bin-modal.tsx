@@ -114,21 +114,29 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       });
       setUploadedImage(null);
     }
+    // Reset local changes flag when modal opens/closes
+    setHasLocalChanges(false);
   }, [bin, form]);
 
+  // Track if we have unsaved local changes
+  const [hasLocalChanges, setHasLocalChanges] = useState(false);
+
   useEffect(() => {
-    if (binDetails?.binSkus) {
-      setBinSkus(
-        binDetails.binSkus.map((bs) => ({
-          skuId: bs.skuId,
-          quantity: bs.quantity,
-          sku: bs.sku,
-        }))
-      );
-    } else {
-      setBinSkus([]);
+    // Only reset binSkus from server data if we don't have unsaved local changes
+    if (!hasLocalChanges) {
+      if (binDetails?.binSkus) {
+        setBinSkus(
+          binDetails.binSkus.map((bs) => ({
+            skuId: bs.skuId,
+            quantity: bs.quantity,
+            sku: bs.sku,
+          }))
+        );
+      } else {
+        setBinSkus([]);
+      }
     }
-  }, [binDetails]);
+  }, [binDetails, hasLocalChanges]);
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertBin) => {
@@ -152,6 +160,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
         title: "Success",
         description: "Bin created successfully",
       });
+      setHasLocalChanges(false);
       onClose();
     },
     onError: () => {
@@ -205,6 +214,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
           title: "Success",
           description: "Bin updated successfully",
         });
+        setHasLocalChanges(false);
         onClose();
       } catch (error) {
         toast({
@@ -228,10 +238,6 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       sku => !binSkus.find(bs => bs.skuId === sku.id)
     ) || [];
     
-    console.log('Available SKUs:', availableSkus);
-    console.log('Current binSkus:', binSkus);
-    console.log('All SKUs:', skus);
-    
     if (availableSkus.length === 0) {
       toast({
         title: "No SKUs available",
@@ -247,13 +253,8 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       sku: availableSkus[0],
     };
     
-    console.log('Adding new SKU:', newBinSku);
-    
-    setBinSkus(prevBinSkus => {
-      const updated = [...prevBinSkus, newBinSku];
-      console.log('Updated binSkus state:', updated);
-      return updated;
-    });
+    setBinSkus(prevBinSkus => [...prevBinSkus, newBinSku]);
+    setHasLocalChanges(true);
     
     toast({
       title: "SKU Added",
@@ -263,12 +264,14 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
 
   const removeSku = (skuId: number) => {
     setBinSkus(binSkus.filter(bs => bs.skuId !== skuId));
+    setHasLocalChanges(true);
   };
 
   const updateSkuQuantity = (skuId: number, quantity: number) => {
     setBinSkus(binSkus.map(bs => 
       bs.skuId === skuId ? { ...bs, quantity } : bs
     ));
+    setHasLocalChanges(true);
   };
 
   const updateSkuSelection = (oldSkuId: number, newSkuId: number) => {
@@ -278,6 +281,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
         ? { ...bs, skuId: newSkuId, sku: newSku }
         : bs
     ));
+    setHasLocalChanges(true);
   };
 
   const onSubmit = (data: FormData) => {
@@ -424,10 +428,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                 </Button>
               </div>
 
-              {(() => {
-                console.log('Rendering SKU section, binSkus.length:', binSkus.length, 'binSkus:', binSkus);
-                return binSkus.length === 0;
-              })() ? (
+              {binSkus.length === 0 ? (
                 <div className="border border-gray-200 rounded-lg p-8 text-center">
                   <div className="text-gray-400 mb-2">
                     <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
