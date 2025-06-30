@@ -1,19 +1,101 @@
-import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Package, MapPin } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowLeft, Package, MapPin, Edit, Trash2, Check, X } from "lucide-react";
 import { type BinWithSkus } from "@shared/schema";
+import { queryClient, apiRequest } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
 
 export default function BinDetail() {
   const [location, setLocation] = useLocation();
   const binId = new URLSearchParams(window.location.search).get('id');
+  const { toast } = useToast();
+  
+  // State for editing quantities
+  const [editingSkuId, setEditingSkuId] = useState<number | null>(null);
+  const [editQuantity, setEditQuantity] = useState<string>("");
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
     queryKey: [`/api/bins/${binId}`],
     enabled: !!binId,
   });
+
+  // Mutation for updating bin-sku quantity
+  const updateQuantityMutation = useMutation({
+    mutationFn: async ({ binId, skuId, quantity }: { binId: number; skuId: number; quantity: number }) => {
+      await apiRequest("PUT", `/api/bins/${binId}/skus/${skuId}`, { quantity });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/bins/${binId}`] });
+      toast({
+        title: "Success",
+        description: "Quantity updated successfully",
+      });
+      setEditingSkuId(null);
+      setEditQuantity("");
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update quantity",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Mutation for removing SKU from bin
+  const removeSkuMutation = useMutation({
+    mutationFn: async ({ binId, skuId }: { binId: number; skuId: number }) => {
+      await apiRequest("DELETE", `/api/bins/${binId}/skus/${skuId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/bins/${binId}`] });
+      toast({
+        title: "Success",
+        description: "SKU removed from bin successfully",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to remove SKU from bin",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleEditQuantity = (skuId: number, currentQuantity: number) => {
+    setEditingSkuId(skuId);
+    setEditQuantity(currentQuantity.toString());
+  };
+
+  const handleSaveQuantity = (binId: number, skuId: number) => {
+    const quantity = parseInt(editQuantity);
+    if (isNaN(quantity) || quantity <= 0) {
+      toast({
+        title: "Error",
+        description: "Quantity must be a positive number",
+        variant: "destructive",
+      });
+      return;
+    }
+    updateQuantityMutation.mutate({ binId, skuId, quantity });
+  };
+
+  const handleCancelEdit = () => {
+    setEditingSkuId(null);
+    setEditQuantity("");
+  };
+
+  const handleRemoveSku = (binId: number, skuId: number, skuName: string) => {
+    if (confirm(`Are you sure you want to remove "${skuName}" from this bin?`)) {
+      removeSkuMutation.mutate({ binId, skuId });
+    }
+  };
 
 
 
@@ -158,9 +240,60 @@ export default function BinDetail() {
                                 )}
                               </div>
                               <div className="flex flex-col items-end ml-4">
-                                <Badge variant="secondary" className="mb-2">
-                                  Qty: {binSku.quantity}
-                                </Badge>
+                                <div className="flex items-center space-x-2 mb-2">
+                                  {editingSkuId === binSku.sku?.id ? (
+                                    <div className="flex items-center space-x-1">
+                                      <Input
+                                        type="number"
+                                        value={editQuantity}
+                                        onChange={(e) => setEditQuantity(e.target.value)}
+                                        className="w-16 h-8 text-sm"
+                                        min="1"
+                                        autoFocus
+                                      />
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => handleSaveQuantity(bin.id, binSku.sku!.id)}
+                                        disabled={updateQuantityMutation.isPending}
+                                        className="h-8 w-8 p-0 text-green-600 hover:text-green-700"
+                                      >
+                                        <Check className="h-4 w-4" />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={handleCancelEdit}
+                                        className="h-8 w-8 p-0 text-gray-600 hover:text-gray-700"
+                                      >
+                                        <X className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center space-x-1">
+                                      <Badge variant="secondary">
+                                        Qty: {binSku.quantity}
+                                      </Badge>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => handleEditQuantity(binSku.sku!.id, binSku.quantity)}
+                                        className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700"
+                                      >
+                                        <Edit className="h-4 w-4" />
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => handleRemoveSku(bin.id, binSku.sku!.id, binSku.sku!.name)}
+                                        disabled={removeSkuMutation.isPending}
+                                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                                      >
+                                        <Trash2 className="h-4 w-4" />
+                                      </Button>
+                                    </div>
+                                  )}
+                                </div>
                                 {binSku.sku?.price && (
                                   <span className="text-lg font-semibold text-green-600">
                                     ₹{parseFloat(binSku.sku.price).toFixed(2)}

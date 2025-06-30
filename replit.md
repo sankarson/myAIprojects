@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Added edit and delete functionality for SKUs in bin detail view with quantity validation (must be >0)
 - June 30, 2025: Removed refresh button from header across all pages for cleaner interface
 - June 30, 2025: Removed "Inventory Tracker" title from all pages and simplified breadcrumbs to show only current section
 - June 30, 2025: Removed SKUs management section from edit bin dialogue for cleaner, focused interface
