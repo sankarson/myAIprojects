@@ -152,7 +152,6 @@ export default function Pallets() {
                             <span 
                               className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
                               onClick={() => {
-                                console.log('Navigating to:', `/bins?pallet=${pallet.id}`);
                                 window.location.href = `/bins?pallet=${pallet.id}`;
                               }}
                             >

@@ -26,15 +26,7 @@ export default function Bins() {
   const palletFilter = urlParams.get('pallet');
   const filteredPalletId = palletFilter ? parseInt(palletFilter) : null;
   
-  // Debug logging
-  console.log('Bins page - URL params:', {
-    fullLocation: location,
-    windowLocation: window.location.href,
-    windowSearch: window.location.search,
-    urlParams: Object.fromEntries(urlParams.entries()),
-    palletFilter,
-    filteredPalletId
-  });
+
 
   const { data: bins, isLoading } = useQuery<Bin[]>({
     queryKey: ["/api/bins"],
@@ -73,16 +65,7 @@ export default function Bins() {
     // Apply pallet filter if specified
     const matchesPallet = filteredPalletId ? bin.palletId === filteredPalletId : true;
     
-    // Debug logging
-    if (filteredPalletId) {
-      console.log(`Filtering bins for pallet ${filteredPalletId}:`, {
-        binId: bin.id,
-        binName: bin.name || bin.binNumber,
-        binPalletId: bin.palletId,
-        matchesPallet,
-        finalMatch: matchesSearch && matchesPallet
-      });
-    }
+
     
     return matchesSearch && matchesPallet;
   }) || [];
@@ -122,12 +105,17 @@ export default function Bins() {
           <div className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Link href="/pallets">
-                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Pallets
-                  </Button>
-                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-blue-600 hover:text-blue-800"
+                  onClick={() => {
+                    window.location.href = '/pallets';
+                  }}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Pallets
+                </Button>
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     Bins in {getFilteredPalletName()}
@@ -137,11 +125,15 @@ export default function Bins() {
                   </p>
                 </div>
               </div>
-              <Link href="/bins">
-                <Button variant="outline" size="sm">
-                  View All Bins
-                </Button>
-              </Link>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  window.location.href = '/bins';
+                }}
+              >
+                View All Bins
+              </Button>
             </div>
           </div>
         </Card>
