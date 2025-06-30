@@ -298,7 +298,12 @@ export default function BinDetail() {
                                 )}
                               </div>
                               <div className="flex flex-col items-end ml-4">
-                                <div className="flex items-center space-x-2 mb-2">
+                                {binSku.sku?.price && (
+                                  <span className="text-lg font-semibold text-green-600 mb-2">
+                                    ₹{parseFloat(binSku.sku.price).toFixed(2)}
+                                  </span>
+                                )}
+                                <div className="flex items-center space-x-2">
                                   {editingSkuId === binSku.sku?.id ? (
                                     <div className="flex items-center space-x-1">
                                       <Input
@@ -352,11 +357,6 @@ export default function BinDetail() {
                                     </div>
                                   )}
                                 </div>
-                                {binSku.sku?.price && (
-                                  <span className="text-lg font-semibold text-green-600">
-                                    ₹{parseFloat(binSku.sku.price).toFixed(2)}
-                                  </span>
-                                )}
                               </div>
                             </div>
                           </div>
