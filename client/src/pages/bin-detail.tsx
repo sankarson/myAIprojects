@@ -37,6 +37,10 @@ export default function BinDetail() {
   
   // State for fullscreen image modal
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  
+  // State for SKU image modal
+  const [isSkuImageModalOpen, setIsSkuImageModalOpen] = useState(false);
+  const [selectedSkuImage, setSelectedSkuImage] = useState<{ url: string; name: string } | null>(null);
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
     queryKey: [`/api/bins/${binId}`],
@@ -166,6 +170,11 @@ export default function BinDetail() {
     addSkuForm.reset();
   };
 
+  const handleSkuImageClick = (imageUrl: string, skuName: string) => {
+    setSelectedSkuImage({ url: imageUrl, name: skuName });
+    setIsSkuImageModalOpen(true);
+  };
+
   // Show all SKUs in the dropdown since adding existing SKUs will now add to quantity
   const availableSkus = skus || [];
 
@@ -267,7 +276,12 @@ export default function BinDetail() {
                       >
                         <div className="flex items-center space-x-3">
                           {/* SKU Image */}
-                          <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+                          <div 
+                            className={`w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 ${
+                              binSku.sku?.imageUrl ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''
+                            }`}
+                            onClick={() => binSku.sku?.imageUrl && handleSkuImageClick(binSku.sku.imageUrl, binSku.sku.name || 'Unknown SKU')}
+                          >
                             {binSku.sku?.imageUrl ? (
                               <img
                                 src={binSku.sku.imageUrl}
@@ -468,6 +482,36 @@ export default function BinDetail() {
                 size="sm"
                 className="absolute top-4 right-4 text-white hover:bg-white/20"
                 onClick={() => setIsImageModalOpen(false)}
+                aria-label="Close image"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* SKU Image Modal */}
+      {selectedSkuImage && (
+        <Dialog open={isSkuImageModalOpen} onOpenChange={setIsSkuImageModalOpen}>
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/90" aria-describedby="sku-image-description">
+            <DialogHeader className="sr-only">
+              <DialogTitle>SKU Image - {selectedSkuImage.name}</DialogTitle>
+              <DialogDescription id="sku-image-description">
+                Full size view of the SKU image. Press Escape or click the X button to close.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src={selectedSkuImage.url}
+                alt={selectedSkuImage.name}
+                className="max-w-full max-h-full object-contain"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 text-white hover:bg-white/20"
+                onClick={() => setIsSkuImageModalOpen(false)}
                 aria-label="Close image"
               >
                 <X className="h-6 w-6" />
