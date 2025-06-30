@@ -289,7 +289,7 @@ export default function BinDetail() {
                                   {binSku.sku?.name || "Unknown SKU"}
                                 </h3>
                                 <p className="text-xs text-gray-500 truncate">
-                                  {binSku.sku?.skuNumber}
+                                  {binSku.sku?.description || "No description"}
                                 </p>
                               </div>
                               <div className="flex items-center space-x-1 ml-2">
