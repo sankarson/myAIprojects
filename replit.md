@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Added Items column to bins page showing count of SKUs in each bin with badge display
 - June 30, 2025: Removed breadcrumbs from header, keeping only page titles for cleaner navigation
 - June 30, 2025: Made quantity badge larger with increased text size and padding for better visibility
 - June 30, 2025: Hidden amount/price field from bin detail view, displaying only quantity information

@@ -46,7 +46,7 @@ export interface IStorage {
   deletePallet(id: number): Promise<void>;
 
   // Bin methods
-  getBins(): Promise<Bin[]>;
+  getBins(): Promise<(Bin & { itemCount: number })[]>;
   getBinById(id: number): Promise<BinWithSkus | undefined>;
   createBin(bin: InsertBin): Promise<Bin>;
   updateBin(id: number, bin: Partial<InsertBin>): Promise<Bin>;
@@ -187,8 +187,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Bin methods
-  async getBins(): Promise<Bin[]> {
-    return await db.select().from(bins).orderBy(bins.binNumber);
+  async getBins(): Promise<(Bin & { itemCount: number })[]> {
+    const result = await db
+      .select({
+        id: bins.id,
+        binNumber: bins.binNumber,
+        name: bins.name,
+        palletId: bins.palletId,
+        imageUrl: bins.imageUrl,
+        itemCount: sql<number>`COALESCE(COUNT(${binSkus.id}), 0)`.as('itemCount'),
+      })
+      .from(bins)
+      .leftJoin(binSkus, eq(bins.id, binSkus.binId))
+      .groupBy(bins.id, bins.binNumber, bins.name, bins.palletId, bins.imageUrl)
+      .orderBy(bins.binNumber);
+    
+    return result;
   }
 
   async getBinById(id: number): Promise<BinWithSkus | undefined> {

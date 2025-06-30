@@ -14,6 +14,8 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import type { Bin, Pallet } from "@shared/schema";
 
+type BinWithItemCount = Bin & { itemCount: number };
+
 export default function Bins() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +30,7 @@ export default function Bins() {
   
 
 
-  const { data: bins, isLoading } = useQuery<Bin[]>({
+  const { data: bins, isLoading } = useQuery<BinWithItemCount[]>({
     queryKey: ["/api/bins"],
   });
 
@@ -197,6 +199,7 @@ export default function Bins() {
                   <TableRow>
                     <TableHead>Name</TableHead>
                     <TableHead>Pallet</TableHead>
+                    <TableHead>Items</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -220,6 +223,11 @@ export default function Bins() {
                         <span className="text-sm text-gray-900">
                           {getPalletName(bin.palletId)}
                         </span>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className="font-mono">
+                          {bin.itemCount}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
