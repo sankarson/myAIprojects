@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, decimal, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, decimal, varchar, timestamp } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -155,3 +155,22 @@ export const insertUserSchema = createInsertSchema(users).pick({
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
+
+// Activity log table for tracking CRUD operations
+export const activityLog = pgTable("activity_log", {
+  id: serial("id").primaryKey(),
+  action: varchar("action", { length: 20 }).notNull(), // CREATE, UPDATE, DELETE
+  entityType: varchar("entity_type", { length: 20 }).notNull(), // warehouse, pallet, bin, sku
+  entityId: integer("entity_id").notNull(),
+  entityName: text("entity_name").notNull(),
+  description: text("description").notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
+
+export const insertActivityLogSchema = createInsertSchema(activityLog).omit({
+  id: true,
+  timestamp: true,
+});
+
+export type ActivityLog = typeof activityLog.$inferSelect;
+export type InsertActivityLog = z.infer<typeof insertActivityLogSchema>;

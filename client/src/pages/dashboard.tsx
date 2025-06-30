@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
-import { Building, Package, Box, Warehouse } from "lucide-react";
+import { Building, Package, Box, Warehouse, Clock, Plus, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
+import { formatDistanceToNow } from "date-fns";
 
 interface Stats {
   warehouses: number;
@@ -11,9 +12,23 @@ interface Stats {
   skus: number;
 }
 
+interface ActivityLog {
+  id: number;
+  action: string;
+  entityType: string;
+  entityId: number;
+  entityName: string;
+  description: string;
+  timestamp: string;
+}
+
 export default function Dashboard() {
   const { data: stats, isLoading } = useQuery<Stats>({
     queryKey: ["/api/stats"],
+  });
+
+  const { data: activities, isLoading: activitiesLoading } = useQuery<ActivityLog[]>({
+    queryKey: ["/api/activity"],
   });
 
   if (isLoading) {
@@ -115,23 +130,82 @@ export default function Dashboard() {
         </Link>
       </div>
 
-      {/* Getting Started */}
+      {/* Recent Activity */}
       <Card className="shadow-md">
         <div className="p-6 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">Getting Started</h3>
+          <h3 className="text-lg font-medium text-gray-900 flex items-center">
+            <Clock className="h-5 w-5 mr-2" />
+            Recent Activity
+          </h3>
         </div>
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="text-center py-8">
-              <Warehouse className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">
-                Start building your inventory
-              </h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Create warehouses, add pallets, organize bins, and track your SKUs.
-              </p>
+        <CardContent className="p-0">
+          {activitiesLoading ? (
+            <div className="p-6 space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center space-x-3">
+                  <Skeleton className="h-8 w-8 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
+          ) : activities && activities.length > 0 ? (
+            <div className="divide-y divide-gray-200">
+              {activities.map((activity) => {
+                const getIcon = (action: string) => {
+                  switch (action) {
+                    case 'CREATE':
+                      return <Plus className="h-4 w-4 text-green-600" />;
+                    case 'UPDATE':
+                      return <Edit className="h-4 w-4 text-blue-600" />;
+                    case 'DELETE':
+                      return <Trash2 className="h-4 w-4 text-red-600" />;
+                    default:
+                      return <Clock className="h-4 w-4 text-gray-400" />;
+                  }
+                };
+
+                const getBgColor = (action: string) => {
+                  switch (action) {
+                    case 'CREATE':
+                      return 'bg-green-100';
+                    case 'UPDATE':
+                      return 'bg-blue-100';
+                    case 'DELETE':
+                      return 'bg-red-100';
+                    default:
+                      return 'bg-gray-100';
+                  }
+                };
+
+                return (
+                  <div key={activity.id} className="p-4 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start space-x-3">
+                      <div className={`p-2 rounded-full ${getBgColor(activity.action)}`}>
+                        {getIcon(activity.action)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900">
+                          {activity.description}
+                        </p>
+                        <p className="text-xs text-gray-500 mt-1">
+                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-8 text-gray-500">
+              <Clock className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+              <p className="text-sm">No recent activity</p>
+              <p className="text-xs mt-1">Activities will appear here as you manage your inventory</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

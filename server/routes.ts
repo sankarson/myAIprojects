@@ -81,6 +81,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Activity log endpoint
+  app.get("/api/activity", async (req, res) => {
+    try {
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+      const activities = await storage.getRecentActivity(limit);
+      res.json(activities);
+    } catch (error) {
+      console.error("Error fetching activity log:", error);
+      res.status(500).json({ error: "Failed to fetch activity log" });
+    }
+  });
+
   // Warehouse routes
   app.get("/api/warehouses", async (req, res) => {
     try {

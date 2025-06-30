@@ -4,6 +4,7 @@ import {
   bins,
   skus,
   binSkus,
+  activityLog,
   type Warehouse,
   type InsertWarehouse,
   type Pallet,
@@ -18,6 +19,8 @@ import {
   type PalletWithBins,
   type BinWithSkus,
   type SkuWithLocations,
+  type ActivityLog,
+  type InsertActivityLog,
   users,
   type User,
   type InsertUser,
@@ -71,6 +74,10 @@ export interface IStorage {
     bins: number;
     skus: number;
   }>;
+
+  // Activity Log methods
+  logActivity(activity: InsertActivityLog): Promise<void>;
+  getRecentActivity(limit?: number): Promise<ActivityLog[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -113,6 +120,16 @@ export class DatabaseStorage implements IStorage {
       .insert(warehouses)
       .values(warehouse)
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "CREATE",
+      entityType: "warehouse",
+      entityId: newWarehouse.id,
+      entityName: newWarehouse.name,
+      description: `Created warehouse "${newWarehouse.name}"`
+    });
+    
     return newWarehouse;
   }
 
@@ -167,6 +184,16 @@ export class DatabaseStorage implements IStorage {
       .insert(pallets)
       .values({ ...pallet, palletNumber, name })
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "CREATE",
+      entityType: "pallet",
+      entityId: newPallet.id,
+      entityName: newPallet.name || newPallet.palletNumber,
+      description: `Created pallet "${newPallet.name || newPallet.palletNumber}"`
+    });
+    
     return newPallet;
   }
 
@@ -239,6 +266,16 @@ export class DatabaseStorage implements IStorage {
       .insert(bins)
       .values({ ...bin, binNumber, name })
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "CREATE",
+      entityType: "bin",
+      entityId: newBin.id,
+      entityName: newBin.name || newBin.binNumber,
+      description: `Created bin "${newBin.name || newBin.binNumber}"`
+    });
+    
     return newBin;
   }
 
@@ -307,6 +344,16 @@ export class DatabaseStorage implements IStorage {
       .insert(skus)
       .values({ ...sku, skuNumber })
       .returning();
+    
+    // Log activity
+    await this.logActivity({
+      action: "CREATE",
+      entityType: "sku",
+      entityId: newSku.id,
+      entityName: newSku.name,
+      description: `Created SKU "${newSku.name}"`
+    });
+    
     return newSku;
   }
 
@@ -401,6 +448,19 @@ export class DatabaseStorage implements IStorage {
       bins: binCount.count || 0,
       skus: skuCount.count || 0,
     };
+  }
+
+  // Activity Log methods
+  async logActivity(activity: InsertActivityLog): Promise<void> {
+    await db.insert(activityLog).values(activity);
+  }
+
+  async getRecentActivity(limit: number = 20): Promise<ActivityLog[]> {
+    return await db
+      .select()
+      .from(activityLog)
+      .orderBy(desc(activityLog.timestamp))
+      .limit(limit);
   }
 }
 
