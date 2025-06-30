@@ -206,11 +206,14 @@ export default function Bins() {
                       <TableCell>
                         <div className="flex items-center">
                           <Box className="h-5 w-5 text-orange-600 mr-3" />
-                          <Link href={`/skus?bin=${bin.id}`}>
-                            <span className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline">
-                              {bin.name || bin.binNumber}
-                            </span>
-                          </Link>
+                          <span 
+                            className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                            onClick={() => {
+                              window.location.href = `/skus?bin=${bin.id}`;
+                            }}
+                          >
+                            {bin.name || bin.binNumber}
+                          </span>
                         </div>
                       </TableCell>
                       <TableCell>

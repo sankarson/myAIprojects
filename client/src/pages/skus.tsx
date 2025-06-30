@@ -22,7 +22,7 @@ export default function Skus() {
   const { toast } = useToast();
 
   // Extract bin filter from URL query parameters
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const urlParams = new URLSearchParams(window.location.search);
   const binFilter = urlParams.get('bin');
   const filteredBinId = binFilter ? parseInt(binFilter) : null;
 
@@ -107,12 +107,17 @@ export default function Skus() {
           <div className="p-4 md:p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                <Link href="/bins">
-                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Back to Bins
-                  </Button>
-                </Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="text-blue-600 hover:text-blue-800"
+                  onClick={() => {
+                    window.location.href = '/bins';
+                  }}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Bins
+                </Button>
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
                     SKUs in {getFilteredBinName()}
@@ -122,11 +127,15 @@ export default function Skus() {
                   </p>
                 </div>
               </div>
-              <Link href="/skus">
-                <Button variant="outline" size="sm">
-                  View All SKUs
-                </Button>
-              </Link>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => {
+                  window.location.href = '/skus';
+                }}
+              >
+                View All SKUs
+              </Button>
             </div>
           </div>
         </Card>
