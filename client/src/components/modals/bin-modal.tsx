@@ -172,13 +172,10 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       try {
         // Update bin SKUs
         const currentSkus = binDetails?.binSkus || [];
-        console.log("Current SKUs in bin:", currentSkus);
-        console.log("New SKUs to save:", binSkus);
         
         // Remove SKUs that are no longer in the list
         for (const currentSku of currentSkus) {
           if (!binSkus.find(bs => bs.skuId === currentSku.skuId)) {
-            console.log("Removing SKU:", currentSku.skuId);
             await apiRequest("DELETE", `/api/bins/${bin!.id}/skus/${currentSku.skuId}`);
           }
         }
@@ -189,13 +186,11 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
             const existing = currentSkus.find(cs => cs.skuId === binSku.skuId);
             if (existing) {
               if (existing.quantity !== binSku.quantity) {
-                console.log("Updating SKU quantity:", binSku.skuId, "from", existing.quantity, "to", binSku.quantity);
                 await apiRequest("PUT", `/api/bins/${bin!.id}/skus/${binSku.skuId}`, {
                   quantity: binSku.quantity,
                 });
               }
             } else {
-              console.log("Adding new SKU:", binSku.skuId, "with quantity:", binSku.quantity);
               await apiRequest("POST", `/api/bins/${bin!.id}/skus`, {
                 skuId: binSku.skuId,
                 quantity: binSku.quantity,
@@ -212,7 +207,6 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
         });
         onClose();
       } catch (error) {
-        console.error("Error updating bin SKUs:", error);
         toast({
           title: "Error",
           description: "Failed to update bin SKUs",

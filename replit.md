@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Implemented clickable navigation system - pallet names link to filtered bins, bin names link to filtered SKUs with back navigation and breadcrumbs
 - June 30, 2025: Fixed mobile responsiveness for bin SKU management with card-based layout replacing table view on small screens
 - June 30, 2025: Extended image upload functionality to bins, replacing URL input with drag-and-drop interface for both SKUs and bins
 - June 30, 2025: Implemented image upload functionality replacing URL input with drag-and-drop file upload interface

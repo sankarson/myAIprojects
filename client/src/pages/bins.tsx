@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, Edit, Trash2, Box } from "lucide-react";
+import { Plus, Search, Edit, Trash2, Box, ArrowLeft } from "lucide-react";
 import { BinModal } from "@/components/modals/bin-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -17,7 +18,13 @@ export default function Bins() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingBin, setEditingBin] = useState<Bin | null>(null);
+  const [location] = useLocation();
   const { toast } = useToast();
+
+  // Extract pallet filter from URL query parameters
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const palletFilter = urlParams.get('pallet');
+  const filteredPalletId = palletFilter ? parseInt(palletFilter) : null;
 
   const { data: bins, isLoading } = useQuery<Bin[]>({
     queryKey: ["/api/bins"],
@@ -48,11 +55,22 @@ export default function Bins() {
     },
   });
 
-  const filteredBins = bins?.filter(
-    (bin) =>
-      (bin.name || bin.binNumber).toLowerCase().includes(searchQuery.toLowerCase()) ||
-      bin.binNumber.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+  const filteredBins = bins?.filter((bin) => {
+    // Apply search filter
+    const matchesSearch = (bin.name || bin.binNumber).toLowerCase().includes(searchQuery.toLowerCase()) ||
+      bin.binNumber.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Apply pallet filter if specified
+    const matchesPallet = filteredPalletId ? bin.palletId === filteredPalletId : true;
+    
+    return matchesSearch && matchesPallet;
+  }) || [];
+
+  const getFilteredPalletName = () => {
+    if (!filteredPalletId) return null;
+    const pallet = pallets?.find(p => p.id === filteredPalletId);
+    return pallet?.name || pallet?.palletNumber || "Unknown Pallet";
+  };
 
   const getPalletName = (palletId: number | null) => {
     if (!palletId) return "Unassigned";
@@ -78,6 +96,36 @@ export default function Bins() {
 
   return (
     <>
+      {filteredPalletId && (
+        <Card className="shadow-md mb-4">
+          <div className="p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Link href="/pallets">
+                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Pallets
+                  </Button>
+                </Link>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    Bins in {getFilteredPalletName()}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Showing {filteredBins.length} bin{filteredBins.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              <Link href="/bins">
+                <Button variant="outline" size="sm">
+                  View All Bins
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
+      )}
+      
       <Card className="shadow-md">
         <div className="p-4 md:p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
@@ -145,9 +193,11 @@ export default function Bins() {
                       <TableCell>
                         <div className="flex items-center">
                           <Box className="h-5 w-5 text-orange-600 mr-3" />
-                          <span className="text-sm font-medium">
-                            {bin.name || bin.binNumber}
-                          </span>
+                          <Link href={`/skus?bin=${bin.id}`}>
+                            <span className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline">
+                              {bin.name || bin.binNumber}
+                            </span>
+                          </Link>
                         </div>
                       </TableCell>
                       <TableCell>

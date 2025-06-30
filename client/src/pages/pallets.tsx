@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { Link } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -148,9 +149,11 @@ export default function Pallets() {
                         <div className="flex items-center">
                           <Package className="h-5 w-5 text-green-600 mr-3" />
                           <div>
-                            <span className="text-sm font-medium">
-                              {pallet.name || pallet.palletNumber}
-                            </span>
+                            <Link href={`/bins?pallet=${pallet.id}`}>
+                              <span className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline">
+                                {pallet.name || pallet.palletNumber}
+                              </span>
+                            </Link>
                             <div className="sm:hidden text-xs text-gray-500 mt-1">
                               {getWarehouseName(pallet.warehouseId)}
                               {pallet.locationCode && (

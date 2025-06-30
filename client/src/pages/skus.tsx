@@ -1,26 +1,44 @@
 import { useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { Link, useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, Edit, MapPin, Trash2 } from "lucide-react";
+import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import type { Sku } from "@shared/schema";
+import type { Sku, Bin, SkuWithLocations } from "@shared/schema";
 
 export default function Skus() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSku, setEditingSku] = useState<Sku | null>(null);
+  const [location] = useLocation();
   const { toast } = useToast();
+
+  // Extract bin filter from URL query parameters
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const binFilter = urlParams.get('bin');
+  const filteredBinId = binFilter ? parseInt(binFilter) : null;
 
   const { data: skus, isLoading } = useQuery<Sku[]>({
     queryKey: ["/api/skus"],
+  });
+
+  const { data: bins } = useQuery<Bin[]>({
+    queryKey: ["/api/bins"],
+  });
+
+  // For bin filtering, we need SKUs with their location information
+  const { data: skusWithLocations } = useQuery<SkuWithLocations[]>({
+    queryKey: ["/api/skus"],
+    select: (skus) => skus.map(sku => sku as SkuWithLocations),
+    enabled: !!filteredBinId,
   });
 
   const deleteMutation = useMutation({
@@ -44,12 +62,27 @@ export default function Skus() {
     },
   });
 
-  const filteredSkus = skus?.filter(
-    (sku) =>
-      sku.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  const filteredSkus = skus?.filter((sku) => {
+    // Apply search filter
+    const matchesSearch = sku.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       sku.skuNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sku.description?.toLowerCase().includes(searchQuery.toLowerCase())
-  ) || [];
+      sku.description?.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Apply bin filter if specified - this requires checking if SKU is in the specific bin
+    if (filteredBinId && skusWithLocations) {
+      const skuWithLocation = skusWithLocations.find(s => s.id === sku.id);
+      const isInBin = skuWithLocation?.binSkus?.some(bs => bs.bin?.id === filteredBinId);
+      return matchesSearch && isInBin;
+    }
+    
+    return matchesSearch;
+  }) || [];
+
+  const getFilteredBinName = () => {
+    if (!filteredBinId) return null;
+    const bin = bins?.find(b => b.id === filteredBinId);
+    return bin?.name || bin?.binNumber || "Unknown Bin";
+  };
 
   const handleEdit = (sku: Sku) => {
     setEditingSku(sku);
@@ -69,6 +102,36 @@ export default function Skus() {
 
   return (
     <>
+      {filteredBinId && (
+        <Card className="shadow-md mb-4">
+          <div className="p-4 md:p-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <Link href="/bins">
+                  <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-800">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Back to Bins
+                  </Button>
+                </Link>
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900">
+                    SKUs in {getFilteredBinName()}
+                  </h2>
+                  <p className="text-sm text-gray-500">
+                    Showing {filteredSkus.length} SKU{filteredSkus.length !== 1 ? 's' : ''}
+                  </p>
+                </div>
+              </div>
+              <Link href="/skus">
+                <Button variant="outline" size="sm">
+                  View All SKUs
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </Card>
+      )}
+      
       <Card className="shadow-md">
         <div className="p-4 md:p-6 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
