@@ -394,9 +394,9 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
                 <h4 className="text-md font-medium text-gray-900">SKUs in this Bin</h4>
-                <Button type="button" variant="outline" onClick={addSku}>
+                <Button type="button" variant="outline" onClick={addSku} className="self-start sm:self-auto">
                   <Plus className="mr-2 h-4 w-4" />
                   Add SKU
                 </Button>
@@ -413,70 +413,131 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                   <p className="text-sm text-gray-400">Click "Add SKU" to get started</p>
                 </div>
               ) : (
-                <div className="border border-gray-200 rounded-lg">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>SKU</TableHead>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Quantity</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {binSkus.map((binSku, index) => (
-                        <TableRow key={index}>
-                          <TableCell>
-                            <Select
-                              value={binSku.skuId.toString()}
-                              onValueChange={(value) => updateSkuSelection(binSku.skuId, parseInt(value))}
-                            >
-                              <SelectTrigger className="w-40">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {skus
-                                  ?.filter(sku => 
-                                    sku.id === binSku.skuId || 
-                                    !binSkus.find(bs => bs.skuId === sku.id)
-                                  )
-                                  .map((sku) => (
-                                    <SelectItem key={sku.id} value={sku.id.toString()}>
-                                      {sku.skuNumber}
-                                    </SelectItem>
-                                  ))}
-                              </SelectContent>
-                            </Select>
-                          </TableCell>
-                          <TableCell>
-                            <span className="text-sm">
-                              {binSku.sku?.name || "Unknown SKU"}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <Input
-                              type="number"
-                              min="1"
-                              value={binSku.quantity}
-                              onChange={(e) => updateSkuQuantity(binSku.skuId, parseInt(e.target.value) || 1)}
-                              className="w-20"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Button
-                              type="button"
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => removeSku(binSku.skuId)}
-                              className="text-red-600 hover:text-red-700"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </TableCell>
+                <div className="space-y-3">
+                  {/* Desktop Table View */}
+                  <div className="hidden md:block border border-gray-200 rounded-lg">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>SKU</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Quantity</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {binSkus.map((binSku, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Select
+                                value={binSku.skuId.toString()}
+                                onValueChange={(value) => updateSkuSelection(binSku.skuId, parseInt(value))}
+                              >
+                                <SelectTrigger className="w-40">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {skus
+                                    ?.filter(sku => 
+                                      sku.id === binSku.skuId || 
+                                      !binSkus.find(bs => bs.skuId === sku.id)
+                                    )
+                                    .map((sku) => (
+                                      <SelectItem key={sku.id} value={sku.id.toString()}>
+                                        {sku.skuNumber}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                            </TableCell>
+                            <TableCell>
+                              <span className="text-sm">
+                                {binSku.sku?.name || "Unknown SKU"}
+                              </span>
+                            </TableCell>
+                            <TableCell>
+                              <Input
+                                type="number"
+                                min="1"
+                                value={binSku.quantity}
+                                onChange={(e) => updateSkuQuantity(binSku.skuId, parseInt(e.target.value) || 1)}
+                                className="w-20"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => removeSku(binSku.skuId)}
+                                className="text-red-600 hover:text-red-700"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+
+                  {/* Mobile Card View */}
+                  <div className="md:hidden space-y-3">
+                    {binSkus.map((binSku, index) => (
+                      <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm font-medium">SKU</Label>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => removeSku(binSku.skuId)}
+                            className="text-red-600 hover:text-red-700 p-1"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Select
+                          value={binSku.skuId.toString()}
+                          onValueChange={(value) => updateSkuSelection(binSku.skuId, parseInt(value))}
+                        >
+                          <SelectTrigger className="w-full">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {skus
+                              ?.filter(sku => 
+                                sku.id === binSku.skuId || 
+                                !binSkus.find(bs => bs.skuId === sku.id)
+                              )
+                              .map((sku) => (
+                                <SelectItem key={sku.id} value={sku.id.toString()}>
+                                  {sku.skuNumber}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        
+                        <div>
+                          <Label className="text-sm font-medium">Name</Label>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {binSku.sku?.name || "Unknown SKU"}
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-center gap-2">
+                          <Label className="text-sm font-medium">Quantity</Label>
+                          <Input
+                            type="number"
+                            min="1"
+                            value={binSku.quantity}
+                            onChange={(e) => updateSkuQuantity(binSku.skuId, parseInt(e.target.value) || 1)}
+                            className="w-20"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
