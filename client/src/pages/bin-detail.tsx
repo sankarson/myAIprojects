@@ -34,6 +34,9 @@ export default function BinDetail() {
   
   // State for Add SKU dialog
   const [isAddSkuDialogOpen, setIsAddSkuDialogOpen] = useState(false);
+  
+  // State for fullscreen image modal
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
     queryKey: [`/api/bins/${binId}`],
@@ -195,7 +198,12 @@ export default function BinDetail() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
               {/* Bin Image Icon */}
-              <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 mr-4">
+              <div 
+                className={`w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 mr-4 ${
+                  bin.imageUrl ? 'cursor-pointer hover:opacity-80 transition-opacity' : ''
+                }`}
+                onClick={() => bin.imageUrl && setIsImageModalOpen(true)}
+              >
                 {bin.imageUrl ? (
                   <img
                     src={bin.imageUrl}
@@ -447,6 +455,29 @@ export default function BinDetail() {
           </Form>
         </DialogContent>
       </Dialog>
+
+      {/* Fullscreen Image Modal */}
+      {bin.imageUrl && (
+        <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 border-none bg-black/90">
+            <div className="relative w-full h-full flex items-center justify-center">
+              <img
+                src={bin.imageUrl}
+                alt={bin.name || bin.binNumber}
+                className="max-w-full max-h-full object-contain"
+              />
+              <Button
+                variant="ghost"
+                size="sm"
+                className="absolute top-4 right-4 text-white hover:bg-white/20"
+                onClick={() => setIsImageModalOpen(false)}
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
