@@ -329,7 +329,7 @@ export default function BinDetail() {
                                     </div>
                                   ) : (
                                     <div className="flex items-center space-x-1">
-                                      <Badge variant="secondary">
+                                      <Badge variant="secondary" className="text-lg px-3 py-1">
                                         Qty: {binSku.quantity}
                                       </Badge>
                                       <Button
