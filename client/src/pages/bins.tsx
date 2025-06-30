@@ -25,6 +25,14 @@ export default function Bins() {
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const palletFilter = urlParams.get('pallet');
   const filteredPalletId = palletFilter ? parseInt(palletFilter) : null;
+  
+  // Debug logging
+  console.log('Bins page - URL params:', {
+    fullLocation: location,
+    urlParams: Object.fromEntries(urlParams.entries()),
+    palletFilter,
+    filteredPalletId
+  });
 
   const { data: bins, isLoading } = useQuery<Bin[]>({
     queryKey: ["/api/bins"],
@@ -62,6 +70,17 @@ export default function Bins() {
     
     // Apply pallet filter if specified
     const matchesPallet = filteredPalletId ? bin.palletId === filteredPalletId : true;
+    
+    // Debug logging
+    if (filteredPalletId) {
+      console.log(`Filtering bins for pallet ${filteredPalletId}:`, {
+        binId: bin.id,
+        binName: bin.name || bin.binNumber,
+        binPalletId: bin.palletId,
+        matchesPallet,
+        finalMatch: matchesSearch && matchesPallet
+      });
+    }
     
     return matchesSearch && matchesPallet;
   }) || [];
