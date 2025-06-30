@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -12,6 +12,7 @@ import { insertSkuSchema, type Sku, type InsertSku } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Upload, X } from "lucide-react";
 import { z } from "zod";
 
 type SkuFormData = {
@@ -30,6 +31,42 @@ interface SkuModalProps {
 export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
   const { toast } = useToast();
   const isEditing = !!sku;
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleImageUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      const result = await response.json();
+      setUploadedImage(result.url);
+      form.setValue('imageUrl', result.url);
+      
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to upload image",
+        variant: "destructive",
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const form = useForm<SkuFormData>({
     defaultValues: {
@@ -48,6 +85,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
         price: sku.price ? sku.price.toString() : "",
         imageUrl: sku.imageUrl || "",
       });
+      setUploadedImage(sku.imageUrl || null);
     } else {
       form.reset({
         name: "",
@@ -55,6 +93,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
         price: "",
         imageUrl: "",
       });
+      setUploadedImage(null);
     }
   }, [sku, form]);
 
@@ -206,26 +245,65 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="https://example.com/image.jpg"
-                      value={field.value || ""}
-                      onChange={field.onChange}
-                      onBlur={field.onBlur}
-                      name={field.name}
-                      ref={field.ref}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+            <div className="space-y-4">
+              <Label>Product Image</Label>
+              
+              {uploadedImage ? (
+                <div className="relative">
+                  <img
+                    src={uploadedImage}
+                    alt="Product preview"
+                    className="w-32 h-32 rounded-md object-cover border"
+                  />
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    className="absolute -top-2 -right-2 h-6 w-6 rounded-full p-0"
+                    onClick={() => {
+                      setUploadedImage(null);
+                      form.setValue('imageUrl', '');
+                    }}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+                  <div className="text-center">
+                    <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                    <div className="mt-4">
+                      <label htmlFor="image-upload" className="cursor-pointer">
+                        <span className="mt-2 block text-sm font-medium text-gray-900">
+                          Upload product image
+                        </span>
+                        <span className="mt-1 block text-xs text-gray-500">
+                          PNG, JPG, GIF up to 5MB
+                        </span>
+                      </label>
+                      <input
+                        id="image-upload"
+                        type="file"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImageUpload(file);
+                          }
+                        }}
+                        disabled={isUploading}
+                      />
+                    </div>
+                    {isUploading && (
+                      <div className="mt-2 text-sm text-blue-600">
+                        Uploading...
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
-            />
+            </div>
 
             <div className="flex items-center justify-end space-x-3 pt-6 border-t border-gray-200">
               <Button type="button" variant="outline" onClick={onClose}>
