@@ -173,7 +173,7 @@ export default function Skus() {
                       <TableCell>
                         {sku.price ? (
                           <span className="text-sm font-medium text-gray-900">
-                            ${sku.price}
+                            ₹{sku.price}
                           </span>
                         ) : (
                           <span className="text-sm text-gray-500">—</span>

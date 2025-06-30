@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Updated SKU pricing to use Indian rupees (₹) instead of dollars across forms and displays
 - June 30, 2025: Optimized pallets table for mobile with responsive columns and removed Status field for cleaner layout
 - June 30, 2025: Extended name field functionality to bins with editable names, search integration, and proper display in listings
 - June 30, 2025: Enhanced pallets and bins with user-friendly name fields that default to auto-generated numbers but can be customized

@@ -190,7 +190,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
                   <FormControl>
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                        $
+                        ₹
                       </span>
                       <Input
                         type="number"
