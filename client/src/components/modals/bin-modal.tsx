@@ -188,8 +188,8 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                   <FormItem>
                     <FormLabel>Pallet</FormLabel>
                     <Select
-                      value={field.value?.toString() || ""}
-                      onValueChange={(value) => field.onChange(value ? parseInt(value) : undefined)}
+                      value={field.value?.toString() || "none"}
+                      onValueChange={(value) => field.onChange(value === "none" ? undefined : parseInt(value))}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -197,7 +197,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="">No pallet</SelectItem>
+                        <SelectItem value="none">No pallet</SelectItem>
                         {pallets?.map((pallet) => (
                           <SelectItem key={pallet.id} value={pallet.id.toString()}>
                             {pallet.name || pallet.palletNumber}
