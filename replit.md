@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Improved activity logging to show meaningful field names and values instead of IDs (e.g., 'warehouse: "Aramex" → "DHL"', 'pallet: "First Pallet" → "Second Pallet"')
 - June 30, 2025: Enhanced activity logging to show original and changed values in update operations (e.g., 'name: "Old Name" → "New Name"', 'price: ₹100 → ₹150')
 - June 30, 2025: Added activity logging for all edit operations (UPDATE actions) across warehouses, pallets, bins, SKUs, and inventory movements
 - June 30, 2025: Replaced getting started section with comprehensive activity log showing last 20 CRUD operations with timestamps and icons

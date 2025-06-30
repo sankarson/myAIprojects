@@ -238,7 +238,12 @@ export class DatabaseStorage implements IStorage {
       changes.push(`name: "${original.name}" → "${pallet.name}"`);
     }
     if (pallet.warehouseId && pallet.warehouseId !== original.warehouseId) {
-      changes.push(`warehouse: ${original.warehouseId || 'none'} → ${pallet.warehouseId}`);
+      // Get warehouse names for meaningful logging
+      const [originalWarehouse] = original.warehouseId ? 
+        await db.select().from(warehouses).where(eq(warehouses.id, original.warehouseId)) : [null];
+      const [newWarehouse] = await db.select().from(warehouses).where(eq(warehouses.id, pallet.warehouseId));
+      
+      changes.push(`warehouse: "${originalWarehouse?.name || 'none'}" → "${newWarehouse?.name || 'unknown'}"`);
     }
     if (pallet.locationCode && pallet.locationCode !== original.locationCode) {
       changes.push(`location: "${original.locationCode || 'none'}" → "${pallet.locationCode}"`);
@@ -342,10 +347,21 @@ export class DatabaseStorage implements IStorage {
       changes.push(`name: "${original.name}" → "${bin.name}"`);
     }
     if (bin.palletId && bin.palletId !== original.palletId) {
-      changes.push(`pallet: ${original.palletId || 'none'} → ${bin.palletId}`);
+      // Get pallet names for meaningful logging
+      const [originalPallet] = original.palletId ? 
+        await db.select().from(pallets).where(eq(pallets.id, original.palletId)) : [null];
+      const [newPallet] = await db.select().from(pallets).where(eq(pallets.id, bin.palletId));
+      
+      changes.push(`pallet: "${originalPallet?.name || originalPallet?.palletNumber || 'none'}" → "${newPallet?.name || newPallet?.palletNumber || 'unknown'}"`);
     }
     if (bin.imageUrl !== undefined && bin.imageUrl !== original.imageUrl) {
-      changes.push(`image: ${original.imageUrl ? 'updated' : 'added'}`);
+      if (original.imageUrl && bin.imageUrl) {
+        changes.push(`image: updated`);
+      } else if (!original.imageUrl && bin.imageUrl) {
+        changes.push(`image: added`);
+      } else if (original.imageUrl && !bin.imageUrl) {
+        changes.push(`image: removed`);
+      }
     }
     
     // Log activity
@@ -451,7 +467,13 @@ export class DatabaseStorage implements IStorage {
       changes.push(`price: ₹${original.price} → ₹${sku.price}`);
     }
     if (sku.imageUrl !== undefined && sku.imageUrl !== original.imageUrl) {
-      changes.push(`image: ${original.imageUrl ? 'updated' : 'added'}`);
+      if (original.imageUrl && sku.imageUrl) {
+        changes.push(`image: updated`);
+      } else if (!original.imageUrl && sku.imageUrl) {
+        changes.push(`image: added`);
+      } else if (original.imageUrl && !sku.imageUrl) {
+        changes.push(`image: removed`);
+      }
     }
     
     // Log activity
