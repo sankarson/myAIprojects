@@ -97,7 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- June 30, 2025: Swapped quantity and amount field positions in bin detail view - price now appears first, quantity below
+- June 30, 2025: Hidden amount/price field from bin detail view, displaying only quantity information
 - June 30, 2025: Removed tools section from sidebar, keeping only main navigation items (Dashboard, Warehouses, Pallets, Bins, SKUs)
 - June 30, 2025: Fixed accessibility errors by adding DialogTitle, DialogDescription, and proper ARIA attributes to modals
 - June 30, 2025: Made bin image icon clickable to show fullscreen image modal with close button
