@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { RefreshCw, Plus } from "lucide-react";
 import { useLocation } from "wouter";
-import { queryClient } from "@/lib/queryClient";
 
 const pageConfig = {
   "/": {
@@ -33,10 +30,6 @@ export function Header() {
     breadcrumb: ["Dashboard"],
   };
 
-  const handleRefresh = () => {
-    queryClient.invalidateQueries();
-  };
-
   return (
     <header className="bg-white shadow-sm border-b border-gray-200">
       <div className="px-4 md:px-6 py-3 md:py-4 ml-12 md:ml-0">
@@ -53,12 +46,6 @@ export function Header() {
         
         <div className="flex items-center justify-between">
           <h2 className="text-xl md:text-2xl font-semibold text-gray-900 truncate pr-4">{config.title}</h2>
-          <div className="flex items-center space-x-2 md:space-x-3">
-            <Button variant="outline" onClick={handleRefresh} size="sm" className="md:size-default">
-              <RefreshCw className="h-4 w-4 md:mr-2" />
-              <span className="hidden md:inline">Refresh</span>
-            </Button>
-          </div>
         </div>
       </div>
     </header>
