@@ -50,6 +50,7 @@ export default function Pallets() {
 
   const filteredPallets = pallets?.filter(
     (pallet) =>
+      (pallet.name || pallet.palletNumber).toLowerCase().includes(searchQuery.toLowerCase()) ||
       pallet.palletNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
       pallet.locationCode?.toLowerCase().includes(searchQuery.toLowerCase())
   ) || [];
@@ -134,10 +135,9 @@ export default function Pallets() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Pallet ID</TableHead>
-                    <TableHead>Warehouse</TableHead>
-                    <TableHead>Location Code</TableHead>
-                    <TableHead>Status</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="hidden sm:table-cell">Warehouse</TableHead>
+                    <TableHead className="hidden md:table-cell">Location Code</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -147,17 +147,25 @@ export default function Pallets() {
                       <TableCell>
                         <div className="flex items-center">
                           <Package className="h-5 w-5 text-green-600 mr-3" />
-                          <span className="font-mono text-sm font-medium">
-                            {pallet.palletNumber}
-                          </span>
+                          <div>
+                            <span className="text-sm font-medium">
+                              {pallet.name || pallet.palletNumber}
+                            </span>
+                            <div className="sm:hidden text-xs text-gray-500 mt-1">
+                              {getWarehouseName(pallet.warehouseId)}
+                              {pallet.locationCode && (
+                                <span className="ml-2">• {pallet.locationCode}</span>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <span className="text-sm text-gray-900">
                           {getWarehouseName(pallet.warehouseId)}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden md:table-cell">
                         {pallet.locationCode ? (
                           <Badge variant="secondary" className="font-mono">
                             {pallet.locationCode}
@@ -165,14 +173,6 @@ export default function Pallets() {
                         ) : (
                           <span className="text-sm text-gray-500">—</span>
                         )}
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant={pallet.warehouseId ? "default" : "secondary"}
-                          className={pallet.warehouseId ? "bg-green-100 text-green-800" : ""}
-                        >
-                          {pallet.warehouseId ? "Assigned" : "Unassigned"}
-                        </Badge>
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center space-x-2">
