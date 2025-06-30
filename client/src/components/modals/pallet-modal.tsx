@@ -68,6 +68,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pallets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Pallet created successfully",
@@ -90,6 +91,7 @@ export function PalletModal({ isOpen, onClose, pallet }: PalletModalProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pallets"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Pallet updated successfully",

@@ -101,6 +101,8 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bins"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin created successfully",
@@ -123,6 +125,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bins"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin updated successfully",

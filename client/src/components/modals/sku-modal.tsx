@@ -105,6 +105,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "SKU created successfully",
@@ -127,6 +128,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "SKU updated successfully",

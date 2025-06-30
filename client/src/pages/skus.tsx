@@ -48,6 +48,7 @@ export default function Skus() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "SKU deleted successfully",

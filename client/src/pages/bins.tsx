@@ -45,6 +45,7 @@ export default function Bins() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/bins"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin deleted successfully",

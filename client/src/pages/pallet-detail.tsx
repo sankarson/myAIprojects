@@ -54,6 +54,7 @@ export default function PalletDetail() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/pallets/${palletId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin name updated successfully",
@@ -77,6 +78,7 @@ export default function PalletDetail() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/pallets/${palletId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin deleted successfully",
@@ -98,6 +100,7 @@ export default function PalletDetail() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/pallets/${palletId}`] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Bin added to pallet successfully",

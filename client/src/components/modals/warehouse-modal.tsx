@@ -52,6 +52,7 @@ export function WarehouseModal({ isOpen, onClose, warehouse }: WarehouseModalPro
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/warehouses"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Warehouse created successfully",
@@ -74,6 +75,7 @@ export function WarehouseModal({ isOpen, onClose, warehouse }: WarehouseModalPro
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/warehouses"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Warehouse updated successfully",

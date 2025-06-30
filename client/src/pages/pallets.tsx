@@ -35,6 +35,7 @@ export default function Pallets() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/pallets"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
         description: "Pallet deleted successfully",
