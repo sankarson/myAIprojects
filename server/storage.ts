@@ -311,8 +311,31 @@ export class DatabaseStorage implements IStorage {
 
   // BinSku methods
   async addSkuToBin(binSku: InsertBinSku): Promise<BinSku> {
-    const [newBinSku] = await db.insert(binSkus).values(binSku).returning();
-    return newBinSku;
+    // Check if this SKU already exists in the bin
+    const existing = await db
+      .select()
+      .from(binSkus)
+      .where(
+        sql`${binSkus.binId} = ${binSku.binId} AND ${binSkus.skuId} = ${binSku.skuId}`
+      )
+      .limit(1);
+
+    if (existing.length > 0) {
+      // If it exists, add to the existing quantity
+      const newQuantity = existing[0].quantity + binSku.quantity;
+      const [updated] = await db
+        .update(binSkus)
+        .set({ quantity: newQuantity })
+        .where(
+          sql`${binSkus.binId} = ${binSku.binId} AND ${binSkus.skuId} = ${binSku.skuId}`
+        )
+        .returning();
+      return updated;
+    } else {
+      // If it doesn't exist, create a new record
+      const [newBinSku] = await db.insert(binSkus).values(binSku).returning();
+      return newBinSku;
+    }
   }
 
   async updateBinSkuQuantity(
