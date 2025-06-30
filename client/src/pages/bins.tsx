@@ -22,13 +22,15 @@ export default function Bins() {
   const { toast } = useToast();
 
   // Extract pallet filter from URL query parameters
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const urlParams = new URLSearchParams(window.location.search);
   const palletFilter = urlParams.get('pallet');
   const filteredPalletId = palletFilter ? parseInt(palletFilter) : null;
   
   // Debug logging
   console.log('Bins page - URL params:', {
     fullLocation: location,
+    windowLocation: window.location.href,
+    windowSearch: window.location.search,
     urlParams: Object.fromEntries(urlParams.entries()),
     palletFilter,
     filteredPalletId
