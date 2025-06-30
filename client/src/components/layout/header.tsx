@@ -10,26 +10,26 @@ const pageConfig = {
   },
   "/warehouses": {
     title: "Warehouses",
-    breadcrumb: ["Inventory", "Warehouses"],
+    breadcrumb: ["Warehouses"],
   },
   "/pallets": {
     title: "Pallets",
-    breadcrumb: ["Inventory", "Pallets"],
+    breadcrumb: ["Pallets"],
   },
   "/bins": {
     title: "Bins",
-    breadcrumb: ["Inventory", "Bins"],
+    breadcrumb: ["Bins"],
   },
   "/skus": {
     title: "SKUs",
-    breadcrumb: ["Inventory", "SKUs"],
+    breadcrumb: ["SKUs"],
   },
 };
 
 export function Header() {
   const [location] = useLocation();
   const config = pageConfig[location as keyof typeof pageConfig] || {
-    title: "Inventory Tracker",
+    title: "",
     breadcrumb: ["Dashboard"],
   };
 
