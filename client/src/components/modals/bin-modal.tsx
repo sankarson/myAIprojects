@@ -169,42 +169,56 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       return response.json();
     },
     onSuccess: async () => {
-      // Update bin SKUs
-      const currentSkus = binDetails?.binSkus || [];
-      
-      // Remove SKUs that are no longer in the list
-      for (const currentSku of currentSkus) {
-        if (!binSkus.find(bs => bs.skuId === currentSku.skuId)) {
-          await apiRequest("DELETE", `/api/bins/${bin!.id}/skus/${currentSku.skuId}`);
+      try {
+        // Update bin SKUs
+        const currentSkus = binDetails?.binSkus || [];
+        console.log("Current SKUs in bin:", currentSkus);
+        console.log("New SKUs to save:", binSkus);
+        
+        // Remove SKUs that are no longer in the list
+        for (const currentSku of currentSkus) {
+          if (!binSkus.find(bs => bs.skuId === currentSku.skuId)) {
+            console.log("Removing SKU:", currentSku.skuId);
+            await apiRequest("DELETE", `/api/bins/${bin!.id}/skus/${currentSku.skuId}`);
+          }
         }
-      }
-      
-      // Add or update SKUs
-      for (const binSku of binSkus) {
-        if (binSku.quantity > 0) {
-          const existing = currentSkus.find(cs => cs.skuId === binSku.skuId);
-          if (existing) {
-            if (existing.quantity !== binSku.quantity) {
-              await apiRequest("PUT", `/api/bins/${bin!.id}/skus/${binSku.skuId}`, {
+        
+        // Add or update SKUs
+        for (const binSku of binSkus) {
+          if (binSku.quantity > 0) {
+            const existing = currentSkus.find(cs => cs.skuId === binSku.skuId);
+            if (existing) {
+              if (existing.quantity !== binSku.quantity) {
+                console.log("Updating SKU quantity:", binSku.skuId, "from", existing.quantity, "to", binSku.quantity);
+                await apiRequest("PUT", `/api/bins/${bin!.id}/skus/${binSku.skuId}`, {
+                  quantity: binSku.quantity,
+                });
+              }
+            } else {
+              console.log("Adding new SKU:", binSku.skuId, "with quantity:", binSku.quantity);
+              await apiRequest("POST", `/api/bins/${bin!.id}/skus`, {
+                skuId: binSku.skuId,
                 quantity: binSku.quantity,
               });
             }
-          } else {
-            await apiRequest("POST", `/api/bins/${bin!.id}/skus`, {
-              skuId: binSku.skuId,
-              quantity: binSku.quantity,
-            });
           }
         }
+        
+        queryClient.invalidateQueries({ queryKey: ["/api/bins"] });
+        queryClient.invalidateQueries({ queryKey: ["/api/bins", bin!.id] });
+        toast({
+          title: "Success",
+          description: "Bin updated successfully",
+        });
+        onClose();
+      } catch (error) {
+        console.error("Error updating bin SKUs:", error);
+        toast({
+          title: "Error",
+          description: "Failed to update bin SKUs",
+          variant: "destructive",
+        });
       }
-      
-      queryClient.invalidateQueries({ queryKey: ["/api/bins"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/bins", bin!.id] });
-      toast({
-        title: "Success",
-        description: "Bin updated successfully",
-      });
-      onClose();
     },
     onError: () => {
       toast({
