@@ -11,9 +11,11 @@ export default function BinDetail() {
   const binId = new URLSearchParams(window.location.search).get('id');
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
-    queryKey: ["/api/bins", binId],
+    queryKey: [`/api/bins/${binId}`],
     enabled: !!binId,
   });
+
+
 
   if (isLoading) {
     return (
