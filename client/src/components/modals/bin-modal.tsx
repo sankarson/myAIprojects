@@ -228,6 +228,10 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       sku => !binSkus.find(bs => bs.skuId === sku.id)
     ) || [];
     
+    console.log('Available SKUs:', availableSkus);
+    console.log('Current binSkus:', binSkus);
+    console.log('All SKUs:', skus);
+    
     if (availableSkus.length === 0) {
       toast({
         title: "No SKUs available",
@@ -237,14 +241,23 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       return;
     }
     
+    const newBinSku = {
+      skuId: availableSkus[0].id,
+      quantity: 1,
+      sku: availableSkus[0],
+    };
+    
+    console.log('Adding new SKU:', newBinSku);
+    
     setBinSkus([
       ...binSkus,
-      {
-        skuId: availableSkus[0].id,
-        quantity: 1,
-        sku: availableSkus[0],
-      },
+      newBinSku,
     ]);
+    
+    toast({
+      title: "SKU Added",
+      description: `Added ${availableSkus[0].name || availableSkus[0].skuNumber} to bin`,
+    });
   };
 
   const removeSku = (skuId: number) => {
