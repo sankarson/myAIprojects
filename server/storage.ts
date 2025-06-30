@@ -137,11 +137,23 @@ export class DatabaseStorage implements IStorage {
     id: number,
     warehouse: Partial<InsertWarehouse>
   ): Promise<Warehouse> {
+    // Get original values before updating
+    const [original] = await db.select().from(warehouses).where(eq(warehouses.id, id));
+    
     const [updated] = await db
       .update(warehouses)
       .set(warehouse)
       .where(eq(warehouses.id, id))
       .returning();
+    
+    // Build change description
+    const changes: string[] = [];
+    if (warehouse.name && warehouse.name !== original.name) {
+      changes.push(`name: "${original.name}" → "${warehouse.name}"`);
+    }
+    if (warehouse.address && warehouse.address !== original.address) {
+      changes.push(`address: "${original.address}" → "${warehouse.address}"`);
+    }
     
     // Log activity
     await this.logActivity({
@@ -149,7 +161,7 @@ export class DatabaseStorage implements IStorage {
       entityType: "warehouse",
       entityId: updated.id,
       entityName: updated.name,
-      description: `Updated warehouse "${updated.name}"`
+      description: `Updated warehouse "${updated.name}"${changes.length > 0 ? ` (${changes.join(', ')})` : ''}`
     });
     
     return updated;
@@ -211,11 +223,26 @@ export class DatabaseStorage implements IStorage {
     id: number,
     pallet: Partial<InsertPallet>
   ): Promise<Pallet> {
+    // Get original values before updating
+    const [original] = await db.select().from(pallets).where(eq(pallets.id, id));
+    
     const [updated] = await db
       .update(pallets)
       .set(pallet)
       .where(eq(pallets.id, id))
       .returning();
+    
+    // Build change description
+    const changes: string[] = [];
+    if (pallet.name && pallet.name !== original.name) {
+      changes.push(`name: "${original.name}" → "${pallet.name}"`);
+    }
+    if (pallet.warehouseId && pallet.warehouseId !== original.warehouseId) {
+      changes.push(`warehouse: ${original.warehouseId || 'none'} → ${pallet.warehouseId}`);
+    }
+    if (pallet.locationCode && pallet.locationCode !== original.locationCode) {
+      changes.push(`location: "${original.locationCode || 'none'}" → "${pallet.locationCode}"`);
+    }
     
     // Log activity
     await this.logActivity({
@@ -223,7 +250,7 @@ export class DatabaseStorage implements IStorage {
       entityType: "pallet",
       entityId: updated.id,
       entityName: updated.name || updated.palletNumber,
-      description: `Updated pallet "${updated.name || updated.palletNumber}"`
+      description: `Updated pallet "${updated.name || updated.palletNumber}"${changes.length > 0 ? ` (${changes.join(', ')})` : ''}`
     });
     
     return updated;
@@ -300,11 +327,26 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateBin(id: number, bin: Partial<InsertBin>): Promise<Bin> {
+    // Get original values before updating
+    const [original] = await db.select().from(bins).where(eq(bins.id, id));
+    
     const [updated] = await db
       .update(bins)
       .set(bin)
       .where(eq(bins.id, id))
       .returning();
+    
+    // Build change description
+    const changes: string[] = [];
+    if (bin.name && bin.name !== original.name) {
+      changes.push(`name: "${original.name}" → "${bin.name}"`);
+    }
+    if (bin.palletId && bin.palletId !== original.palletId) {
+      changes.push(`pallet: ${original.palletId || 'none'} → ${bin.palletId}`);
+    }
+    if (bin.imageUrl !== undefined && bin.imageUrl !== original.imageUrl) {
+      changes.push(`image: ${original.imageUrl ? 'updated' : 'added'}`);
+    }
     
     // Log activity
     await this.logActivity({
@@ -312,7 +354,7 @@ export class DatabaseStorage implements IStorage {
       entityType: "bin",
       entityId: updated.id,
       entityName: updated.name || updated.binNumber,
-      description: `Updated bin "${updated.name || updated.binNumber}"`
+      description: `Updated bin "${updated.name || updated.binNumber}"${changes.length > 0 ? ` (${changes.join(', ')})` : ''}`
     });
     
     return updated;
@@ -388,11 +430,29 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateSku(id: number, sku: Partial<InsertSku>): Promise<Sku> {
+    // Get original values before updating
+    const [original] = await db.select().from(skus).where(eq(skus.id, id));
+    
     const [updated] = await db
       .update(skus)
       .set(sku)
       .where(eq(skus.id, id))
       .returning();
+    
+    // Build change description
+    const changes: string[] = [];
+    if (sku.name && sku.name !== original.name) {
+      changes.push(`name: "${original.name}" → "${sku.name}"`);
+    }
+    if (sku.description && sku.description !== original.description) {
+      changes.push(`description: "${original.description || 'none'}" → "${sku.description}"`);
+    }
+    if (sku.price && sku.price !== original.price) {
+      changes.push(`price: ₹${original.price} → ₹${sku.price}`);
+    }
+    if (sku.imageUrl !== undefined && sku.imageUrl !== original.imageUrl) {
+      changes.push(`image: ${original.imageUrl ? 'updated' : 'added'}`);
+    }
     
     // Log activity
     await this.logActivity({
@@ -400,7 +460,7 @@ export class DatabaseStorage implements IStorage {
       entityType: "sku",
       entityId: updated.id,
       entityName: updated.name,
-      description: `Updated SKU "${updated.name}"`
+      description: `Updated SKU "${updated.name}"${changes.length > 0 ? ` (${changes.join(', ')})` : ''}`
     });
     
     return updated;
@@ -472,6 +532,15 @@ export class DatabaseStorage implements IStorage {
     skuId: number,
     quantity: number
   ): Promise<BinSku> {
+    // Get original quantity before updating
+    const [original] = await db
+      .select()
+      .from(binSkus)
+      .where(
+        sql`${binSkus.binId} = ${binId} AND ${binSkus.skuId} = ${skuId}`
+      )
+      .limit(1);
+    
     const [updated] = await db
       .update(binSkus)
       .set({ quantity })
@@ -479,6 +548,26 @@ export class DatabaseStorage implements IStorage {
         sql`${binSkus.binId} = ${binId} AND ${binSkus.skuId} = ${skuId}`
       )
       .returning();
+    
+    // Get SKU and Bin names for logging
+    const [sku] = await db.select().from(skus).where(eq(skus.id, skuId));
+    const [bin] = await db.select().from(bins).where(eq(bins.id, binId));
+    
+    // Log activity with quantity change
+    if (original) {
+      const quantityChange = quantity - original.quantity;
+      const changeType = quantityChange > 0 ? 'increased' : 'decreased';
+      const changeAmount = Math.abs(quantityChange);
+      
+      await this.logActivity({
+        action: "UPDATE",
+        entityType: "inventory",
+        entityId: binId,
+        entityName: `${sku?.name || 'Unknown SKU'} in ${bin?.name || bin?.binNumber || 'Unknown Bin'}`,
+        description: `${changeType === 'increased' ? 'Increased' : 'Decreased'} quantity of "${sku?.name || 'Unknown SKU'}" in bin "${bin?.name || bin?.binNumber || 'Unknown Bin'}" by ${changeAmount} units (${original.quantity} → ${quantity})`
+      });
+    }
+    
     return updated;
   }
 
