@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Extended image upload functionality to bins, replacing URL input with drag-and-drop interface for both SKUs and bins
 - June 30, 2025: Implemented image upload functionality replacing URL input with drag-and-drop file upload interface
 - June 30, 2025: Simplified SKU table to show only names (removed internal ID column) and fixed mobile hamburger menu positioning
 - June 30, 2025: Updated SKU pricing to use Indian rupees (₹) instead of dollars across forms and displays
