@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { ArrowLeft, Package, MapPin, Edit, Trash2, Check, X, Plus } from "lucide-react";
+import { Package, MapPin, Edit, Trash2, Check, X, Plus } from "lucide-react";
 import { type BinWithSkus, type Sku, insertBinSkuSchema } from "@shared/schema";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -181,10 +181,7 @@ export default function BinDetail() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Bin Not Found</h1>
-          <Button onClick={() => setLocation("/bins")}>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Bins
-          </Button>
+          <p className="text-gray-500">The requested bin could not be found.</p>
         </div>
       </div>
     );
@@ -197,14 +194,6 @@ export default function BinDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
-              <Button 
-                variant="ghost" 
-                onClick={() => setLocation("/bins")}
-                className="mr-4"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Bins
-              </Button>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
                   {bin.name || bin.binNumber}
