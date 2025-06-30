@@ -152,7 +152,7 @@ export default function Pallets() {
                             <span 
                               className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
                               onClick={() => {
-                                window.location.href = `/bins?pallet=${pallet.id}`;
+                                window.location.href = `/pallet-detail?id=${pallet.id}`;
                               }}
                             >
                               {pallet.name || pallet.palletNumber}

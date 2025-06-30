@@ -8,6 +8,7 @@ import Warehouses from "@/pages/warehouses";
 import Pallets from "@/pages/pallets";
 import Bins from "@/pages/bins";
 import BinDetail from "@/pages/bin-detail";
+import PalletDetail from "@/pages/pallet-detail";
 import Skus from "@/pages/skus";
 import NotFound from "@/pages/not-found";
 import { Sidebar } from "@/components/layout/sidebar";
@@ -27,6 +28,7 @@ function Router() {
               <Route path="/pallets" component={Pallets} />
               <Route path="/bins" component={Bins} />
               <Route path="/bin-detail" component={BinDetail} />
+              <Route path="/pallet-detail" component={PalletDetail} />
               <Route path="/skus" component={Skus} />
               <Route component={NotFound} />
             </Switch>
