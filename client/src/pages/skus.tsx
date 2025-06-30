@@ -130,9 +130,8 @@ export default function Skus() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>SKU ID</TableHead>
                     <TableHead>Name</TableHead>
-                    <TableHead>Description</TableHead>
+                    <TableHead className="hidden sm:table-cell">Description</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Actions</TableHead>
                   </TableRow>
@@ -140,11 +139,6 @@ export default function Skus() {
                 <TableBody>
                   {filteredSkus.map((sku) => (
                     <TableRow key={sku.id} className="hover:bg-gray-50">
-                      <TableCell>
-                        <span className="font-mono text-sm font-medium">
-                          {sku.skuNumber}
-                        </span>
-                      </TableCell>
                       <TableCell>
                         <div className="flex items-center">
                           {sku.imageUrl ? (
@@ -160,12 +154,17 @@ export default function Skus() {
                               </svg>
                             </div>
                           )}
-                          <span className="text-sm font-medium text-gray-900">
-                            {sku.name}
-                          </span>
+                          <div>
+                            <span className="text-sm font-medium text-gray-900">
+                              {sku.name}
+                            </span>
+                            <div className="sm:hidden text-xs text-gray-500 mt-1">
+                              {sku.description || "No description"}
+                            </div>
+                          </div>
                         </div>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <span className="text-sm text-gray-900">
                           {sku.description || "—"}
                         </span>

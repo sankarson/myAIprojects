@@ -46,7 +46,7 @@ export function Sidebar() {
           variant="ghost"
           size="sm"
           onClick={() => setIsMobileOpen(true)}
-          className="fixed top-4 left-4 z-50 md:hidden bg-white shadow-md"
+          className="fixed top-6 left-4 z-50 md:hidden bg-white shadow-md"
         >
           <Menu className="h-5 w-5" />
         </Button>
