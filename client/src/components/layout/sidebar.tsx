@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Building, Package, Box, BarChart3, Warehouse, Search, FileText, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { Building, Package, Box, BarChart3, Warehouse, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -12,10 +12,7 @@ const navigationItems = [
   { name: "SKUs", path: "/skus", icon: Warehouse },
 ];
 
-const toolItems = [
-  { name: "Search Inventory", path: "/search", icon: Search },
-  { name: "Export Data", path: "/export", icon: FileText },
-];
+
 
 export function Sidebar() {
   const [location] = useLocation();
@@ -98,26 +95,6 @@ export function Sidebar() {
                       </Link>
                     );
                   })}
-                  
-                  <div className="mt-6">
-                    <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                      Tools
-                    </h3>
-                    <div className="mt-2 space-y-1">
-                      {toolItems.map((item) => {
-                        const Icon = item.icon;
-                        
-                        return (
-                          <Link key={item.path} href={item.path}>
-                            <div className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-blue-50/50 transition-colors cursor-pointer">
-                              <Icon className="mr-3 h-4 w-4" />
-                              {item.name}
-                            </div>
-                          </Link>
-                        );
-                      })}
-                    </div>
-                  </div>
                 </div>
               </nav>
             </div>
@@ -171,46 +148,6 @@ export function Sidebar() {
               </Link>
             );
           })}
-          
-          {!isCollapsed && (
-            <div className="mt-6">
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Tools
-              </h3>
-              <div className="mt-2 space-y-1">
-                {toolItems.map((item) => {
-                  const Icon = item.icon;
-                  
-                  return (
-                    <Link key={item.path} href={item.path}>
-                      <div className="group flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-blue-50/50 transition-colors cursor-pointer">
-                        <Icon className="mr-3 h-4 w-4" />
-                        {item.name}
-                      </div>
-                    </Link>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-          {isCollapsed && (
-            <div className="mt-6 space-y-1">
-              {toolItems.map((item) => {
-                const Icon = item.icon;
-                
-                return (
-                  <Link key={item.path} href={item.path}>
-                    <div 
-                      className="group flex items-center px-2 py-3 justify-center text-sm font-medium text-gray-700 rounded-md hover:text-gray-900 hover:bg-blue-50/50 transition-colors cursor-pointer"
-                      title={item.name}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
         </div>
       </nav>
     </div>
