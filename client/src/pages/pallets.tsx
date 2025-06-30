@@ -149,11 +149,15 @@ export default function Pallets() {
                         <div className="flex items-center">
                           <Package className="h-5 w-5 text-green-600 mr-3" />
                           <div>
-                            <Link href={`/bins?pallet=${pallet.id}`}>
-                              <span className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline">
-                                {pallet.name || pallet.palletNumber}
-                              </span>
-                            </Link>
+                            <span 
+                              className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                              onClick={() => {
+                                console.log('Navigating to:', `/bins?pallet=${pallet.id}`);
+                                window.location.href = `/bins?pallet=${pallet.id}`;
+                              }}
+                            >
+                              {pallet.name || pallet.palletNumber}
+                            </span>
                             <div className="sm:hidden text-xs text-gray-500 mt-1">
                               {getWarehouseName(pallet.warehouseId)}
                               {pallet.locationCode && (
