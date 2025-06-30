@@ -246,28 +246,28 @@ export default function BinDetail() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="max-w-4xl">
           {/* SKUs List */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Package className="h-5 w-5 mr-2" />
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <Package className="h-4 w-4 mr-2" />
                   SKUs in this Bin ({bin.binSkus?.length || 0})
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="pt-0">
                 {bin.binSkus && bin.binSkus.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     {bin.binSkus.map((binSku, index) => (
                       <div
                         key={index}
-                        className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                        className="border rounded-md p-3 hover:bg-gray-50 transition-colors"
                       >
-                        <div className="flex items-start space-x-4">
+                        <div className="flex items-center space-x-3">
                           {/* SKU Image */}
-                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
                             {binSku.sku?.imageUrl ? (
                               <img
                                 src={binSku.sku.imageUrl}
@@ -276,82 +276,75 @@ export default function BinDetail() {
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <Package className="h-6 w-6 text-gray-400" />
+                                <Package className="h-4 w-4 text-gray-400" />
                               </div>
                             )}
                           </div>
 
                           {/* SKU Details */}
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between">
-                              <div>
-                                <h3 className="font-medium text-gray-900 truncate">
+                            <div className="flex items-center justify-between">
+                              <div className="min-w-0 flex-1">
+                                <h3 className="font-medium text-gray-900 truncate text-sm">
                                   {binSku.sku?.name || "Unknown SKU"}
                                 </h3>
-                                <p className="text-sm text-gray-500 mt-1">
+                                <p className="text-xs text-gray-500 truncate">
                                   {binSku.sku?.skuNumber}
                                 </p>
-                                {binSku.sku?.description && (
-                                  <p className="text-sm text-gray-600 mt-2 line-clamp-2">
-                                    {binSku.sku.description}
-                                  </p>
-                                )}
                               </div>
-                              <div className="flex flex-col items-end ml-4">
-                                <div className="flex items-center space-x-2">
-                                  {editingSkuId === binSku.sku?.id ? (
-                                    <div className="flex items-center space-x-1">
-                                      <Input
-                                        type="number"
-                                        value={editQuantity}
-                                        onChange={(e) => setEditQuantity(e.target.value)}
-                                        className="w-16 h-8 text-sm"
-                                        min="1"
-                                        autoFocus
-                                      />
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => handleSaveQuantity(bin.id, binSku.sku!.id)}
-                                        disabled={updateQuantityMutation.isPending}
-                                        className="h-8 w-8 p-0 text-green-600 hover:text-green-700"
-                                      >
-                                        <Check className="h-4 w-4" />
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={handleCancelEdit}
-                                        className="h-8 w-8 p-0 text-gray-600 hover:text-gray-700"
-                                      >
-                                        <X className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  ) : (
-                                    <div className="flex items-center space-x-1">
-                                      <Badge variant="secondary" className="text-lg px-3 py-1">
-                                        Qty: {binSku.quantity}
-                                      </Badge>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => handleEditQuantity(binSku.sku!.id, binSku.quantity)}
-                                        className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700"
-                                      >
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() => handleRemoveSku(bin.id, binSku.sku!.id, binSku.sku!.name)}
-                                        disabled={removeSkuMutation.isPending}
-                                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                                      >
-                                        <Trash2 className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                  )}
-                                </div>
+                              <div className="flex items-center space-x-1 ml-2">
+                                {editingSkuId === binSku.sku?.id ? (
+                                  <div className="flex items-center space-x-1">
+                                    <Input
+                                      type="number"
+                                      value={editQuantity}
+                                      onChange={(e) => setEditQuantity(e.target.value)}
+                                      className="w-14 h-7 text-xs"
+                                      min="1"
+                                      autoFocus
+                                    />
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleSaveQuantity(bin.id, binSku.sku!.id)}
+                                      disabled={updateQuantityMutation.isPending}
+                                      className="h-7 w-7 p-0 text-green-600 hover:text-green-700"
+                                    >
+                                      <Check className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={handleCancelEdit}
+                                      className="h-7 w-7 p-0 text-gray-600 hover:text-gray-700"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center space-x-1">
+                                    <Badge variant="secondary" className="text-sm px-2 py-0.5">
+                                      {binSku.quantity}
+                                    </Badge>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleEditQuantity(binSku.sku!.id, binSku.quantity)}
+                                      className="h-7 w-7 p-0 text-blue-600 hover:text-blue-700"
+                                    >
+                                      <Edit className="h-3 w-3" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      onClick={() => handleRemoveSku(bin.id, binSku.sku!.id, binSku.sku!.name)}
+                                      disabled={removeSkuMutation.isPending}
+                                      className="h-7 w-7 p-0 text-red-600 hover:text-red-700"
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                )}
                               </div>
                             </div>
                           </div>
@@ -360,10 +353,10 @@ export default function BinDetail() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No SKUs</h3>
-                    <p className="text-gray-500">This bin doesn't contain any SKUs yet.</p>
+                  <div className="text-center py-6">
+                    <Package className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                    <h3 className="text-base font-medium text-gray-900 mb-1">No SKUs</h3>
+                    <p className="text-sm text-gray-500">This bin doesn't contain any SKUs yet.</p>
                   </div>
                 )}
               </CardContent>
