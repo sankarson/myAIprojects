@@ -194,6 +194,20 @@ export default function BinDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
+              {/* Bin Image Icon */}
+              <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 mr-4">
+                {bin.imageUrl ? (
+                  <img
+                    src={bin.imageUrl}
+                    alt={bin.name || bin.binNumber}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <Package className="h-6 w-6 text-gray-400" />
+                  </div>
+                )}
+              </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-900">
                   {bin.name || bin.binNumber}
@@ -225,37 +239,7 @@ export default function BinDetail() {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Bin Image */}
-          <div className="space-y-4">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Package className="h-5 w-5 mr-2" />
-                  Bin Image
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {bin.imageUrl ? (
-                  <div className="aspect-square w-full bg-gray-100 rounded-lg overflow-hidden">
-                    <img
-                      src={bin.imageUrl}
-                      alt={bin.name || bin.binNumber}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-square w-full bg-gray-100 rounded-lg flex items-center justify-center">
-                    <div className="text-center">
-                      <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-500">No image available</p>
-                    </div>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
-
+        <div className="max-w-4xl">
           {/* SKUs List */}
           <div className="space-y-4">
             <Card>

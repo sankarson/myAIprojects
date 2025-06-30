@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- June 30, 2025: Moved bin image from large card to small icon beside bin name in header, removed dedicated image card
 - June 30, 2025: Removed "Back to Bins" navigation link from bin detail view for cleaner interface
 - June 30, 2025: Added "Add SKU" dialog on bin detail view with SKU selection and quantity input, leverages additive quantity logic
 - June 30, 2025: Implemented additive quantity logic - when adding an SKU that already exists in a bin, quantities are added together
