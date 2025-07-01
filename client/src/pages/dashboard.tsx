@@ -223,34 +223,34 @@ export default function Dashboard() {
                 };
 
                 return (
-                  <div key={activity.id} className="p-2 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start space-x-2">
-                      <div className={`p-1.5 rounded-full ${getBgColor(activity.action)}`}>
-                        {getIcon(activity.action)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900">
+                  <div key={activity.id} className="px-3 py-1.5 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2 flex-1 min-w-0">
+                        <div className={`p-1 rounded-full ${getBgColor(activity.action)}`}>
+                          {getIcon(activity.action)}
+                        </div>
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {activity.description}
                         </p>
-                        <p className="text-xs text-gray-500 mt-0.5">
-                          {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
-                        </p>
                       </div>
+                      <p className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                        {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                      </p>
                     </div>
                   </div>
                 );
               })}
               {hasMore && (
-                <div className="p-3 border-t border-gray-200">
+                <div className="px-3 py-2 border-t border-gray-200">
                   {activitiesLoading && offset > 0 ? (
                     <div className="flex items-center justify-center space-x-2 text-gray-500">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-300"></div>
-                      <span className="text-sm">Loading more...</span>
+                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-300"></div>
+                      <span className="text-xs">Loading more...</span>
                     </div>
                   ) : (
                     <button
                       onClick={() => setOffset(prev => prev + 20)}
-                      className="w-full py-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      className="w-full py-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium"
                       disabled={activitiesLoading}
                     >
                       Load More Activities
