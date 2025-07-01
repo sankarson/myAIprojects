@@ -9,6 +9,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft, Upload, FileDown } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
@@ -24,6 +25,8 @@ export default function Skus() {
   const [importFile, setImportFile] = useState<File | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [skuToDelete, setSkuToDelete] = useState<Sku | null>(null);
+  const [selectedSkus, setSelectedSkus] = useState<Set<number>>(new Set());
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
   const [location] = useLocation();
   const { toast } = useToast();
 
@@ -64,6 +67,29 @@ export default function Skus() {
       toast({
         title: "Error",
         description: "Failed to delete SKU",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const bulkDeleteMutation = useMutation({
+    mutationFn: async (ids: number[]) => {
+      await Promise.all(ids.map(id => apiRequest("DELETE", `/api/skus/${id}`)));
+    },
+    onSuccess: (_, ids) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
+      setSelectedSkus(new Set());
+      toast({
+        title: "Success",
+        description: `${ids.length} SKUs deleted successfully`,
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to delete selected SKUs",
         variant: "destructive",
       });
     },
@@ -179,6 +205,36 @@ export default function Skus() {
     setEditingSku(null);
   };
 
+  const handleSelectSku = (skuId: number, checked: boolean) => {
+    const newSelection = new Set(selectedSkus);
+    if (checked) {
+      newSelection.add(skuId);
+    } else {
+      newSelection.delete(skuId);
+    }
+    setSelectedSkus(newSelection);
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      const allSkuIds = new Set(filteredSkus.map(sku => sku.id));
+      setSelectedSkus(allSkuIds);
+    } else {
+      setSelectedSkus(new Set());
+    }
+  };
+
+  const handleBulkDelete = () => {
+    setBulkDeleteConfirmOpen(true);
+  };
+
+  const confirmBulkDelete = () => {
+    if (selectedSkus.size > 0) {
+      bulkDeleteMutation.mutate(Array.from(selectedSkus));
+      setBulkDeleteConfirmOpen(false);
+    }
+  };
+
   return (
     <>
       {filteredBinId && (
@@ -246,6 +302,29 @@ export default function Skus() {
                 Import CSV
               </Button>
             </div>
+            {selectedSkus.size > 0 && (
+              <div className="flex items-center space-x-2 mt-3 pt-3 border-t">
+                <Badge variant="secondary">
+                  {selectedSkus.size} selected
+                </Badge>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleteMutation.isPending}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete Selected"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedSkus(new Set())}
+                >
+                  Clear Selection
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -289,6 +368,13 @@ export default function Skus() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="py-3 w-12">
+                      <Checkbox
+                        checked={selectedSkus.size === filteredSkus.length && filteredSkus.length > 0}
+                        onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
+                        aria-label="Select all SKUs"
+                      />
+                    </TableHead>
                     <TableHead className="py-3">Name</TableHead>
                     <TableHead className="hidden sm:table-cell py-3">Description</TableHead>
                     <TableHead className="py-3">Price</TableHead>
@@ -298,6 +384,13 @@ export default function Skus() {
                 <TableBody>
                   {filteredSkus.map((sku) => (
                     <TableRow key={sku.id} className="hover:bg-gray-50">
+                      <TableCell className="py-2">
+                        <Checkbox
+                          checked={selectedSkus.has(sku.id)}
+                          onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
+                          aria-label={`Select ${sku.name}`}
+                        />
+                      </TableCell>
                       <TableCell className="py-2">
                         <div className="flex items-center">
                           {sku.imageUrl ? (
@@ -460,6 +553,28 @@ export default function Skus() {
               className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={bulkDeleteConfirmOpen} onOpenChange={setBulkDeleteConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Multiple SKUs</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {selectedSkus.size} selected SKU{selectedSkus.size !== 1 ? 's' : ''}? This action cannot be undone and will remove all selected SKUs from all bins.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setBulkDeleteConfirmOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmBulkDelete}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            >
+              Delete {selectedSkus.size} SKU{selectedSkus.size !== 1 ? 's' : ''}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
