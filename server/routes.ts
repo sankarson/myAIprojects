@@ -50,6 +50,25 @@ const upload = multer({
   }
 });
 
+// Configure multer for CSV uploads
+const csvUpload = multer({
+  storage: storage_multer,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = /csv/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = file.mimetype === 'text/csv' || file.mimetype === 'application/csv';
+    
+    if (mimetype || extname) {
+      return cb(null, true);
+    } else {
+      cb(new Error('Only CSV files are allowed'));
+    }
+  }
+});
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Serve uploaded files statically
   const staticPath = path.join(process.cwd(), 'uploads');
@@ -355,7 +374,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // SKU CSV Import
-  app.post("/api/skus/import", upload.single('csvFile'), async (req, res) => {
+  app.post("/api/skus/import", csvUpload.single('csvFile'), async (req, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ error: "No CSV file uploaded" });
