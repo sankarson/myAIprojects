@@ -448,21 +448,7 @@ export default function Skus() {
                         )}
                       </Button>
                     </TableHead>
-                    <TableHead className="hidden md:table-cell py-3">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-auto p-0 font-semibold hover:bg-transparent"
-                        onClick={() => handleSort('description')}
-                      >
-                        Description
-                        {sortField === 'description' && (
-                          sortDirection === 'asc' ? 
-                            <ChevronUp className="ml-1 h-4 w-4" /> : 
-                            <ChevronDown className="ml-1 h-4 w-4" />
-                        )}
-                      </Button>
-                    </TableHead>
+
                     <TableHead className="py-3">
                       <Button
                         variant="ghost"
@@ -523,11 +509,7 @@ export default function Skus() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="hidden md:table-cell py-2">
-                        <span className="text-sm text-gray-900">
-                          {sku.description || "—"}
-                        </span>
-                      </TableCell>
+
                       <TableCell className="py-2">
                         {sku.price ? (
                           <span className="text-sm font-medium text-gray-900">
