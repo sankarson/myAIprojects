@@ -85,9 +85,9 @@ export default function Skus() {
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       
-      let description = `Imported ${data.imported} SKUs successfully`;
-      if (data.skipped > 0) {
-        description += `. Skipped ${data.skipped} duplicate SKUs`;
+      let description = `Imported ${data.imported} new SKUs successfully`;
+      if (data.updated > 0) {
+        description += `. Updated ${data.updated} existing SKUs`;
       }
       
       toast({
@@ -367,7 +367,7 @@ export default function Skus() {
           <DialogHeader>
             <DialogTitle>Import SKUs from CSV</DialogTitle>
             <DialogDescription>
-              Upload a CSV file with name and description columns to import SKUs. Optional price column supported. Column headers are case insensitive. SKU numbers will be auto-generated. Duplicate SKU names will be automatically skipped.
+              Upload a CSV file with name and description columns to import SKUs. Optional price column supported. Column headers are case insensitive. SKU numbers will be auto-generated. Existing SKUs will be updated with new data.
             </DialogDescription>
           </DialogHeader>
           

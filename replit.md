@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Changed CSV import behavior to update existing SKUs instead of skipping them - when SKU names match, description and price fields are updated with new CSV data
 - July 1, 2025: Added price field support to CSV import facility - allows importing SKUs with pricing information, validates numeric values, and handles optional price column
 - July 1, 2025: Made SKUs screen more compact by reducing row height, spacing between elements, and table padding for improved density
 - July 1, 2025: Added duplicate detection to CSV import - SKUs with matching names are automatically skipped to prevent duplicates (case insensitive comparison)

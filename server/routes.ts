@@ -457,21 +457,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No valid data found in CSV file" });
       }
 
-      // Check for existing SKUs to avoid duplicates
+      // Check for existing SKUs to update them instead of skipping
       const existingSkus = await storage.getSkus();
-      const existingNames = new Set(existingSkus.map(sku => sku.name.toLowerCase()));
+      const existingSkusMap = new Map(existingSkus.map(sku => [sku.name.toLowerCase(), sku]));
       
-      // Import SKUs, skipping duplicates
+      // Import SKUs, updating existing ones
       const createdSkus = [];
-      const skippedSkus = [];
+      const updatedSkus = [];
       
       for (const skuData of results) {
-        // Skip if SKU name already exists (case insensitive comparison)
-        if (existingNames.has(skuData.name.toLowerCase())) {
-          skippedSkus.push(skuData.name);
+        // Check if SKU name already exists (case insensitive comparison)
+        const existingSku = existingSkusMap.get(skuData.name.toLowerCase());
+        
+        if (existingSku) {
+          // Update existing SKU with new data
+          try {
+            const updatedSku = await storage.updateSku(existingSku.id, {
+              description: skuData.description,
+              price: skuData.price || existingSku.price, // Keep existing price if not provided
+            });
+            updatedSkus.push(updatedSku);
+          } catch (error) {
+            console.error("Error updating SKU:", error);
+            errors.push(`Failed to update SKU: ${skuData.name}`);
+          }
           continue;
         }
         
+        // Create new SKU
         try {
           const sku = await storage.createSku({
             name: skuData.name,
@@ -480,8 +493,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             imageUrl: ""
           });
           createdSkus.push(sku);
-          // Add to existing names set to prevent duplicates within the same import
-          existingNames.add(skuData.name.toLowerCase());
+          // Add to existing names map to prevent duplicates within the same import
+          existingSkusMap.set(skuData.name.toLowerCase(), sku);
         } catch (error) {
           console.error("Error creating SKU:", error);
           errors.push(`Failed to create SKU: ${skuData.name}`);
@@ -491,11 +504,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         imported: createdSkus.length,
-        skipped: skippedSkus.length,
+        updated: updatedSkus.length,
         total: results.length,
         errors: errors.length > 0 ? errors : undefined,
-        skippedNames: skippedSkus.length > 0 ? skippedSkus : undefined,
-        skus: createdSkus
+        createdSkus: createdSkus,
+        updatedSkus: updatedSkus
       });
 
     } catch (error) {
