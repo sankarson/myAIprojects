@@ -63,7 +63,7 @@ export function Sidebar() {
                 <Link href="/" onClick={() => setIsMobileOpen(false)}>
                   <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
                     <Warehouse className="text-primary mr-2" />
-                    Mynx Inventory
+                    MI7
                   </h1>
                 </Link>
                 <Button
@@ -113,7 +113,7 @@ export function Sidebar() {
           <Link href="/">
             <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
               <Warehouse className="text-primary mr-2" />
-              Mynx Inventory
+              MI7
             </h1>
           </Link>
         )}
