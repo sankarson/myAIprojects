@@ -330,57 +330,56 @@ export default function Skus() {
       )}
       <Card className="shadow-md">
         <div className="p-3 lg:p-4 border-b border-gray-200">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-2 lg:space-y-0">
-            <div className="flex flex-col lg:flex-row items-stretch lg:items-center space-y-3 lg:space-y-0 lg:space-x-3">
-              <div className="relative flex-1 lg:flex-none">
+          <div className="space-y-3">
+            <div className="flex space-x-2">
+              <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search SKUs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full lg:w-64"
+                  className="pl-10 w-full"
                 />
               </div>
-              <div className="flex space-x-2">
-                <Button onClick={() => setIsModalOpen(true)} className="flex-1 lg:flex-none">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add SKU
-                </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => setIsImportDialogOpen(true)} 
-                  className="flex-1 lg:flex-none"
-                >
-                  <Upload className="mr-2 h-4 w-4" />
-                  Import CSV
-                </Button>
-              </div>
+              <Button 
+                onClick={() => setIsModalOpen(true)} 
+                size="sm" 
+                className="whitespace-nowrap"
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                Add SKU
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsImportDialogOpen(true)} 
+                size="sm"
+                className="whitespace-nowrap"
+              >
+                <Upload className="mr-1 h-4 w-4" />
+                Import CSV
+              </Button>
             </div>
             {selectedSkus.size > 0 && (
-              <div className="flex flex-col lg:flex-row items-stretch lg:items-center space-y-2 lg:space-y-0 lg:space-x-2 mt-3 pt-3 border-t">
-                <Badge variant="secondary" className="w-fit">
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary">
                   {selectedSkus.size} selected
                 </Badge>
-                <div className="flex space-x-2">
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={handleBulkDelete}
-                    disabled={bulkDeleteMutation.isPending}
-                    className="flex-1 lg:flex-none"
-                  >
-                    <Trash2 className="mr-2 h-4 w-4" />
-                    {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setSelectedSkus(new Set())}
-                    className="flex-1 lg:flex-none"
-                  >
-                    Clear
-                  </Button>
-                </div>
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={handleBulkDelete}
+                  disabled={bulkDeleteMutation.isPending}
+                >
+                  <Trash2 className="mr-1 h-4 w-4" />
+                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setSelectedSkus(new Set())}
+                >
+                  Clear
+                </Button>
               </div>
             )}
           </div>
@@ -558,6 +557,7 @@ export default function Skus() {
           )}
         </CardContent>
       </Card>
+
       <SkuModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
