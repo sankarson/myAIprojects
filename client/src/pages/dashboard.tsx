@@ -93,7 +93,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="h-full flex flex-col space-y-8">
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <Link href="/warehouses">
@@ -170,14 +170,14 @@ export default function Dashboard() {
       </div>
 
       {/* Recent Activity */}
-      <Card className="shadow-md">
+      <Card className="shadow-md flex-1 flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900 flex items-center">
             <Clock className="h-5 w-5 mr-2" />
             Recent Activity
           </h3>
         </div>
-        <CardContent className="p-0">
+        <CardContent className="p-0 flex-1 flex flex-col">
           {activitiesLoading ? (
             <div className="p-3 space-y-2">
               {[...Array(5)].map((_, i) => (
@@ -193,7 +193,7 @@ export default function Dashboard() {
           ) : displayActivities && displayActivities.length > 0 ? (
             <div 
               ref={activityRef}
-              className="divide-y divide-gray-200 max-h-96 overflow-y-auto"
+              className="divide-y divide-gray-200 flex-1 overflow-y-auto"
             >
               {displayActivities.map((activity) => {
                 const getIcon = (action: string) => {
@@ -260,7 +260,7 @@ export default function Dashboard() {
               )}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
+            <div className="text-center py-8 text-gray-500 flex-1 flex flex-col justify-center">
               <Clock className="mx-auto h-12 w-12 text-gray-300 mb-3" />
               <p className="text-sm">No recent activity</p>
               <p className="text-xs mt-1">Activities will appear here as you manage your inventory</p>
