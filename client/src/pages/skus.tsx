@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,6 +22,8 @@ export default function Skus() {
   const [editingSku, setEditingSku] = useState<Sku | null>(null);
   const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
   const [importFile, setImportFile] = useState<File | null>(null);
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [skuToDelete, setSkuToDelete] = useState<Sku | null>(null);
   const [location] = useLocation();
   const { toast } = useToast();
 
@@ -158,9 +161,16 @@ export default function Skus() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this SKU?")) {
-      deleteMutation.mutate(id);
+  const handleDelete = (sku: Sku) => {
+    setSkuToDelete(sku);
+    setDeleteConfirmOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (skuToDelete) {
+      deleteMutation.mutate(skuToDelete.id);
+      setDeleteConfirmOpen(false);
+      setSkuToDelete(null);
     }
   };
 
@@ -340,7 +350,7 @@ export default function Skus() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => handleDelete(sku.id)}
+                            onClick={() => handleDelete(sku)}
                             className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
                           >
                             <Trash2 className="h-4 w-4" />
@@ -429,6 +439,31 @@ export default function Skus() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete SKU</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete "{skuToDelete?.name}"? This action cannot be undone and will remove the SKU from all bins.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => {
+              setDeleteConfirmOpen(false);
+              setSkuToDelete(null);
+            }}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDelete}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
