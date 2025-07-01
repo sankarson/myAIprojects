@@ -440,9 +440,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: "No valid data found in CSV file" });
       }
 
-      // Import SKUs
+      // Check for existing SKUs to avoid duplicates
+      const existingSkus = await storage.getSkus();
+      const existingNames = new Set(existingSkus.map(sku => sku.name.toLowerCase()));
+      
+      // Import SKUs, skipping duplicates
       const createdSkus = [];
+      const skippedSkus = [];
+      
       for (const skuData of results) {
+        // Skip if SKU name already exists (case insensitive comparison)
+        if (existingNames.has(skuData.name.toLowerCase())) {
+          skippedSkus.push(skuData.name);
+          continue;
+        }
+        
         try {
           const sku = await storage.createSku({
             name: skuData.name,
@@ -451,6 +463,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
             imageUrl: ""
           });
           createdSkus.push(sku);
+          // Add to existing names set to prevent duplicates within the same import
+          existingNames.add(skuData.name.toLowerCase());
         } catch (error) {
           console.error("Error creating SKU:", error);
           errors.push(`Failed to create SKU: ${skuData.name}`);
@@ -460,8 +474,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json({
         success: true,
         imported: createdSkus.length,
+        skipped: skippedSkus.length,
         total: results.length,
         errors: errors.length > 0 ? errors : undefined,
+        skippedNames: skippedSkus.length > 0 ? skippedSkus : undefined,
         skus: createdSkus
       });
 

@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Added duplicate detection to CSV import - SKUs with matching names are automatically skipped to prevent duplicates (case insensitive comparison)
 - July 1, 2025: Enhanced CSV import to support case insensitive column headers for better usability (accepts "name"/"Name"/"NAME" and "description"/"Description"/"DESCRIPTION")
 - July 1, 2025: Added CSV import functionality for SKUs with drag-and-drop interface, template download, and auto-generated SKU numbers from name/description fields
 - June 30, 2025: Added automatic activity log refresh - dashboard activity section now updates in real-time when performing any CRUD operations without manual refresh
