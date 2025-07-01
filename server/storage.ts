@@ -489,7 +489,24 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteSku(id: number): Promise<void> {
+    // Get SKU details for activity logging before deletion
+    const sku = await db.select().from(skus).where(eq(skus.id, id)).limit(1);
+    const skuName = sku[0]?.name || `SKU ${id}`;
+    
+    // First delete all bin_skus entries that reference this SKU
+    await db.delete(binSkus).where(eq(binSkus.skuId, id));
+    
+    // Then delete the SKU itself
     await db.delete(skus).where(eq(skus.id, id));
+    
+    // Log the activity
+    await this.logActivity({
+      action: "DELETE",
+      entityType: "sku",
+      entityId: id,
+      entityName: skuName,
+      description: `Deleted SKU "${skuName}" and removed from all bins`
+    });
   }
 
   // BinSku methods

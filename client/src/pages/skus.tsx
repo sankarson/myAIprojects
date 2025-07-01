@@ -74,17 +74,33 @@ export default function Skus() {
 
   const bulkDeleteMutation = useMutation({
     mutationFn: async (ids: number[]) => {
-      await Promise.all(ids.map(id => apiRequest("DELETE", `/api/skus/${id}`)));
+      const results = await Promise.allSettled(
+        ids.map(id => apiRequest("DELETE", `/api/skus/${id}`))
+      );
+      
+      const failures = results.filter(result => result.status === 'rejected').length;
+      const successes = results.filter(result => result.status === 'fulfilled').length;
+      
+      return { successes, failures, total: ids.length };
     },
-    onSuccess: (_, ids) => {
+    onSuccess: (result, ids) => {
       queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
       queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       setSelectedSkus(new Set());
-      toast({
-        title: "Success",
-        description: `${ids.length} SKUs deleted successfully`,
-      });
+      
+      if (result.failures === 0) {
+        toast({
+          title: "Success",
+          description: `${result.successes} SKUs deleted successfully`,
+        });
+      } else {
+        toast({
+          title: "Partial Success",
+          description: `${result.successes} SKUs deleted, ${result.failures} failed`,
+          variant: result.successes > 0 ? "default" : "destructive",
+        });
+      }
     },
     onError: () => {
       toast({
