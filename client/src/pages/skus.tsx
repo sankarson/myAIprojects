@@ -456,7 +456,7 @@ export default function Skus() {
                         className="h-auto p-0 font-semibold hover:bg-transparent"
                         onClick={() => handleSort('price')}
                       >
-                        Price
+                        Unit Price
                         {sortField === 'price' && (
                           sortDirection === 'asc' ? 
                             <ChevronUp className="ml-1 h-4 w-4" /> : 
