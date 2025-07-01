@@ -329,52 +329,58 @@ export default function Skus() {
         </Card>
       )}
       <Card className="shadow-md">
-        <div className="p-3 md:p-4 border-b border-gray-200">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
-              <div className="relative flex-1 sm:flex-none">
+        <div className="p-3 lg:p-4 border-b border-gray-200">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-2 lg:space-y-0">
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center space-y-3 lg:space-y-0 lg:space-x-3">
+              <div className="relative flex-1 lg:flex-none">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search SKUs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full sm:w-64"
+                  className="pl-10 w-full lg:w-64"
                 />
               </div>
-              <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
-                <Plus className="mr-2 h-4 w-4" />
-                Add SKU
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsImportDialogOpen(true)} 
-                className="w-full sm:w-auto"
-              >
-                <Upload className="mr-2 h-4 w-4" />
-                Import CSV
-              </Button>
+              <div className="flex space-x-2">
+                <Button onClick={() => setIsModalOpen(true)} className="flex-1 lg:flex-none">
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add SKU
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsImportDialogOpen(true)} 
+                  className="flex-1 lg:flex-none"
+                >
+                  <Upload className="mr-2 h-4 w-4" />
+                  Import CSV
+                </Button>
+              </div>
             </div>
             {selectedSkus.size > 0 && (
-              <div className="flex items-center space-x-2 mt-3 border-t pt-[0px] pb-[0px]">
-                <Badge variant="secondary">
+              <div className="flex flex-col lg:flex-row items-stretch lg:items-center space-y-2 lg:space-y-0 lg:space-x-2 mt-3 pt-3 border-t">
+                <Badge variant="secondary" className="w-fit">
                   {selectedSkus.size} selected
                 </Badge>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleBulkDelete}
-                  disabled={bulkDeleteMutation.isPending}
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedSkus(new Set())}
-                >
-                  Clear
-                </Button>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleBulkDelete}
+                    disabled={bulkDeleteMutation.isPending}
+                    className="flex-1 lg:flex-none"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedSkus(new Set())}
+                    className="flex-1 lg:flex-none"
+                  >
+                    Clear
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -442,7 +448,7 @@ export default function Skus() {
                         )}
                       </Button>
                     </TableHead>
-                    <TableHead className="hidden sm:table-cell py-3">
+                    <TableHead className="hidden lg:table-cell py-3">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -510,7 +516,7 @@ export default function Skus() {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="hidden sm:table-cell py-2">
+                      <TableCell className="hidden lg:table-cell py-2">
                         <span className="text-sm text-gray-900">
                           {sku.description || "—"}
                         </span>

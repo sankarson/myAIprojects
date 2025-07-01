@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Improved responsive layout for mid-size screens (iPad) with expanded sidebar - optimized button grouping, search width, and column visibility for better tablet experience
 - July 1, 2025: Added sortable column headers to SKUs table - users can sort by name, description, or price in ascending/descending order with visual indicators
 - July 1, 2025: Added multi-select checkbox functionality to SKUs page with bulk delete capability - users can select multiple SKUs and delete them all at once with confirmation dialog
 - July 1, 2025: Changed CSV import behavior to update existing SKUs instead of skipping them - when SKU names match, description and price fields are updated with new CSV data
