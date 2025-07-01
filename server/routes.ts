@@ -383,7 +383,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const filePath = req.file.path;
-      const results: Array<{ name: string; description: string }> = [];
+      const results: Array<{ name: string; description: string; price?: string }> = [];
       const errors: string[] = [];
 
       // Parse CSV file
@@ -397,6 +397,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const keys = Object.keys(data);
             const nameKey = keys.find(key => key.toLowerCase() === 'name');
             const descriptionKey = keys.find(key => key.toLowerCase() === 'description');
+            const priceKey = keys.find(key => key.toLowerCase() === 'price');
             
             // Validate required fields
             if (!nameKey || !descriptionKey) {
@@ -415,9 +416,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
               return;
             }
             
+            // Parse price if provided
+            let price: string | undefined;
+            if (priceKey && data[priceKey]) {
+              const priceValue = data[priceKey].toString().trim();
+              if (priceValue !== '') {
+                // Validate price is a number
+                const numericPrice = parseFloat(priceValue);
+                if (isNaN(numericPrice) || numericPrice < 0) {
+                  errors.push(`Invalid price value "${priceValue}" in row: ${JSON.stringify(data)}`);
+                  return;
+                }
+                price = numericPrice.toFixed(2);
+              }
+            }
+            
             results.push({
               name: data[nameKey].toString().trim(),
-              description: data[descriptionKey].toString().trim()
+              description: data[descriptionKey].toString().trim(),
+              price: price
             });
           })
           .on('end', resolve)
@@ -459,7 +476,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const sku = await storage.createSku({
             name: skuData.name,
             description: skuData.description,
-            price: "0", // Default price, can be updated later
+            price: skuData.price || "0", // Use CSV price or default to 0
             imageUrl: ""
           });
           createdSkus.push(sku);

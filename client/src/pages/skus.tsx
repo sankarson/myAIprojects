@@ -119,7 +119,7 @@ export default function Skus() {
   };
 
   const downloadTemplate = () => {
-    const csvContent = "name,description\nSample Product,This is a sample product description\nAnother Product,Another sample description";
+    const csvContent = "name,description,price\nSample Product,This is a sample product description,99.99\nAnother Product,Another sample description,149.50\nFree Product,Free sample product,0";
     const blob = new Blob([csvContent], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -367,7 +367,7 @@ export default function Skus() {
           <DialogHeader>
             <DialogTitle>Import SKUs from CSV</DialogTitle>
             <DialogDescription>
-              Upload a CSV file with name and description columns to import SKUs. Column headers are case insensitive. SKU numbers will be auto-generated. Duplicate SKU names will be automatically skipped.
+              Upload a CSV file with name and description columns to import SKUs. Optional price column supported. Column headers are case insensitive. SKU numbers will be auto-generated. Duplicate SKU names will be automatically skipped.
             </DialogDescription>
           </DialogHeader>
           
