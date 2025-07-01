@@ -59,9 +59,11 @@ const csvUpload = multer({
   fileFilter: (req, file, cb) => {
     const allowedTypes = /csv/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = file.mimetype === 'text/csv' || file.mimetype === 'application/csv';
+    const mimetype = file.mimetype === 'text/csv' || 
+                     file.mimetype === 'application/csv' || 
+                     file.mimetype === 'text/plain';
     
-    if (mimetype || extname) {
+    if (mimetype || extname || file.originalname.toLowerCase().endsWith('.csv')) {
       return cb(null, true);
     } else {
       cb(new Error('Only CSV files are allowed'));
