@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Added CSV import functionality for SKUs with drag-and-drop interface, template download, and auto-generated SKU numbers from name/description fields
 - June 30, 2025: Added automatic activity log refresh - dashboard activity section now updates in real-time when performing any CRUD operations without manual refresh
 - June 30, 2025: Improved activity logging to show meaningful field names and values instead of IDs (e.g., 'warehouse: "Aramex" → "DHL"', 'pallet: "First Pallet" → "Second Pallet"')
 - June 30, 2025: Enhanced activity logging to show original and changed values in update operations (e.g., 'name: "Old Name" → "New Name"', 'price: ₹100 → ₹150')
