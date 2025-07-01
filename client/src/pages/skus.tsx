@@ -366,14 +366,14 @@ export default function Skus() {
                   disabled={bulkDeleteMutation.isPending}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
-                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete Selected"}
+                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedSkus(new Set())}
                 >
-                  Clear Selection
+                  Clear
                 </Button>
               </div>
             )}
