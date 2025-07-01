@@ -108,7 +108,7 @@ export function Sidebar() {
 
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg flex-shrink-0 transition-all duration-300 hidden md:block`}>
-      <div className={`${isCollapsed ? 'p-3' : 'p-6'} border-b border-gray-200 flex items-center justify-between`}>
+      <div className="p-6 border-b border-gray-200 flex items-center justify-between pt-[10px] pb-[10px]">
         {!isCollapsed && (
           <Link href="/">
             <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
@@ -131,7 +131,6 @@ export function Sidebar() {
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
       </div>
-      
       <nav className={`mt-6 ${isCollapsed ? 'px-2' : 'px-3'}`}>
         <div className="space-y-1">
           {navigationItems.map((item) => {
