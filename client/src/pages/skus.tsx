@@ -448,7 +448,7 @@ export default function Skus() {
                         )}
                       </Button>
                     </TableHead>
-                    <TableHead className="hidden lg:table-cell py-3">
+                    <TableHead className="py-3">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -478,18 +478,36 @@ export default function Skus() {
                         )}
                       </Button>
                     </TableHead>
-                    <TableHead className="py-3">Actions</TableHead>
+
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredSkus.map((sku) => (
                     <TableRow key={sku.id} className="hover:bg-gray-50">
                       <TableCell className="py-2">
-                        <Checkbox
-                          checked={selectedSkus.has(sku.id)}
-                          onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
-                          aria-label={`Select ${sku.name}`}
-                        />
+                        <div className="flex items-center space-x-1">
+                          <Checkbox
+                            checked={selectedSkus.has(sku.id)}
+                            onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
+                            aria-label={`Select ${sku.name}`}
+                          />
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleEdit(sku)}
+                            className="h-8 w-8 p-0"
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => handleDelete(sku)}
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                       <TableCell className="py-2">
                         <div className="flex items-center">
@@ -510,13 +528,10 @@ export default function Skus() {
                             <span className="text-sm font-medium text-gray-900">
                               {sku.name}
                             </span>
-                            <div className="sm:hidden text-xs text-gray-500">
-                              {sku.description || "No description"}
-                            </div>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="hidden lg:table-cell py-2">
+                      <TableCell className="py-2">
                         <span className="text-sm text-gray-900">
                           {sku.description || "—"}
                         </span>
@@ -530,26 +545,7 @@ export default function Skus() {
                           <span className="text-sm text-gray-500">—</span>
                         )}
                       </TableCell>
-                      <TableCell className="py-2">
-                        <div className="flex items-center space-x-1">
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleEdit(sku)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleDelete(sku)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
+
                     </TableRow>
                   ))}
                 </TableBody>
