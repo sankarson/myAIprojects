@@ -234,7 +234,13 @@ export default function Dashboard() {
                         </p>
                       </div>
                       <p className="text-xs text-gray-500 ml-2 flex-shrink-0">
-                        {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
+                        {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })
+                          .replace(' minutes', 'm')
+                          .replace(' minute', 'm')
+                          .replace(' hours', 'h')
+                          .replace(' hour', 'h')
+                          .replace(' days', 'd')
+                          .replace(' day', 'd')}
                       </p>
                     </div>
                   </div>
