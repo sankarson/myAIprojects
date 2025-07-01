@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft, Upload, FileDown, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Search, Edit, MapPin, ArrowLeft, Upload, FileDown, ChevronUp, ChevronDown } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -499,14 +499,7 @@ export default function Skus() {
                           >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleDelete(sku)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 ml-[-1px] mr-[-1px]"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
+
                         </div>
                       </TableCell>
                       <TableCell className="py-2">
