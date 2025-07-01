@@ -449,7 +449,7 @@ export default function Skus() {
                       </Button>
                     </TableHead>
 
-                    <TableHead className="py-3">
+                    <TableHead className="py-3 text-right">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -510,7 +510,7 @@ export default function Skus() {
                         </div>
                       </TableCell>
 
-                      <TableCell className="py-2">
+                      <TableCell className="py-2 text-right">
                         {sku.price ? (
                           <span className="text-sm font-medium text-gray-900">
                             ₹{sku.price}
