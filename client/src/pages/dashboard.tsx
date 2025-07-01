@@ -174,7 +174,7 @@ export default function Dashboard() {
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-lg font-medium text-gray-900 flex items-center">
             <Clock className="h-5 w-5 mr-2" />
-            Recent Activity
+            Activity Log
           </h3>
         </div>
         <CardContent className="p-0 flex-1 flex flex-col">
