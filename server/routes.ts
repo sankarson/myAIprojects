@@ -391,9 +391,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fs.createReadStream(filePath)
           .pipe(csvParser())
           .on('data', (data) => {
+            console.log('CSV row data:', data);
             // Validate required fields
             if (!data.name || !data.description) {
               errors.push(`Row missing required fields: ${JSON.stringify(data)}`);
+              return;
+            }
+            
+            // Check if fields are empty strings
+            if (data.name.toString().trim() === '' || data.description.toString().trim() === '') {
+              errors.push(`Row has empty required fields: ${JSON.stringify(data)}`);
               return;
             }
             
@@ -409,6 +416,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clean up uploaded file
       fs.unlinkSync(filePath);
 
+      console.log('CSV parsing completed. Results:', results.length, 'Errors:', errors.length);
+      console.log('Errors:', errors);
+      
       if (errors.length > 0) {
         return res.status(400).json({ 
           error: "CSV validation failed", 
