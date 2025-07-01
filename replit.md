@@ -97,6 +97,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Implemented infinite scroll for activity log with manual "Load More" button - allows access to all historical activities beyond recent hour, supporting permanent log retention
 - July 1, 2025: Renamed application from "Mynx Inventory" to "MI7" - updated title, sidebar branding, and documentation
 - July 1, 2025: Improved responsive layout for mid-size screens (iPad) with expanded sidebar - optimized button grouping, search width, and column visibility for better tablet experience
 - July 1, 2025: Added sortable column headers to SKUs table - users can sort by name, description, or price in ascending/descending order with visual indicators
