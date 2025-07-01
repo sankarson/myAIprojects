@@ -51,16 +51,22 @@ export default function Dashboard() {
     },
   });
 
-  const displayActivities = offset === 0 ? (activities || []) : allActivities;
+  const displayActivities = allActivities;
 
   const handleScroll = useCallback(() => {
     if (!activityRef.current || !hasMore || activitiesLoading) return;
     
     const { scrollTop, scrollHeight, clientHeight } = activityRef.current;
+    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
+    
+    // Debug logging
+    console.log('Scroll:', { scrollTop, scrollHeight, clientHeight, scrollPercentage, hasMore, offset });
+    
     if (scrollTop + clientHeight >= scrollHeight - 5) {
+      console.log('Loading more activities, current offset:', offset);
       setOffset(prev => prev + 20);
     }
-  }, [hasMore, activitiesLoading]);
+  }, [hasMore, activitiesLoading, offset]);
 
   useEffect(() => {
     const element = activityRef.current;
