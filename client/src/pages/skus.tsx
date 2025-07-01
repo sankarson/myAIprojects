@@ -4,10 +4,11 @@ import { Link, useLocation } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft } from "lucide-react";
+import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft, Upload, FileDown } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -18,6 +19,8 @@ export default function Skus() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSku, setEditingSku] = useState<Sku | null>(null);
+  const [isImportDialogOpen, setIsImportDialogOpen] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
   const [location] = useLocation();
   const { toast } = useToast();
 
@@ -62,6 +65,65 @@ export default function Skus() {
       });
     },
   });
+
+  const importMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('csvFile', file);
+      const response = await fetch('/api/skus/import', {
+        method: 'POST',
+        body: formData,
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Import failed');
+      }
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/stats"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
+      toast({
+        title: "Success",
+        description: `Imported ${data.imported} SKUs successfully`,
+      });
+      setIsImportDialogOpen(false);
+      setImportFile(null);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to import SKUs",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleImport = () => {
+    if (!importFile) {
+      toast({
+        title: "Error",
+        description: "Please select a CSV file to import",
+        variant: "destructive",
+      });
+      return;
+    }
+    importMutation.mutate(importFile);
+  };
+
+  const downloadTemplate = () => {
+    const csvContent = "name,description\nSample Product,This is a sample product description\nAnother Product,Another sample description";
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sku_import_template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
 
   const filteredSkus = skus?.filter((sku) => {
     // Apply search filter
@@ -158,6 +220,14 @@ export default function Skus() {
               <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
                 Add SKU
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => setIsImportDialogOpen(true)} 
+                className="w-full sm:w-auto"
+              >
+                <Upload className="mr-2 h-4 w-4" />
+                Import CSV
               </Button>
             </div>
           </div>
@@ -284,6 +354,74 @@ export default function Skus() {
         onClose={handleCloseModal}
         sku={editingSku}
       />
+
+      <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Import SKUs from CSV</DialogTitle>
+            <DialogDescription>
+              Upload a CSV file with name and description columns to import SKUs. SKU numbers will be auto-generated.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-center w-full">
+              <label 
+                htmlFor="csv-upload" 
+                className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+              >
+                <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                  <Upload className="w-8 h-8 mb-4 text-gray-500" />
+                  <p className="mb-2 text-sm text-gray-500">
+                    <span className="font-semibold">Click to upload</span> or drag and drop
+                  </p>
+                  <p className="text-xs text-gray-500">CSV files only</p>
+                  {importFile && (
+                    <p className="mt-2 text-sm text-blue-600 font-medium">{importFile.name}</p>
+                  )}
+                </div>
+                <input 
+                  id="csv-upload" 
+                  type="file" 
+                  accept=".csv" 
+                  className="hidden" 
+                  onChange={(e) => setImportFile(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={downloadTemplate}
+                className="flex items-center"
+              >
+                <FileDown className="mr-2 h-4 w-4" />
+                Download Template
+              </Button>
+              
+              <div className="flex space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setIsImportDialogOpen(false);
+                    setImportFile(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleImport}
+                  disabled={!importFile || importMutation.isPending}
+                >
+                  {importMutation.isPending ? "Importing..." : "Import"}
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -13,6 +13,7 @@ import { z } from "zod";
 import multer from "multer";
 import path from "path";
 import fs from "fs";
+import csvParser from "csv-parser";
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(process.cwd(), 'uploads');
@@ -350,6 +351,86 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting SKU:", error);
       res.status(500).json({ error: "Failed to delete SKU" });
+    }
+  });
+
+  // SKU CSV Import
+  app.post("/api/skus/import", upload.single('csvFile'), async (req, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No CSV file uploaded" });
+      }
+
+      const filePath = req.file.path;
+      const results: Array<{ name: string; description: string }> = [];
+      const errors: string[] = [];
+
+      // Parse CSV file
+      await new Promise((resolve, reject) => {
+        fs.createReadStream(filePath)
+          .pipe(csvParser())
+          .on('data', (data) => {
+            // Validate required fields
+            if (!data.name || !data.description) {
+              errors.push(`Row missing required fields: ${JSON.stringify(data)}`);
+              return;
+            }
+            
+            results.push({
+              name: data.name.toString().trim(),
+              description: data.description.toString().trim()
+            });
+          })
+          .on('end', resolve)
+          .on('error', reject);
+      });
+
+      // Clean up uploaded file
+      fs.unlinkSync(filePath);
+
+      if (errors.length > 0) {
+        return res.status(400).json({ 
+          error: "CSV validation failed", 
+          details: errors 
+        });
+      }
+
+      if (results.length === 0) {
+        return res.status(400).json({ error: "No valid data found in CSV file" });
+      }
+
+      // Import SKUs
+      const createdSkus = [];
+      for (const skuData of results) {
+        try {
+          const sku = await storage.createSku({
+            name: skuData.name,
+            description: skuData.description,
+            price: "0", // Default price, can be updated later
+            imageUrl: ""
+          });
+          createdSkus.push(sku);
+        } catch (error) {
+          console.error("Error creating SKU:", error);
+          errors.push(`Failed to create SKU: ${skuData.name}`);
+        }
+      }
+
+      res.json({
+        success: true,
+        imported: createdSkus.length,
+        total: results.length,
+        errors: errors.length > 0 ? errors : undefined,
+        skus: createdSkus
+      });
+
+    } catch (error) {
+      // Clean up file if it exists
+      if (req.file && fs.existsSync(req.file.path)) {
+        fs.unlinkSync(req.file.path);
+      }
+      console.error("Error importing SKUs:", error);
+      res.status(500).json({ error: "Failed to import SKUs from CSV" });
     }
   });
 
