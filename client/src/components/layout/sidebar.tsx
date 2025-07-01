@@ -108,7 +108,7 @@ export function Sidebar() {
 
   return (
     <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg flex-shrink-0 transition-all duration-300 hidden md:block`}>
-      <div className="p-6 border-b border-gray-200 flex items-center justify-between pt-[12px] pb-[12px]">
+      <div className="p-6 border-b border-gray-200 flex items-center justify-between pt-[18px] pb-[18px]">
         {!isCollapsed && (
           <Link href="/">
             <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
