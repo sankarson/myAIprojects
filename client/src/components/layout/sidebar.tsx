@@ -20,7 +20,7 @@ export function Sidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const isMobile = useIsMobile();
 
-  // Auto-collapse on mobile
+  // Auto-collapse on mobile and ensure proper state reset
   useEffect(() => {
     if (isMobile) {
       setIsCollapsed(false); // Don't use collapsed mode on mobile, use overlay instead
@@ -38,7 +38,7 @@ export function Sidebar() {
   if (isMobile) {
     return (
       <>
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button - Always show on mobile regardless of collapsed state */}
         <Button
           variant="ghost"
           size="sm"
