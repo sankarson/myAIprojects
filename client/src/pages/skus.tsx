@@ -448,7 +448,7 @@ export default function Skus() {
                         )}
                       </Button>
                     </TableHead>
-                    <TableHead className="py-3">
+                    <TableHead className="hidden md:table-cell py-3">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -513,14 +513,17 @@ export default function Skus() {
                           <div>
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0 text-left"
+                              className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
                             >
                               {sku.name}
                             </button>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {sku.description || "—"}
+                            </div>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="hidden md:table-cell py-2">
                         <span className="text-sm text-gray-900">
                           {sku.description || "—"}
                         </span>
