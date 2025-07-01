@@ -57,16 +57,10 @@ export default function Dashboard() {
     if (!activityRef.current || !hasMore || activitiesLoading) return;
     
     const { scrollTop, scrollHeight, clientHeight } = activityRef.current;
-    const scrollPercentage = (scrollTop + clientHeight) / scrollHeight;
-    
-    // Debug logging
-    console.log('Scroll:', { scrollTop, scrollHeight, clientHeight, scrollPercentage, hasMore, offset });
-    
     if (scrollTop + clientHeight >= scrollHeight - 5) {
-      console.log('Loading more activities, current offset:', offset);
       setOffset(prev => prev + 20);
     }
-  }, [hasMore, activitiesLoading, offset]);
+  }, [hasMore, activitiesLoading]);
 
   useEffect(() => {
     const element = activityRef.current;
@@ -246,12 +240,22 @@ export default function Dashboard() {
                   </div>
                 );
               })}
-              {hasMore && activitiesLoading && offset > 0 && (
-                <div className="p-3 text-center">
-                  <div className="flex items-center justify-center space-x-2 text-gray-500">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-300"></div>
-                    <span className="text-sm">Loading more...</span>
-                  </div>
+              {hasMore && (
+                <div className="p-3 border-t border-gray-200">
+                  {activitiesLoading && offset > 0 ? (
+                    <div className="flex items-center justify-center space-x-2 text-gray-500">
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-300"></div>
+                      <span className="text-sm">Loading more...</span>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => setOffset(prev => prev + 20)}
+                      className="w-full py-2 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      disabled={activitiesLoading}
+                    >
+                      Load More Activities
+                    </button>
+                  )}
                 </div>
               )}
             </div>
