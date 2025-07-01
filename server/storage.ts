@@ -77,7 +77,7 @@ export interface IStorage {
 
   // Activity Log methods
   logActivity(activity: InsertActivityLog): Promise<void>;
-  getRecentActivity(limit?: number): Promise<ActivityLog[]>;
+  getRecentActivity(limit?: number, offset?: number): Promise<ActivityLog[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -651,12 +651,13 @@ export class DatabaseStorage implements IStorage {
     await db.insert(activityLog).values(activity);
   }
 
-  async getRecentActivity(limit: number = 20): Promise<ActivityLog[]> {
+  async getRecentActivity(limit: number = 20, offset: number = 0): Promise<ActivityLog[]> {
     return await db
       .select()
       .from(activityLog)
       .orderBy(desc(activityLog.timestamp))
-      .limit(limit);
+      .limit(limit)
+      .offset(offset);
   }
 }
 

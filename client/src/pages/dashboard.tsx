@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useCallback, useRef, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Building, Package, Box, Warehouse, Clock, Plus, Edit, Trash2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,13 +24,51 @@ interface ActivityLog {
 }
 
 export default function Dashboard() {
+  const activityRef = useRef<HTMLDivElement>(null);
+  const [offset, setOffset] = useState(0);
+  const [allActivities, setAllActivities] = useState<ActivityLog[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  
   const { data: stats, isLoading } = useQuery<Stats>({
     queryKey: ["/api/stats"],
   });
 
   const { data: activities, isLoading: activitiesLoading } = useQuery<ActivityLog[]>({
-    queryKey: ["/api/activity"],
+    queryKey: ["/api/activity", offset],
+    queryFn: async () => {
+      const response = await fetch(`/api/activity?offset=${offset}&limit=20`);
+      if (!response.ok) throw new Error("Failed to fetch activities");
+      const newActivities = await response.json();
+      
+      if (offset === 0) {
+        setAllActivities(newActivities);
+      } else {
+        setAllActivities(prev => [...prev, ...newActivities]);
+      }
+      
+      setHasMore(newActivities.length === 20);
+      return newActivities;
+    },
   });
+
+  const displayActivities = offset === 0 ? (activities || []) : allActivities;
+
+  const handleScroll = useCallback(() => {
+    if (!activityRef.current || !hasMore || activitiesLoading) return;
+    
+    const { scrollTop, scrollHeight, clientHeight } = activityRef.current;
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      setOffset(prev => prev + 20);
+    }
+  }, [hasMore, activitiesLoading]);
+
+  useEffect(() => {
+    const element = activityRef.current;
+    if (element) {
+      element.addEventListener('scroll', handleScroll);
+      return () => element.removeEventListener('scroll', handleScroll);
+    }
+  }, [handleScroll]);
 
   if (isLoading) {
     return (
@@ -151,9 +190,12 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
-          ) : activities && activities.length > 0 ? (
-            <div className="divide-y divide-gray-200">
-              {activities.map((activity) => {
+          ) : displayActivities && displayActivities.length > 0 ? (
+            <div 
+              ref={activityRef}
+              className="divide-y divide-gray-200 max-h-96 overflow-y-auto"
+            >
+              {displayActivities.map((activity) => {
                 const getIcon = (action: string) => {
                   switch (action) {
                     case 'CREATE':
@@ -198,6 +240,14 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+              {hasMore && activitiesLoading && offset > 0 && (
+                <div className="p-3 text-center">
+                  <div className="flex items-center justify-center space-x-2 text-gray-500">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-300"></div>
+                    <span className="text-sm">Loading more...</span>
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             <div className="text-center py-8 text-gray-500">
