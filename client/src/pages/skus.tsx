@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft, Upload, FileDown } from "lucide-react";
+import { Plus, Search, Edit, MapPin, Trash2, ArrowLeft, Upload, FileDown, ChevronUp, ChevronDown } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -27,6 +27,8 @@ export default function Skus() {
   const [skuToDelete, setSkuToDelete] = useState<Sku | null>(null);
   const [selectedSkus, setSelectedSkus] = useState<Set<number>>(new Set());
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+  const [sortField, setSortField] = useState<'name' | 'description' | 'price'>('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [location] = useLocation();
   const { toast } = useToast();
 
@@ -176,6 +178,15 @@ export default function Skus() {
     window.URL.revokeObjectURL(url);
   };
 
+  const handleSort = (field: 'name' | 'description' | 'price') => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+  };
+
   const filteredSkus = skus?.filter((sku) => {
     // Apply search filter
     const matchesSearch = sku.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -190,6 +201,32 @@ export default function Skus() {
     }
     
     return matchesSearch;
+  }).sort((a, b) => {
+    let aValue: string | number;
+    let bValue: string | number;
+    
+    switch (sortField) {
+      case 'name':
+        aValue = a.name.toLowerCase();
+        bValue = b.name.toLowerCase();
+        break;
+      case 'description':
+        aValue = (a.description || '').toLowerCase();
+        bValue = (b.description || '').toLowerCase();
+        break;
+      case 'price':
+        aValue = parseFloat(a.price || '0');
+        bValue = parseFloat(b.price || '0');
+        break;
+      default:
+        return 0;
+    }
+    
+    if (sortDirection === 'asc') {
+      return aValue < bValue ? -1 : aValue > bValue ? 1 : 0;
+    } else {
+      return aValue > bValue ? -1 : aValue < bValue ? 1 : 0;
+    }
   }) || [];
 
   const getFilteredBinName = () => {
@@ -391,9 +428,51 @@ export default function Skus() {
                         aria-label="Select all SKUs"
                       />
                     </TableHead>
-                    <TableHead className="py-3">Name</TableHead>
-                    <TableHead className="hidden sm:table-cell py-3">Description</TableHead>
-                    <TableHead className="py-3">Price</TableHead>
+                    <TableHead className="py-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleSort('name')}
+                      >
+                        Name
+                        {sortField === 'name' && (
+                          sortDirection === 'asc' ? 
+                            <ChevronUp className="ml-1 h-4 w-4" /> : 
+                            <ChevronDown className="ml-1 h-4 w-4" />
+                        )}
+                      </Button>
+                    </TableHead>
+                    <TableHead className="hidden sm:table-cell py-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleSort('description')}
+                      >
+                        Description
+                        {sortField === 'description' && (
+                          sortDirection === 'asc' ? 
+                            <ChevronUp className="ml-1 h-4 w-4" /> : 
+                            <ChevronDown className="ml-1 h-4 w-4" />
+                        )}
+                      </Button>
+                    </TableHead>
+                    <TableHead className="py-3">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        onClick={() => handleSort('price')}
+                      >
+                        Price
+                        {sortField === 'price' && (
+                          sortDirection === 'asc' ? 
+                            <ChevronUp className="ml-1 h-4 w-4" /> : 
+                            <ChevronDown className="ml-1 h-4 w-4" />
+                        )}
+                      </Button>
+                    </TableHead>
                     <TableHead className="py-3">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
