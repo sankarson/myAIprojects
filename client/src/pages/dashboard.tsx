@@ -140,11 +140,11 @@ export default function Dashboard() {
         </div>
         <CardContent className="p-0">
           {activitiesLoading ? (
-            <div className="p-6 space-y-4">
+            <div className="p-3 space-y-2">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center space-x-3">
-                  <Skeleton className="h-8 w-8 rounded-full" />
-                  <div className="flex-1 space-y-2">
+                <div key={i} className="flex items-center space-x-2">
+                  <Skeleton className="h-6 w-6 rounded-full" />
+                  <div className="flex-1 space-y-1">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-3 w-1/2" />
                   </div>
@@ -181,16 +181,16 @@ export default function Dashboard() {
                 };
 
                 return (
-                  <div key={activity.id} className="p-4 hover:bg-gray-50 transition-colors">
-                    <div className="flex items-start space-x-3">
-                      <div className={`p-2 rounded-full ${getBgColor(activity.action)}`}>
+                  <div key={activity.id} className="p-2 hover:bg-gray-50 transition-colors">
+                    <div className="flex items-start space-x-2">
+                      <div className={`p-1.5 rounded-full ${getBgColor(activity.action)}`}>
                         {getIcon(activity.action)}
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-gray-900">
                           {activity.description}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 mt-0.5">
                           {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
                         </p>
                       </div>
