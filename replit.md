@@ -155,3 +155,8 @@ The system uses a hierarchical structure:
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
+
+## Data Retention Policies
+- **Activity Logs**: Must be maintained forever with no automatic cleanup or deletion
+- All CRUD operations are permanently logged for audit trail purposes
+- The activity log uses infinite scroll pagination to handle large amounts of historical data efficiently
