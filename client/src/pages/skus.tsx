@@ -328,7 +328,6 @@ export default function Skus() {
           </div>
         </Card>
       )}
-      
       <Card className="shadow-md">
         <div className="p-3 md:p-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-2 md:space-y-0">
@@ -356,7 +355,7 @@ export default function Skus() {
               </Button>
             </div>
             {selectedSkus.size > 0 && (
-              <div className="flex items-center space-x-2 mt-3 pt-3 border-t">
+              <div className="flex items-center space-x-2 mt-3 border-t pt-[0px] pb-[0px]">
                 <Badge variant="secondary">
                   {selectedSkus.size} selected
                 </Badge>
@@ -553,13 +552,11 @@ export default function Skus() {
           )}
         </CardContent>
       </Card>
-
       <SkuModal
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         sku={editingSku}
       />
-
       <Dialog open={isImportDialogOpen} onOpenChange={setIsImportDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -627,7 +624,6 @@ export default function Skus() {
           </div>
         </DialogContent>
       </Dialog>
-
       <AlertDialog open={deleteConfirmOpen} onOpenChange={setDeleteConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -652,7 +648,6 @@ export default function Skus() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
       <AlertDialog open={bulkDeleteConfirmOpen} onOpenChange={setBulkDeleteConfirmOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
