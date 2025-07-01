@@ -95,7 +95,7 @@ export default function Dashboard() {
   return (
     <div className="h-full flex flex-col space-y-8">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <Link href="/warehouses">
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
