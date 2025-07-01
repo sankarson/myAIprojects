@@ -503,7 +503,7 @@ export default function Skus() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleDelete(sku)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700 ml-[-1px] mr-[-1px]"
                           >
                             <Trash2 className="h-4 w-4" />
                           </Button>
