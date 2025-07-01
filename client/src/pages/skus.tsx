@@ -360,7 +360,7 @@ export default function Skus() {
           <DialogHeader>
             <DialogTitle>Import SKUs from CSV</DialogTitle>
             <DialogDescription>
-              Upload a CSV file with name and description columns to import SKUs. SKU numbers will be auto-generated.
+              Upload a CSV file with name and description columns to import SKUs. Column headers are case insensitive. SKU numbers will be auto-generated.
             </DialogDescription>
           </DialogHeader>
           

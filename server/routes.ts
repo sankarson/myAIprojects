@@ -391,22 +391,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fs.createReadStream(filePath)
           .pipe(csvParser())
           .on('data', (data) => {
-            console.log('CSV row data:', data);
+
+            
+            // Make headers case insensitive by finding the actual keys
+            const keys = Object.keys(data);
+            const nameKey = keys.find(key => key.toLowerCase() === 'name');
+            const descriptionKey = keys.find(key => key.toLowerCase() === 'description');
+            
             // Validate required fields
-            if (!data.name || !data.description) {
-              errors.push(`Row missing required fields: ${JSON.stringify(data)}`);
+            if (!nameKey || !descriptionKey) {
+              errors.push(`Row missing required columns (name, description): ${JSON.stringify(data)}`);
+              return;
+            }
+            
+            if (!data[nameKey] || !data[descriptionKey]) {
+              errors.push(`Row missing required field values: ${JSON.stringify(data)}`);
               return;
             }
             
             // Check if fields are empty strings
-            if (data.name.toString().trim() === '' || data.description.toString().trim() === '') {
+            if (data[nameKey].toString().trim() === '' || data[descriptionKey].toString().trim() === '') {
               errors.push(`Row has empty required fields: ${JSON.stringify(data)}`);
               return;
             }
             
             results.push({
-              name: data.name.toString().trim(),
-              description: data.description.toString().trim()
+              name: data[nameKey].toString().trim(),
+              description: data[descriptionKey].toString().trim()
             });
           })
           .on('end', resolve)
@@ -416,8 +427,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Clean up uploaded file
       fs.unlinkSync(filePath);
 
-      console.log('CSV parsing completed. Results:', results.length, 'Errors:', errors.length);
-      console.log('Errors:', errors);
+
       
       if (errors.length > 0) {
         return res.status(400).json({ 
