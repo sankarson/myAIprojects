@@ -377,6 +377,7 @@ export default function Skus() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setSelectedSkus(new Set())}
+                  className="bg-[#e5e7eb]"
                 >
                   Clear
                 </Button>
