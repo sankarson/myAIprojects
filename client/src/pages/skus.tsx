@@ -10,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Plus, Search, Edit, MapPin, ArrowLeft, Upload, FileDown, ChevronUp, ChevronDown } from "lucide-react";
+import { Plus, Search, MapPin, Trash2, ArrowLeft, Upload, FileDown, ChevronUp, ChevronDown } from "lucide-react";
 import { SkuModal } from "@/components/modals/sku-modal";
 import { queryClient } from "@/lib/queryClient";
 import { apiRequest } from "@/lib/queryClient";
@@ -485,22 +485,11 @@ export default function Skus() {
                   {filteredSkus.map((sku) => (
                     <TableRow key={sku.id} className="hover:bg-gray-50">
                       <TableCell className="py-2">
-                        <div className="flex items-center space-x-1">
-                          <Checkbox
-                            checked={selectedSkus.has(sku.id)}
-                            onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
-                            aria-label={`Select ${sku.name}`}
-                          />
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => handleEdit(sku)}
-                            className="h-8 w-8 p-0"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-
-                        </div>
+                        <Checkbox
+                          checked={selectedSkus.has(sku.id)}
+                          onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
+                          aria-label={`Select ${sku.name}`}
+                        />
                       </TableCell>
                       <TableCell className="py-2">
                         <div className="flex items-center">
@@ -518,9 +507,12 @@ export default function Skus() {
                             </div>
                           )}
                           <div>
-                            <span className="text-sm font-medium text-gray-900">
+                            <button
+                              onClick={() => handleEdit(sku)}
+                              className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0 text-left"
+                            >
                               {sku.name}
-                            </span>
+                            </button>
                           </div>
                         </div>
                       </TableCell>
