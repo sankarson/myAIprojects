@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(0, 0%, 100%);
+  --background: hsl(200, 70%, 90%);
   --foreground: hsl(25, 50%, 15%);
-  --muted: hsl(200, 50%, 95%);
+  --muted: hsl(200, 60%, 85%);
   --muted-foreground: hsl(25, 30%, 45%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(25, 50%, 15%);
   --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(25, 50%, 15%);
-  --border: hsl(200, 30%, 85%);
-  --input: hsl(200, 30%, 90%);
-  --primary: hsl(200, 60%, 75%);
+  --border: hsl(200, 30%, 80%);
+  --input: hsl(200, 30%, 85%);
+  --primary: hsl(200, 60%, 65%);
   --primary-foreground: hsl(25, 50%, 15%);
-  --secondary: hsl(200, 40%, 92%);
+  --secondary: hsl(200, 50%, 88%);
   --secondary-foreground: hsl(25, 50%, 15%);
-  --accent: hsl(200, 50%, 88%);
+  --accent: hsl(200, 55%, 85%);
   --accent-foreground: hsl(25, 50%, 15%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(200, 60%, 75%);
+  --ring: hsl(200, 60%, 65%);
   --radius: 0.5rem;
 }
 
