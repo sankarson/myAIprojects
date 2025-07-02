@@ -100,12 +100,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-blue-100">
+                <div className="p-3 rounded-lg bg-primary/20">
                   <Building className="text-primary text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-gray-500">Warehouses</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Warehouses</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {stats?.warehouses || 0}
                   </p>
                 </div>
@@ -118,12 +118,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-green-100">
-                  <Package className="text-green-600 text-xl" />
+                <div className="p-3 rounded-lg bg-primary/15">
+                  <Package className="text-primary text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-gray-500">Pallets</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Pallets</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {stats?.pallets || 0}
                   </p>
                 </div>
@@ -136,12 +136,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-orange-100">
-                  <Box className="text-orange-600 text-xl" />
+                <div className="p-3 rounded-lg bg-secondary">
+                  <Box className="text-foreground text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-gray-500">Bins</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">Bins</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {stats?.bins || 0}
                   </p>
                 </div>
@@ -154,12 +154,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-purple-100">
-                  <Warehouse className="text-purple-600 text-xl" />
+                <div className="p-3 rounded-lg bg-accent">
+                  <Warehouse className="text-primary text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-gray-500">SKUs</p>
-                  <p className="text-2xl font-semibold text-gray-900">
+                  <p className="text-sm text-muted-foreground">SKUs</p>
+                  <p className="text-2xl font-semibold text-foreground">
                     {stats?.skus || 0}
                   </p>
                 </div>
@@ -193,19 +193,19 @@ export default function Dashboard() {
           ) : displayActivities && displayActivities.length > 0 ? (
             <div 
               ref={activityRef}
-              className="divide-y divide-gray-200 flex-1 overflow-y-auto"
+              className="divide-y divide-border flex-1 overflow-y-auto"
             >
               {displayActivities.map((activity) => {
                 const getIcon = (action: string) => {
                   switch (action) {
                     case 'CREATE':
-                      return <Plus className="h-4 w-4 text-green-600" />;
+                      return <Plus className="h-4 w-4 text-primary" />;
                     case 'UPDATE':
-                      return <Edit className="h-4 w-4 text-blue-600" />;
+                      return <Edit className="h-4 w-4 text-primary" />;
                     case 'DELETE':
-                      return <Trash2 className="h-4 w-4 text-red-600" />;
+                      return <Trash2 className="h-4 w-4 text-destructive" />;
                     default:
-                      return <Clock className="h-4 w-4 text-gray-400" />;
+                      return <Clock className="h-4 w-4 text-muted-foreground" />;
                   }
                 };
 
