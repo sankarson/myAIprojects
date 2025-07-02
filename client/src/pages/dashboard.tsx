@@ -212,28 +212,28 @@ export default function Dashboard() {
                 const getBgColor = (action: string) => {
                   switch (action) {
                     case 'CREATE':
-                      return 'bg-green-100';
+                      return 'bg-primary/20';
                     case 'UPDATE':
-                      return 'bg-blue-100';
+                      return 'bg-secondary';
                     case 'DELETE':
-                      return 'bg-red-100';
+                      return 'bg-destructive/20';
                     default:
-                      return 'bg-gray-100';
+                      return 'bg-muted';
                   }
                 };
 
                 return (
-                  <div key={activity.id} className="px-3 py-1.5 hover:bg-gray-50 transition-colors">
+                  <div key={activity.id} className="px-3 py-1.5 hover:bg-muted transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 flex-1 min-w-0">
                         <div className={`p-1 rounded-full ${getBgColor(activity.action)}`}>
                           {getIcon(activity.action)}
                         </div>
-                        <p className="text-sm font-medium text-gray-900 truncate">
+                        <p className="text-sm font-medium text-foreground truncate">
                           {activity.description}
                         </p>
                       </div>
-                      <p className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                      <p className="text-xs text-muted-foreground ml-2 flex-shrink-0">
                         {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })
                           .replace(' minutes', 'm')
                           .replace(' minute', 'm')
@@ -247,16 +247,16 @@ export default function Dashboard() {
                 );
               })}
               {hasMore && (
-                <div className="px-3 py-2 border-t border-gray-200">
+                <div className="px-3 py-2 border-t border-border">
                   {activitiesLoading && offset > 0 ? (
-                    <div className="flex items-center justify-center space-x-2 text-gray-500">
-                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-300"></div>
+                    <div className="flex items-center justify-center space-x-2 text-muted-foreground">
+                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
                       <span className="text-xs">Loading more...</span>
                     </div>
                   ) : (
                     <button
                       onClick={() => setOffset(prev => prev + 20)}
-                      className="w-full py-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium"
+                      className="w-full py-1.5 text-xs text-primary hover:text-primary/80 font-medium"
                       disabled={activitiesLoading}
                     >
                       Load More Activities
@@ -266,8 +266,8 @@ export default function Dashboard() {
               )}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500 flex-1 flex flex-col justify-center">
-              <Clock className="mx-auto h-12 w-12 text-gray-300 mb-3" />
+            <div className="text-center py-8 text-muted-foreground flex-1 flex flex-col justify-center">
+              <Clock className="mx-auto h-12 w-12 text-muted-foreground/60 mb-3" />
               <p className="text-sm">No recent activity</p>
               <p className="text-xs mt-1">Activities will appear here as you manage your inventory</p>
             </div>
