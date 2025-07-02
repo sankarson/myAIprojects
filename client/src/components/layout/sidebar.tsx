@@ -8,7 +8,7 @@ const navigationItems = [
   { name: "Dashboard", path: "/", icon: BarChart3 },
   { name: "Warehouses", path: "/warehouses", icon: Building },
   { name: "Pallets", path: "/pallets", icon: Package },
-  { name: "Bins", path: "/bins", icon: Box },
+  { name: "Trunks", path: "/bins", icon: Box },
   { name: "SKUs", path: "/skus", icon: Warehouse },
 ];
 

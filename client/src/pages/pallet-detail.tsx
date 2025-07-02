@@ -57,7 +57,7 @@ export default function PalletDetail() {
       queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
-        description: "Bin name updated successfully",
+        description: "Trunk name updated successfully",
       });
       setEditingBinId(null);
       setEditBinName("");
@@ -65,7 +65,7 @@ export default function PalletDetail() {
     onError: (error: any) => {
       toast({
         title: "Error",
-        description: error.message || "Failed to update bin name",
+        description: error.message || "Failed to update trunk name",
         variant: "destructive",
       });
     },
@@ -81,13 +81,13 @@ export default function PalletDetail() {
       queryClient.invalidateQueries({ queryKey: ["/api/activity"] });
       toast({
         title: "Success",
-        description: "Bin deleted successfully",
+        description: "Trunk deleted successfully",
       });
     },
     onError: (error: any) => {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete bin",
+        description: error.message || "Failed to delete trunk",
         variant: "destructive",
       });
     },
@@ -195,7 +195,7 @@ export default function PalletDetail() {
                   {pallet.name || pallet.palletNumber}
                 </h1>
                 <p className="text-sm text-gray-500">
-                  {pallet.palletNumber} • {pallet.bins?.length || 0} Bins
+                  {pallet.palletNumber} • {pallet.bins?.length || 0} Trunks
                 </p>
               </div>
             </div>
@@ -331,8 +331,8 @@ export default function PalletDetail() {
                 ) : (
                   <div className="text-center py-8">
                     <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Bins</h3>
-                    <p className="text-gray-500">This pallet doesn't contain any bins yet.</p>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No Trunks</h3>
+                    <p className="text-gray-500">This pallet doesn't contain any trunks yet.</p>
                   </div>
                 )}
               </CardContent>
@@ -345,9 +345,9 @@ export default function PalletDetail() {
       <Dialog open={isAddBinDialogOpen} onOpenChange={setIsAddBinDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Bin to Pallet</DialogTitle>
+            <DialogTitle>Add Trunk to Pallet</DialogTitle>
             <DialogDescription>
-              Create a new bin and add it to this pallet.
+              Create a new trunk and add it to this pallet.
             </DialogDescription>
           </DialogHeader>
           

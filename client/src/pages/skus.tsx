@@ -304,7 +304,7 @@ export default function Skus() {
                   }}
                 >
                   <ArrowLeft className="mr-2 h-4 w-4" />
-                  Back to Bins
+                  Back to Trunks
                 </Button>
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
