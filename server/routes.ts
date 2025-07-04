@@ -322,6 +322,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/skus-with-trunks", async (req, res) => {
+    try {
+      const skusWithTrunks = await storage.getSkusWithTrunks();
+      res.json(skusWithTrunks);
+    } catch (error) {
+      console.error("Error fetching SKUs with trunks:", error);
+      res.status(500).json({ error: "Failed to fetch SKUs with trunks" });
+    }
+  });
+
   app.get("/api/skus/:id", async (req, res) => {
     try {
       const id = parseInt(req.params.id);

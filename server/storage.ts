@@ -57,6 +57,7 @@ export interface IStorage {
 
   // SKU methods
   getSkus(): Promise<Sku[]>;
+  getSkusWithTrunks(): Promise<Array<Sku & { trunks: Array<{ binId: number; binNumber: string; binName: string; quantity: number }> }>>;
   getSkuById(id: number): Promise<SkuWithLocations | undefined>;
   createSku(sku: InsertSku): Promise<Sku>;
   updateSku(id: number, sku: Partial<InsertSku>): Promise<Sku>;
@@ -383,6 +384,29 @@ export class DatabaseStorage implements IStorage {
   // SKU methods
   async getSkus(): Promise<Sku[]> {
     return await db.select().from(skus).orderBy(skus.skuNumber);
+  }
+
+  async getSkusWithTrunks(): Promise<Array<Sku & { trunks: Array<{ binId: number; binNumber: string; binName: string; quantity: number }> }>> {
+    const skusWithLocations = await db.query.skus.findMany({
+      with: {
+        binSkus: {
+          with: {
+            bin: true,
+          },
+        },
+      },
+      orderBy: skus.skuNumber,
+    });
+
+    return skusWithLocations.map(sku => ({
+      ...sku,
+      trunks: sku.binSkus.map(binSku => ({
+        binId: binSku.bin.id,
+        binNumber: binSku.bin.binNumber,
+        binName: binSku.bin.name || binSku.bin.binNumber,
+        quantity: binSku.quantity,
+      })),
+    }));
   }
 
   async getSkuById(id: number): Promise<SkuWithLocations | undefined> {

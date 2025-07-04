@@ -44,6 +44,7 @@ The system uses a hierarchical structure:
 - `/api/pallets` - Pallet management
 - `/api/bins` - Bin operations
 - `/api/skus` - SKU management
+- `/api/skus-with-trunks` - Returns all SKUs with their associated bins (called "trunks") as JSON
 - `/api/bin-skus` - Inventory quantity tracking
 
 ## Data Flow
@@ -97,6 +98,8 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 1, 2025: Added dark mode functionality with toggle button, localStorage persistence, and proper theme colors throughout the application
+- July 1, 2025: Created `/api/skus-with-trunks` endpoint that returns all SKUs with their associated bins (trunks) as JSON data for external integration
 - July 1, 2025: Fixed hamburger menu disappearing bug when collapsing sidebar in landscape then rotating to portrait - improved mobile state management to ensure hamburger menu always appears on mobile view
 - July 1, 2025: Implemented infinite scroll for activity log with manual "Load More" button - allows access to all historical activities beyond recent hour, supporting permanent log retention
 - July 1, 2025: Renamed application from "Mynx Inventory" to "MI7" - updated title, sidebar branding, and documentation
