@@ -135,7 +135,12 @@ export default function Warehouses() {
                       <TableCell>
                         <div className="flex items-center">
                           <Building className="h-5 w-5 text-primary mr-3" />
-                          <span className="text-sm font-medium text-foreground">
+                          <span 
+                            className="text-sm font-medium text-primary hover:text-primary/80 cursor-pointer underline"
+                            onClick={() => {
+                              window.location.href = `/warehouse-detail?id=${warehouse.id}`;
+                            }}
+                          >
                             {warehouse.name}
                           </span>
                         </div>

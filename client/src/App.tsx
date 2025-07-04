@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Dashboard from "@/pages/dashboard";
 import Warehouses from "@/pages/warehouses";
+import WarehouseDetail from "@/pages/warehouse-detail";
 import Pallets from "@/pages/pallets";
 import Bins from "@/pages/bins";
 import BinDetail from "@/pages/bin-detail";
@@ -26,6 +27,7 @@ function Router() {
             <Switch>
               <Route path="/" component={Dashboard} />
               <Route path="/warehouses" component={Warehouses} />
+              <Route path="/warehouse-detail" component={WarehouseDetail} />
               <Route path="/pallets" component={Pallets} />
               <Route path="/bins" component={Bins} />
               <Route path="/bin-detail" component={BinDetail} />
