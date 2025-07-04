@@ -4,47 +4,47 @@
 
 :root {
   --background: hsl(0, 0%, 100%);
-  --foreground: hsl(25, 50%, 15%);
-  --muted: hsl(200, 50%, 95%);
-  --muted-foreground: hsl(25, 30%, 45%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
   --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(25, 50%, 15%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(25, 50%, 15%);
-  --border: hsl(200, 30%, 85%);
-  --input: hsl(200, 30%, 90%);
-  --primary: hsl(200, 60%, 75%);
-  --primary-foreground: hsl(25, 50%, 15%);
-  --secondary: hsl(200, 40%, 92%);
-  --secondary-foreground: hsl(25, 50%, 15%);
-  --accent: hsl(200, 50%, 88%);
-  --accent-foreground: hsl(25, 50%, 15%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(60, 9.1%, 97.8%);
-  --ring: hsl(200, 60%, 75%);
+  --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: hsl(25, 40%, 8%);
-  --foreground: hsl(200, 50%, 85%);
-  --muted: hsl(25, 30%, 15%);
-  --muted-foreground: hsl(200, 20%, 65%);
-  --popover: hsl(25, 40%, 8%);
-  --popover-foreground: hsl(200, 50%, 85%);
-  --card: hsl(25, 40%, 10%);
-  --card-foreground: hsl(200, 50%, 85%);
-  --border: hsl(25, 20%, 20%);
-  --input: hsl(25, 20%, 18%);
-  --primary: hsl(200, 50%, 65%);
-  --primary-foreground: hsl(25, 40%, 12%);
-  --secondary: hsl(25, 20%, 16%);
-  --secondary-foreground: hsl(200, 50%, 85%);
-  --accent: hsl(25, 25%, 18%);
-  --accent-foreground: hsl(200, 50%, 85%);
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(0, 62.8%, 30.6%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --ring: hsl(200, 50%, 65%);
+  --ring: hsl(240, 4.9%, 83.9%);
   --radius: 0.5rem;
 }
 
@@ -58,17 +58,17 @@
   }
 }
 
-/* Custom styles to match the pastel sky blue and dark brown theme */
+/* Custom styles to match the design reference */
 .card-elevation {
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .sidebar-item:hover {
-  background-color: hsl(200, 50%, 95%);
+  background-color: rgba(25, 118, 210, 0.08);
 }
 
 .table-row:hover {
-  background-color: hsl(200, 30%, 98%);
+  background-color: hsl(60, 4.8%, 98%);
 }
 
 .status-chip {

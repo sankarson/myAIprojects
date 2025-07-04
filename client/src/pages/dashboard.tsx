@@ -100,12 +100,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-primary/20">
+                <div className="p-3 rounded-lg bg-blue-100">
                   <Building className="text-primary text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-muted-foreground">Warehouses</p>
-                  <p className="text-2xl font-semibold text-foreground">
+                  <p className="text-sm text-gray-500">Warehouses</p>
+                  <p className="text-2xl font-semibold text-gray-900">
                     {stats?.warehouses || 0}
                   </p>
                 </div>
@@ -118,12 +118,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-primary/15">
-                  <Package className="text-primary text-xl" />
+                <div className="p-3 rounded-lg bg-green-100">
+                  <Package className="text-green-600 text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-muted-foreground">Pallets</p>
-                  <p className="text-2xl font-semibold text-foreground">
+                  <p className="text-sm text-gray-500">Pallets</p>
+                  <p className="text-2xl font-semibold text-gray-900">
                     {stats?.pallets || 0}
                   </p>
                 </div>
@@ -136,12 +136,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-secondary">
-                  <Box className="text-foreground text-xl" />
+                <div className="p-3 rounded-lg bg-orange-100">
+                  <Box className="text-orange-600 text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-muted-foreground">Bins</p>
-                  <p className="text-2xl font-semibold text-foreground">
+                  <p className="text-sm text-gray-500">Bins</p>
+                  <p className="text-2xl font-semibold text-gray-900">
                     {stats?.bins || 0}
                   </p>
                 </div>
@@ -154,12 +154,12 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-accent">
-                  <Warehouse className="text-primary text-xl" />
+                <div className="p-3 rounded-lg bg-purple-100">
+                  <Warehouse className="text-purple-600 text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-muted-foreground">SKUs</p>
-                  <p className="text-2xl font-semibold text-foreground">
+                  <p className="text-sm text-gray-500">SKUs</p>
+                  <p className="text-2xl font-semibold text-gray-900">
                     {stats?.skus || 0}
                   </p>
                 </div>
@@ -193,47 +193,47 @@ export default function Dashboard() {
           ) : displayActivities && displayActivities.length > 0 ? (
             <div 
               ref={activityRef}
-              className="divide-y divide-border flex-1 overflow-y-auto"
+              className="divide-y divide-gray-200 flex-1 overflow-y-auto"
             >
               {displayActivities.map((activity) => {
                 const getIcon = (action: string) => {
                   switch (action) {
                     case 'CREATE':
-                      return <Plus className="h-4 w-4 text-primary" />;
+                      return <Plus className="h-4 w-4 text-green-600" />;
                     case 'UPDATE':
-                      return <Edit className="h-4 w-4 text-primary" />;
+                      return <Edit className="h-4 w-4 text-blue-600" />;
                     case 'DELETE':
-                      return <Trash2 className="h-4 w-4 text-destructive" />;
+                      return <Trash2 className="h-4 w-4 text-red-600" />;
                     default:
-                      return <Clock className="h-4 w-4 text-muted-foreground" />;
+                      return <Clock className="h-4 w-4 text-gray-400" />;
                   }
                 };
 
                 const getBgColor = (action: string) => {
                   switch (action) {
                     case 'CREATE':
-                      return 'bg-primary/20';
+                      return 'bg-green-100';
                     case 'UPDATE':
-                      return 'bg-secondary';
+                      return 'bg-blue-100';
                     case 'DELETE':
-                      return 'bg-destructive/20';
+                      return 'bg-red-100';
                     default:
-                      return 'bg-muted';
+                      return 'bg-gray-100';
                   }
                 };
 
                 return (
-                  <div key={activity.id} className="px-3 py-1.5 hover:bg-muted transition-colors">
+                  <div key={activity.id} className="px-3 py-1.5 hover:bg-gray-50 transition-colors">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2 flex-1 min-w-0">
                         <div className={`p-1 rounded-full ${getBgColor(activity.action)}`}>
                           {getIcon(activity.action)}
                         </div>
-                        <p className="text-sm font-medium text-foreground truncate">
+                        <p className="text-sm font-medium text-gray-900 truncate">
                           {activity.description}
                         </p>
                       </div>
-                      <p className="text-xs text-muted-foreground ml-2 flex-shrink-0">
+                      <p className="text-xs text-gray-500 ml-2 flex-shrink-0">
                         {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })
                           .replace(' minutes', 'm')
                           .replace(' minute', 'm')
@@ -247,16 +247,16 @@ export default function Dashboard() {
                 );
               })}
               {hasMore && (
-                <div className="px-3 py-2 border-t border-border">
+                <div className="px-3 py-2 border-t border-gray-200">
                   {activitiesLoading && offset > 0 ? (
-                    <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
+                    <div className="flex items-center justify-center space-x-2 text-gray-500">
+                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-300"></div>
                       <span className="text-xs">Loading more...</span>
                     </div>
                   ) : (
                     <button
                       onClick={() => setOffset(prev => prev + 20)}
-                      className="w-full py-1.5 text-xs text-primary hover:text-primary/80 font-medium"
+                      className="w-full py-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium"
                       disabled={activitiesLoading}
                     >
                       Load More Activities
@@ -266,8 +266,8 @@ export default function Dashboard() {
               )}
             </div>
           ) : (
-            <div className="text-center py-8 text-muted-foreground flex-1 flex flex-col justify-center">
-              <Clock className="mx-auto h-12 w-12 text-muted-foreground/60 mb-3" />
+            <div className="text-center py-8 text-gray-500 flex-1 flex flex-col justify-center">
+              <Clock className="mx-auto h-12 w-12 text-gray-300 mb-3" />
               <p className="text-sm">No recent activity</p>
               <p className="text-xs mt-1">Activities will appear here as you manage your inventory</p>
             </div>
