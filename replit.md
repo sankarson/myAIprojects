@@ -97,7 +97,6 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- July 1, 2025: Changed "Bins" to "Trunks" throughout the application - updated navigation, page titles, user interface text, and documentation for consistent terminology
 - July 1, 2025: Fixed hamburger menu disappearing bug when collapsing sidebar in landscape then rotating to portrait - improved mobile state management to ensure hamburger menu always appears on mobile view
 - July 1, 2025: Implemented infinite scroll for activity log with manual "Load More" button - allows access to all historical activities beyond recent hour, supporting permanent log retention
 - July 1, 2025: Renamed application from "Mynx Inventory" to "MI7" - updated title, sidebar branding, and documentation

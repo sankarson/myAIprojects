@@ -91,7 +91,7 @@ export default function Bins() {
   };
 
   const handleDelete = (id: number) => {
-    if (confirm("Are you sure you want to delete this trunk?")) {
+    if (confirm("Are you sure you want to delete this bin?")) {
       deleteMutation.mutate(id);
     }
   };
@@ -121,10 +121,10 @@ export default function Bins() {
                 </Button>
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    Trunks in {getFilteredPalletName()}
+                    Bins in {getFilteredPalletName()}
                   </h2>
                   <p className="text-sm text-gray-500">
-                    Showing {filteredBins.length} trunk{filteredBins.length !== 1 ? 's' : ''}
+                    Showing {filteredBins.length} bin{filteredBins.length !== 1 ? 's' : ''}
                   </p>
                 </div>
               </div>
@@ -135,7 +135,7 @@ export default function Bins() {
                   window.location.href = '/bins';
                 }}
               >
-                View All Trunks
+                View All Bins
               </Button>
             </div>
           </div>
@@ -149,7 +149,7 @@ export default function Bins() {
               <div className="relative flex-1 sm:flex-none">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="Search trunks..."
+                  placeholder="Search bins..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10 w-full sm:w-64"
@@ -157,7 +157,7 @@ export default function Bins() {
               </div>
               <Button onClick={() => setIsModalOpen(true)} className="w-full sm:w-auto">
                 <Plus className="mr-2 h-4 w-4" />
-                Add Trunk
+                Add Bin
               </Button>
             </div>
           </div>

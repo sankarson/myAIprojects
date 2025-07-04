@@ -11,7 +11,7 @@ const pageConfig = {
     title: "Pallets",
   },
   "/bins": {
-    title: "Trunks",
+    title: "Bins",
   },
   "/skus": {
     title: "SKUs",

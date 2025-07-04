@@ -140,7 +140,7 @@ export default function Dashboard() {
                   <Box className="text-foreground text-xl" />
                 </div>
                 <div className="ml-4">
-                  <p className="text-sm text-muted-foreground">Trunks</p>
+                  <p className="text-sm text-muted-foreground">Bins</p>
                   <p className="text-2xl font-semibold text-foreground">
                     {stats?.bins || 0}
                   </p>
