@@ -98,7 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- July 4, 2025: Migrated database from PostgreSQL to SQLite - replaced Neon serverless database with local SQLite file for improved simplicity and portability, includes automatic table creation and sample data seeding
+- July 4, 2025: Successfully migrated database from PostgreSQL to SQLite - transferred all existing data (2 warehouses, 2 pallets, 2 bins, 112 SKUs, 3 inventory relationships, 126 activity log entries) from Neon serverless database to local SQLite file for improved simplicity and portability
 - July 4, 2025: Added warehouse detail view with Google Maps integration - warehouse names are now clickable and show detailed information including embedded map of warehouse address, pallet listings, and comprehensive warehouse data
 - July 4, 2025: Fixed comprehensive dark mode readability issues across all pages including SKUs table, dashboard icons, warehouses, pallets, bins, and CSV import dialog - replaced gray text colors with semantic theme colors for proper contrast in both light and dark modes
 - July 1, 2025: Added dark mode functionality with toggle button, localStorage persistence, and proper theme colors throughout the application
