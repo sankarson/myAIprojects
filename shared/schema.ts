@@ -1,46 +1,46 @@
-import { pgTable, text, serial, integer, boolean, decimal, varchar, timestamp } from "drizzle-orm/pg-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Warehouses table
-export const warehouses = pgTable("warehouses", {
-  id: serial("id").primaryKey(),
+export const warehouses = sqliteTable("warehouses", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name").notNull(),
   address: text("address").notNull(),
 });
 
 // Pallets table
-export const pallets = pgTable("pallets", {
-  id: serial("id").primaryKey(),
-  palletNumber: varchar("pallet_number", { length: 20 }).notNull().unique(),
+export const pallets = sqliteTable("pallets", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  palletNumber: text("pallet_number").notNull().unique(),
   name: text("name"),
   warehouseId: integer("warehouse_id").references(() => warehouses.id),
-  locationCode: varchar("location_code", { length: 6 }),
+  locationCode: text("location_code"),
 });
 
 // Bins table
-export const bins = pgTable("bins", {
-  id: serial("id").primaryKey(),
-  binNumber: varchar("bin_number", { length: 20 }).notNull().unique(),
+export const bins = sqliteTable("bins", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  binNumber: text("bin_number").notNull().unique(),
   name: text("name"),
   palletId: integer("pallet_id").references(() => pallets.id),
   imageUrl: text("image_url"),
 });
 
 // SKUs table
-export const skus = pgTable("skus", {
-  id: serial("id").primaryKey(),
-  skuNumber: varchar("sku_number", { length: 20 }).notNull().unique(),
+export const skus = sqliteTable("skus", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  skuNumber: text("sku_number").notNull().unique(),
   name: text("name").notNull(),
   description: text("description"),
-  price: decimal("price", { precision: 10, scale: 2 }),
+  price: real("price"),
   imageUrl: text("image_url"),
 });
 
 // Bin SKUs junction table (for quantities)
-export const binSkus = pgTable("bin_skus", {
-  id: serial("id").primaryKey(),
+export const binSkus = sqliteTable("bin_skus", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   binId: integer("bin_id").notNull().references(() => bins.id),
   skuId: integer("sku_id").notNull().references(() => skus.id),
   quantity: integer("quantity").notNull(),
@@ -142,8 +142,8 @@ export type SkuWithLocations = Sku & {
 };
 
 // Legacy user schema (keeping for compatibility)
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+export const users = sqliteTable("users", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
@@ -157,14 +157,14 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
 // Activity log table for tracking CRUD operations
-export const activityLog = pgTable("activity_log", {
-  id: serial("id").primaryKey(),
-  action: varchar("action", { length: 20 }).notNull(), // CREATE, UPDATE, DELETE
-  entityType: varchar("entity_type", { length: 20 }).notNull(), // warehouse, pallet, bin, sku
+export const activityLog = sqliteTable("activity_log", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  action: text("action").notNull(), // CREATE, UPDATE, DELETE
+  entityType: text("entity_type").notNull(), // warehouse, pallet, bin, sku
   entityId: integer("entity_id").notNull(),
   entityName: text("entity_name").notNull(),
   description: text("description").notNull(),
-  timestamp: timestamp("timestamp").defaultNow().notNull(),
+  timestamp: integer("timestamp", { mode: "timestamp" }).notNull().$defaultFn(() => new Date()),
 });
 
 export const insertActivityLogSchema = createInsertSchema(activityLog).omit({

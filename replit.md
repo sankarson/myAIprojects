@@ -17,7 +17,7 @@ This is a full-stack inventory management system built with a modern React front
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
-- **Database**: PostgreSQL with Neon serverless database
+- **Database**: SQLite with local file storage
 - **ORM**: Drizzle ORM for type-safe database operations
 - **API Design**: RESTful API with JSON responses
 - **Middleware**: Express middleware for logging and error handling
@@ -59,8 +59,8 @@ The system uses a hierarchical structure:
 ## External Dependencies
 
 ### Database
-- **Neon PostgreSQL**: Serverless PostgreSQL database
-- **Connection**: WebSocket-based connection pooling
+- **SQLite**: Local file-based database
+- **Connection**: Direct file access via better-sqlite3
 
 ### UI Libraries
 - **Radix UI**: Accessible component primitives
@@ -87,9 +87,9 @@ The system uses a hierarchical structure:
 - Single-server deployment serving both API and static files
 
 ### Environment Configuration
-- `DATABASE_URL`: PostgreSQL connection string
+- `DATABASE_URL`: SQLite database file path (defaults to ./database.sqlite)
 - `NODE_ENV`: Environment mode (development/production)
-- Database provisioning required before deployment
+- Database file created automatically on first run
 
 ### Build Process
 1. `npm run build`: Builds both frontend and backend
@@ -98,6 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 4, 2025: Migrated database from PostgreSQL to SQLite - replaced Neon serverless database with local SQLite file for improved simplicity and portability, includes automatic table creation and sample data seeding
 - July 4, 2025: Added warehouse detail view with Google Maps integration - warehouse names are now clickable and show detailed information including embedded map of warehouse address, pallet listings, and comprehensive warehouse data
 - July 4, 2025: Fixed comprehensive dark mode readability issues across all pages including SKUs table, dashboard icons, warehouses, pallets, bins, and CSV import dialog - replaced gray text colors with semantic theme colors for proper contrast in both light and dark modes
 - July 1, 2025: Added dark mode functionality with toggle button, localStorage persistence, and proper theme colors throughout the application

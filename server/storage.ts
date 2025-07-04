@@ -194,10 +194,10 @@ export class DatabaseStorage implements IStorage {
 
   async createPallet(pallet: InsertPallet): Promise<Pallet> {
     // Generate sequential pallet number
-    const result = await db.execute(
-      sql`SELECT COALESCE(MAX(CAST(SUBSTRING(pallet_number FROM 4) AS INTEGER)), 0) + 1 as next_num FROM pallets`
-    );
-    const nextNum = (result.rows[0] as any).next_num;
+    const result = await db.select({
+      nextNum: sql<number>`COALESCE(MAX(CAST(SUBSTR(pallet_number, 4) AS INTEGER)), 0) + 1`
+    }).from(pallets);
+    const nextNum = result[0]?.nextNum || 1;
     const palletNumber = `PLT${nextNum.toString().padStart(7, "0")}`;
 
     // Use provided name or default to pallet number
@@ -306,10 +306,10 @@ export class DatabaseStorage implements IStorage {
 
   async createBin(bin: InsertBin): Promise<Bin> {
     // Generate sequential bin number
-    const result = await db.execute(
-      sql`SELECT COALESCE(MAX(CAST(SUBSTRING(bin_number FROM 4) AS INTEGER)), 0) + 1 as next_num FROM bins`
-    );
-    const nextNum = (result.rows[0] as any).next_num;
+    const result = await db.select({
+      nextNum: sql<number>`COALESCE(MAX(CAST(SUBSTR(bin_number, 4) AS INTEGER)), 0) + 1`
+    }).from(bins);
+    const nextNum = result[0]?.nextNum || 1;
     const binNumber = `BIN${nextNum.toString().padStart(7, "0")}`;
 
     // Use provided name or default to bin number
@@ -446,10 +446,10 @@ export class DatabaseStorage implements IStorage {
 
   async createSku(sku: InsertSku): Promise<Sku> {
     // Generate sequential SKU number
-    const result = await db.execute(
-      sql`SELECT COALESCE(MAX(CAST(SUBSTRING(sku_number FROM 4) AS INTEGER)), 0) + 1 as next_num FROM skus`
-    );
-    const nextNum = (result.rows[0] as any).next_num;
+    const result = await db.select({
+      nextNum: sql<number>`COALESCE(MAX(CAST(SUBSTR(sku_number, 4) AS INTEGER)), 0) + 1`
+    }).from(skus);
+    const nextNum = result[0]?.nextNum || 1;
     const skuNumber = `SKU${nextNum.toString().padStart(7, "0")}`;
 
     const [newSku] = await db
