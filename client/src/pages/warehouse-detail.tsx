@@ -11,13 +11,14 @@ export default function WarehouseDetail() {
   const [, setLocation] = useLocation();
   const urlParams = new URLSearchParams(window.location.search);
   const warehouseId = urlParams.get("id");
+  const warehouseIdNum = warehouseId ? parseInt(warehouseId, 10) : null;
 
-  const { data: warehouse, isLoading } = useQuery<WarehouseWithPallets>({
-    queryKey: [`/api/warehouses/${warehouseId}`],
-    enabled: !!warehouseId,
+  const { data: warehouse, isLoading, error } = useQuery<WarehouseWithPallets>({
+    queryKey: [`/api/warehouses/${warehouseIdNum}`],
+    enabled: !!warehouseIdNum && !isNaN(warehouseIdNum),
   });
 
-  if (!warehouseId) {
+  if (!warehouseId || !warehouseIdNum || isNaN(warehouseIdNum)) {
     return (
       <div className="p-12 text-center">
         <h3 className="text-lg font-medium text-foreground">Warehouse not found</h3>
@@ -44,6 +45,23 @@ export default function WarehouseDetail() {
             <Skeleton className="h-96" />
           </div>
         </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-12 text-center">
+        <h3 className="text-lg font-medium text-foreground">Error loading warehouse</h3>
+        <p className="text-sm text-muted-foreground mt-2">
+          Failed to load warehouse details. Please try again.
+        </p>
+        <Button 
+          className="mt-4" 
+          onClick={() => setLocation("/warehouses")}
+        >
+          Back to Warehouses
+        </Button>
       </div>
     );
   }
@@ -175,7 +193,7 @@ export default function WarehouseDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-              <div className="w-full h-96 rounded-lg overflow-hidden">
+              <div className="w-full h-96 rounded-lg overflow-hidden bg-muted">
                 <iframe
                   src={googleMapsEmbedUrl}
                   width="100%"
@@ -185,7 +203,24 @@ export default function WarehouseDetail() {
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title={`Map of ${warehouse.name}`}
+                  onError={() => {
+                    console.warn('Google Maps iframe failed to load');
+                  }}
                 />
+              </div>
+              <div className="p-4 border-t">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodedAddress}`;
+                    window.open(googleMapsUrl, '_blank');
+                  }}
+                  className="w-full"
+                >
+                  <MapPin className="h-4 w-4 mr-2" />
+                  Open in Google Maps
+                </Button>
               </div>
             </CardContent>
           </Card>

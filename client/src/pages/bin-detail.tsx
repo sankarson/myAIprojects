@@ -25,7 +25,8 @@ type AddSkuFormData = z.infer<typeof addSkuFormSchema>;
 
 export default function BinDetail() {
   const [location, setLocation] = useLocation();
-  const binId = new URLSearchParams(window.location.search).get('id');
+  const binIdParam = new URLSearchParams(window.location.search).get('id');
+  const binId = binIdParam ? parseInt(binIdParam, 10) : null;
   const { toast } = useToast();
   
   // State for editing quantities
@@ -44,7 +45,7 @@ export default function BinDetail() {
 
   const { data: bin, isLoading } = useQuery<BinWithSkus>({
     queryKey: [`/api/bins/${binId}`],
-    enabled: !!binId,
+    enabled: !!binId && !isNaN(binId),
   });
 
   const { data: skus } = useQuery<Sku[]>({
@@ -135,7 +136,7 @@ export default function BinDetail() {
     setEditQuantity(currentQuantity.toString());
   };
 
-  const handleSaveQuantity = (binId: number, skuId: number) => {
+  const handleSaveQuantity = (targetBinId: number, skuId: number) => {
     const quantity = parseInt(editQuantity);
     if (isNaN(quantity) || quantity <= 0) {
       toast({
@@ -145,7 +146,7 @@ export default function BinDetail() {
       });
       return;
     }
-    updateQuantityMutation.mutate({ binId, skuId, quantity });
+    updateQuantityMutation.mutate({ binId: targetBinId, skuId, quantity });
   };
 
   const handleCancelEdit = () => {
@@ -153,16 +154,16 @@ export default function BinDetail() {
     setEditQuantity("");
   };
 
-  const handleRemoveSku = (binId: number, skuId: number, skuName: string) => {
+  const handleRemoveSku = (targetBinId: number, skuId: number, skuName: string) => {
     if (confirm(`Are you sure you want to remove "${skuName}" from this bin?`)) {
-      removeSkuMutation.mutate({ binId, skuId });
+      removeSkuMutation.mutate({ binId: targetBinId, skuId });
     }
   };
 
   const handleAddSku = (data: AddSkuFormData) => {
     if (!binId) return;
     addSkuToBinMutation.mutate({
-      binId: parseInt(binId),
+      binId: binId,
       skuId: data.skuId,
       quantity: data.quantity,
     });

@@ -24,7 +24,8 @@ type AddBinFormData = z.infer<typeof addBinFormSchema>;
 
 export default function PalletDetail() {
   const [location, setLocation] = useLocation();
-  const palletId = new URLSearchParams(window.location.search).get('id');
+  const palletIdParam = new URLSearchParams(window.location.search).get('id');
+  const palletId = palletIdParam ? parseInt(palletIdParam, 10) : null;
   const { toast } = useToast();
   
   // State for editing bin names
@@ -34,9 +35,9 @@ export default function PalletDetail() {
   // State for Add Bin dialog
   const [isAddBinDialogOpen, setIsAddBinDialogOpen] = useState(false);
 
-  const { data: pallet, isLoading } = useQuery<PalletWithBins>({
+  const { data: pallet, isLoading, error } = useQuery<PalletWithBins>({
     queryKey: [`/api/pallets/${palletId}`],
-    enabled: !!palletId,
+    enabled: !!palletId && !isNaN(palletId),
   });
 
   // Form for adding bins
@@ -148,7 +149,7 @@ export default function PalletDetail() {
   const handleAddBin = (data: AddBinFormData) => {
     if (!palletId) return;
     addBinToPalletMutation.mutate({
-      palletId: parseInt(palletId),
+      palletId: palletId,
       name: data.name,
     });
   };
@@ -158,21 +159,61 @@ export default function PalletDetail() {
     addBinForm.reset();
   };
 
+  if (!palletId || isNaN(palletId)) {
+    return (
+      <div className="p-12 text-center">
+        <h3 className="text-lg font-medium text-foreground">Invalid Pallet ID</h3>
+        <p className="text-sm text-muted-foreground mt-2">
+          Please provide a valid pallet ID.
+        </p>
+        <Button 
+          className="mt-4" 
+          onClick={() => setLocation("/pallets")}
+        >
+          Back to Pallets
+        </Button>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-12 text-center">
+        <h3 className="text-lg font-medium text-foreground">Error loading pallet</h3>
+        <p className="text-sm text-muted-foreground mt-2">
+          Failed to load pallet details. Please try again.
+        </p>
+        <Button 
+          className="mt-4" 
+          onClick={() => setLocation("/pallets")}
+        >
+          Back to Pallets
+        </Button>
       </div>
     );
   }
 
   if (!pallet) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Pallet Not Found</h1>
-          <p className="text-gray-500">The requested pallet could not be found.</p>
-        </div>
+      <div className="p-12 text-center">
+        <h3 className="text-lg font-medium text-foreground">Pallet Not Found</h3>
+        <p className="text-sm text-muted-foreground mt-2">
+          The requested pallet could not be found.
+        </p>
+        <Button 
+          className="mt-4" 
+          onClick={() => setLocation("/pallets")}
+        >
+          Back to Pallets
+        </Button>
       </div>
     );
   }
