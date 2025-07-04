@@ -100,7 +100,7 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-blue-100">
+                <div className="p-3 rounded-lg bg-blue-100 dark:bg-blue-900/20">
                   <Building className="text-primary text-xl" />
                 </div>
                 <div className="ml-4">
@@ -118,8 +118,8 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-green-100">
-                  <Package className="text-green-600 text-xl" />
+                <div className="p-3 rounded-lg bg-green-100 dark:bg-green-900/20">
+                  <Package className="text-green-600 dark:text-green-400 text-xl" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm text-muted-foreground">Pallets</p>
@@ -136,8 +136,8 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-orange-100">
-                  <Box className="text-orange-600 text-xl" />
+                <div className="p-3 rounded-lg bg-orange-100 dark:bg-orange-900/20">
+                  <Box className="text-orange-600 dark:text-orange-400 text-xl" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm text-muted-foreground">Bins</p>
@@ -154,8 +154,8 @@ export default function Dashboard() {
           <Card className="shadow-md hover:shadow-lg transition-shadow cursor-pointer">
             <CardContent className="p-4 lg:p-6">
               <div className="flex items-center">
-                <div className="p-3 rounded-lg bg-purple-100">
-                  <Warehouse className="text-purple-600 text-xl" />
+                <div className="p-3 rounded-lg bg-purple-100 dark:bg-purple-900/20">
+                  <Warehouse className="text-purple-600 dark:text-purple-400 text-xl" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm text-muted-foreground">SKUs</p>

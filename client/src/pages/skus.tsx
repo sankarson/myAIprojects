@@ -405,13 +405,13 @@ export default function Skus() {
             </div>
           ) : filteredSkus.length === 0 ? (
             <div className="p-12 text-center">
-              <div className="mx-auto h-24 w-24 text-gray-400">
+              <div className="mx-auto h-24 w-24 text-muted-foreground">
                 <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
               </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No SKUs found</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <h3 className="mt-4 text-lg font-medium text-foreground">No SKUs found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {searchQuery ? "Try adjusting your search terms." : "Get started by creating your first SKU."}
               </p>
               {!searchQuery && (
@@ -469,7 +469,7 @@ export default function Skus() {
                 </TableHeader>
                 <TableBody>
                   {filteredSkus.map((sku) => (
-                    <TableRow key={sku.id} className="hover:bg-gray-50">
+                    <TableRow key={sku.id} className="hover:bg-accent/50">
                       <TableCell className="py-2">
                         <Checkbox
                           checked={selectedSkus.has(sku.id)}
@@ -488,10 +488,10 @@ export default function Skus() {
                           ) : (
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="h-8 w-8 bg-gray-200 rounded flex items-center justify-center mr-2 hover:bg-gray-300 cursor-pointer transition-colors flex-shrink-0"
+                              className="h-8 w-8 bg-muted rounded flex items-center justify-center mr-2 hover:bg-muted/80 cursor-pointer transition-colors flex-shrink-0"
                               title="Click to add image"
                             >
-                              <svg className="h-4 w-4 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="h-4 w-4 text-muted-foreground flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
                             </button>
@@ -499,11 +499,11 @@ export default function Skus() {
                           <div>
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="text-sm font-medium text-gray-900 hover:text-blue-600 hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
+                              className="text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
                             >
                               {sku.name}
                             </button>
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-muted-foreground mt-1">
                               {sku.description || "—"}
                             </div>
                           </div>
@@ -512,11 +512,11 @@ export default function Skus() {
 
                       <TableCell className="py-2 text-right">
                         {sku.price ? (
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-foreground">
                             ₹{sku.price}
                           </span>
                         ) : (
-                          <span className="text-sm text-gray-500">—</span>
+                          <span className="text-sm text-muted-foreground">—</span>
                         )}
                       </TableCell>
 
@@ -547,16 +547,16 @@ export default function Skus() {
             <div className="flex items-center justify-center w-full">
               <label 
                 htmlFor="csv-upload" 
-                className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+                className="flex flex-col items-center justify-center w-full h-32 border-2 border-muted-foreground/25 border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted/80"
               >
                 <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                  <p className="mb-2 text-sm text-gray-500">
+                  <Upload className="w-8 h-8 mb-4 text-muted-foreground" />
+                  <p className="mb-2 text-sm text-muted-foreground">
                     <span className="font-semibold">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-gray-500">CSV files only</p>
+                  <p className="text-xs text-muted-foreground">CSV files only</p>
                   {importFile && (
-                    <p className="mt-2 text-sm text-blue-600 font-medium">{importFile.name}</p>
+                    <p className="mt-2 text-sm text-primary font-medium">{importFile.name}</p>
                   )}
                 </div>
                 <input 

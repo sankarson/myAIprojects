@@ -237,11 +237,11 @@ export default function PalletDetail() {
                     {pallet.bins.map((bin, index) => (
                       <div
                         key={index}
-                        className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                        className="border rounded-lg p-4 hover:bg-accent/50 transition-colors"
                       >
                         <div className="flex items-start space-x-4">
                           {/* Bin Image */}
-                          <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          <div className="w-16 h-16 bg-muted rounded-lg overflow-hidden flex-shrink-0">
                             {bin.imageUrl ? (
                               <img
                                 src={bin.imageUrl}

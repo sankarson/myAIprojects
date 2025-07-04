@@ -98,6 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 4, 2025: Fixed comprehensive dark mode readability issues across all pages including SKUs table, dashboard icons, warehouses, pallets, bins, and CSV import dialog - replaced gray text colors with semantic theme colors for proper contrast in both light and dark modes
 - July 1, 2025: Added dark mode functionality with toggle button, localStorage persistence, and proper theme colors throughout the application
 - July 1, 2025: Created `/api/skus-with-trunks` endpoint that returns all SKUs with their associated bins (trunks) as JSON data for external integration
 - July 1, 2025: Fixed hamburger menu disappearing bug when collapsing sidebar in landscape then rotating to portrait - improved mobile state management to ensure hamburger menu always appears on mobile view

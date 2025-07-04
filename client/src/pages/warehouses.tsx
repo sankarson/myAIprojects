@@ -107,9 +107,9 @@ export default function Warehouses() {
             </div>
           ) : filteredWarehouses.length === 0 ? (
             <div className="p-12 text-center">
-              <Building className="mx-auto h-24 w-24 text-gray-400" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No warehouses found</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <Building className="mx-auto h-24 w-24 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium text-foreground">No warehouses found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {searchQuery ? "Try adjusting your search terms." : "Get started by creating your first warehouse."}
               </p>
               {!searchQuery && (
@@ -131,17 +131,17 @@ export default function Warehouses() {
                 </TableHeader>
                 <TableBody>
                   {filteredWarehouses.map((warehouse) => (
-                    <TableRow key={warehouse.id} className="hover:bg-gray-50">
+                    <TableRow key={warehouse.id} className="hover:bg-accent/50">
                       <TableCell>
                         <div className="flex items-center">
                           <Building className="h-5 w-5 text-primary mr-3" />
-                          <span className="text-sm font-medium text-gray-900">
+                          <span className="text-sm font-medium text-foreground">
                             {warehouse.name}
                           </span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm text-gray-900">
+                        <span className="text-sm text-foreground">
                           {warehouse.address}
                         </span>
                       </TableCell>

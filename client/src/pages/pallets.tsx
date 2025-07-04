@@ -120,9 +120,9 @@ export default function Pallets() {
             </div>
           ) : filteredPallets.length === 0 ? (
             <div className="p-12 text-center">
-              <Package className="mx-auto h-24 w-24 text-gray-400" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No pallets found</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <Package className="mx-auto h-24 w-24 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium text-foreground">No pallets found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {searchQuery ? "Try adjusting your search terms." : "Get started by creating your first pallet."}
               </p>
               {!searchQuery && (
@@ -145,20 +145,20 @@ export default function Pallets() {
                 </TableHeader>
                 <TableBody>
                   {filteredPallets.map((pallet) => (
-                    <TableRow key={pallet.id} className="hover:bg-gray-50">
+                    <TableRow key={pallet.id} className="hover:bg-accent/50">
                       <TableCell>
                         <div className="flex items-center">
-                          <Package className="h-5 w-5 text-green-600 mr-3" />
+                          <Package className="h-5 w-5 text-green-600 dark:text-green-400 mr-3" />
                           <div>
                             <span 
-                              className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                              className="text-sm font-medium text-primary hover:text-primary/80 cursor-pointer underline"
                               onClick={() => {
                                 window.location.href = `/pallet-detail?id=${pallet.id}`;
                               }}
                             >
                               {pallet.name || pallet.palletNumber}
                             </span>
-                            <div className="sm:hidden text-xs text-gray-500 mt-1">
+                            <div className="sm:hidden text-xs text-muted-foreground mt-1">
                               {getWarehouseName(pallet.warehouseId)}
                               {pallet.locationCode && (
                                 <span className="ml-2">• {pallet.locationCode}</span>
@@ -168,7 +168,7 @@ export default function Pallets() {
                         </div>
                       </TableCell>
                       <TableCell className="hidden sm:table-cell">
-                        <span className="text-sm text-gray-900">
+                        <span className="text-sm text-foreground">
                           {getWarehouseName(pallet.warehouseId)}
                         </span>
                       </TableCell>
@@ -178,7 +178,7 @@ export default function Pallets() {
                             {pallet.locationCode}
                           </Badge>
                         ) : (
-                          <span className="text-sm text-gray-500">—</span>
+                          <span className="text-sm text-muted-foreground">—</span>
                         )}
                       </TableCell>
                       <TableCell>

@@ -111,7 +111,7 @@ export default function Bins() {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-primary hover:text-primary/80"
                   onClick={() => {
                     window.location.href = '/pallets';
                   }}
@@ -120,10 +120,10 @@ export default function Bins() {
                   Back to Pallets
                 </Button>
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">
+                  <h2 className="text-lg font-semibold text-foreground">
                     Bins in {getFilteredPalletName()}
                   </h2>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     Showing {filteredBins.length} bin{filteredBins.length !== 1 ? 's' : ''}
                   </p>
                 </div>
@@ -143,11 +143,11 @@ export default function Bins() {
       )}
       
       <Card className="shadow-md">
-        <div className="p-4 md:p-6 border-b border-gray-200">
+        <div className="p-4 md:p-6 border-b border-border">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
               <div className="relative flex-1 sm:flex-none">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Search bins..."
                   value={searchQuery}
@@ -181,9 +181,9 @@ export default function Bins() {
             </div>
           ) : filteredBins.length === 0 ? (
             <div className="p-12 text-center">
-              <Box className="mx-auto h-24 w-24 text-gray-400" />
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No bins found</h3>
-              <p className="mt-2 text-sm text-gray-500">
+              <Box className="mx-auto h-24 w-24 text-muted-foreground" />
+              <h3 className="mt-4 text-lg font-medium text-foreground">No bins found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
                 {searchQuery ? "Try adjusting your search terms." : "Get started by creating your first bin."}
               </p>
               {!searchQuery && (
@@ -206,12 +206,12 @@ export default function Bins() {
                 </TableHeader>
                 <TableBody>
                   {filteredBins.map((bin) => (
-                    <TableRow key={bin.id} className="hover:bg-gray-50">
+                    <TableRow key={bin.id} className="hover:bg-accent/50">
                       <TableCell>
                         <div className="flex items-center">
-                          <Box className="h-5 w-5 text-orange-600 mr-3" />
+                          <Box className="h-5 w-5 text-orange-600 dark:text-orange-400 mr-3" />
                           <span 
-                            className="text-sm font-medium text-blue-600 hover:text-blue-800 cursor-pointer underline"
+                            className="text-sm font-medium text-primary hover:text-primary/80 cursor-pointer underline"
                             onClick={() => {
                               window.location.href = `/bin-detail?id=${bin.id}`;
                             }}
@@ -221,7 +221,7 @@ export default function Bins() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="text-sm text-gray-900">
+                        <span className="text-sm text-foreground">
                           {getPalletName(bin.palletId)}
                         </span>
                       </TableCell>
