@@ -129,14 +129,6 @@ export default function WarehouseDetail() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Name</label>
-                <p className="text-foreground">{warehouse.name}</p>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-muted-foreground">Address</label>
-                <p className="text-foreground">{warehouse.address}</p>
-              </div>
-              <div>
                 <label className="text-sm font-medium text-muted-foreground">Total Pallets</label>
                 <p className="text-foreground">{warehouse.pallets?.length || 0}</p>
               </div>
