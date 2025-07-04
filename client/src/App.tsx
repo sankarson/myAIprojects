@@ -13,14 +13,15 @@ import Skus from "@/pages/skus";
 import NotFound from "@/pages/not-found";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
+import { ThemeProvider } from "@/components/theme-provider";
 
 function Router() {
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen bg-background">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-hidden md:ml-0">
         <Header />
-        <main className="flex-1 overflow-auto bg-gray-50">
+        <main className="flex-1 overflow-auto bg-background">
           <div className="p-3 md:p-6">
             <Switch>
               <Route path="/" component={Dashboard} />
@@ -42,12 +43,14 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <div className="font-sans">
-          <Toaster />
-          <Router />
-        </div>
-      </TooltipProvider>
+      <ThemeProvider defaultTheme="light">
+        <TooltipProvider>
+          <div className="font-sans">
+            <Toaster />
+            <Router />
+          </div>
+        </TooltipProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

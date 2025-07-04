@@ -43,7 +43,7 @@ export function Sidebar() {
           variant="ghost"
           size="sm"
           onClick={() => setIsMobileOpen(true)}
-          className="fixed top-[12px] left-4 z-50 md:hidden bg-white shadow-md"
+          className="fixed top-[12px] left-4 z-50 md:hidden bg-background shadow-md border border-border"
         >
           <Menu className="h-5 w-5" />
         </Button>
@@ -58,10 +58,10 @@ export function Sidebar() {
             />
             
             {/* Mobile Sidebar */}
-            <div className="fixed inset-y-0 left-0 w-64 bg-white shadow-lg">
-              <div className="p-6 border-b border-gray-200 flex items-center justify-between">
+            <div className="fixed inset-y-0 left-0 w-64 bg-background shadow-lg border-r border-border">
+              <div className="p-6 border-b border-border flex items-center justify-between">
                 <Link href="/" onClick={() => setIsMobileOpen(false)}>
-                  <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
+                  <h1 className="text-xl font-semibold text-foreground flex items-center cursor-pointer hover:text-primary transition-colors">
                     <Warehouse className="text-primary mr-2" />
                     MI7
                   </h1>
@@ -87,8 +87,8 @@ export function Sidebar() {
                         <div
                           className={`group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors cursor-pointer ${
                             isActive
-                              ? "bg-blue-50 text-primary"
-                              : "text-gray-700 hover:text-gray-900 hover:bg-blue-50/50"
+                              ? "bg-accent text-primary"
+                              : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                           }`}
                         >
                           <Icon className="mr-3 h-4 w-4" />
@@ -107,11 +107,11 @@ export function Sidebar() {
   }
 
   return (
-    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-white shadow-lg flex-shrink-0 transition-all duration-300 hidden md:block`}>
-      <div className="p-6 border-b border-gray-200 flex items-center justify-between pt-[18px] pb-[18px]">
+    <div className={`${isCollapsed ? 'w-16' : 'w-64'} bg-background border-r border-border flex-shrink-0 transition-all duration-300 hidden md:block`}>
+      <div className="p-6 border-b border-border flex items-center justify-between pt-[18px] pb-[18px]">
         {!isCollapsed && (
           <Link href="/">
-            <h1 className="text-xl font-semibold text-gray-900 flex items-center cursor-pointer hover:text-blue-600 transition-colors">
+            <h1 className="text-xl font-semibold text-foreground flex items-center cursor-pointer hover:text-primary transition-colors">
               <Warehouse className="text-primary mr-2" />
               MI7
             </h1>
@@ -119,7 +119,7 @@ export function Sidebar() {
         )}
         {isCollapsed && (
           <Link href="/">
-            <Warehouse className="text-primary mx-auto cursor-pointer hover:text-blue-600 transition-colors" />
+            <Warehouse className="text-primary mx-auto cursor-pointer hover:text-primary transition-colors" />
           </Link>
         )}
         <Button
@@ -142,8 +142,8 @@ export function Sidebar() {
                 <div
                   className={`group flex items-center ${isCollapsed ? 'px-2 py-3 justify-center' : 'px-3 py-2'} text-sm font-medium rounded-md transition-colors cursor-pointer ${
                     isActive
-                      ? "bg-blue-50 text-primary"
-                      : "text-gray-700 hover:text-gray-900 hover:bg-blue-50/50"
+                      ? "bg-accent text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                   }`}
                   title={isCollapsed ? item.name : undefined}
                 >
