@@ -210,9 +210,47 @@ export default function SkuImages() {
               {filteredSkus.map((sku) => (
                 <div key={sku.id} className="border rounded-lg p-2 hover:shadow-md transition-shadow">
                   <div className="space-y-1 mb-2">
-                    <h3 className="font-bold text-sm text-foreground truncate" title={sku.name}>
-                      {sku.name}
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-sm text-foreground truncate" title={sku.name}>
+                        {sku.name}
+                      </h3>
+                      {sku.imageUrl && (
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setEditingSkuId(sku.id)}
+                            className="text-xs px-2 py-1 h-6"
+                          >
+                            <Edit className="h-3 w-3" />
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 text-xs px-2 py-1 h-6">
+                                <Trash2 className="h-3 w-3" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Delete Image</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Are you sure you want to delete the image for "{sku.name}"? This action cannot be undone.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteImageMutation.mutate(sku.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      )}
+                    </div>
                     <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
                   </div>
                   <div className="aspect-square mb-2 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
@@ -221,7 +259,7 @@ export default function SkuImages() {
                         src={sku.imageUrl}
                         alt={sku.name}
                         className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => setEditingSkuId(sku.id)}
+                        onClick={() => setSelectedImage(sku.imageUrl || "")}
                       />
                     ) : (
                       <div 
@@ -233,52 +271,8 @@ export default function SkuImages() {
                       </div>
                     )}
                   </div>
-                  <div className="space-y-1">
-                    {sku.imageUrl ? (
-                      <div className="flex gap-1">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setSelectedImage(sku.imageUrl || "")}
-                          className="flex-1 text-xs px-2 py-1"
-                        >
-                          <Eye className="h-3 w-3 mr-1" />
-                          View
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setEditingSkuId(sku.id)}
-                          className="text-xs px-2 py-1"
-                        >
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 text-xs px-2 py-1">
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>Delete Image</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                Are you sure you want to delete the image for "{sku.name}"? This action cannot be undone.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>Cancel</AlertDialogCancel>
-                              <AlertDialogAction
-                                onClick={() => deleteImageMutation.mutate(sku.id)}
-                                className="bg-red-600 hover:bg-red-700"
-                              >
-                                Delete
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </div>
-                    ) : (
+                  {!sku.imageUrl && (
+                    <div className="space-y-1">
                       <Button
                         size="sm"
                         variant="outline"
@@ -288,8 +282,8 @@ export default function SkuImages() {
                         <Upload className="h-3 w-3 mr-1" />
                         Add Image
                       </Button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

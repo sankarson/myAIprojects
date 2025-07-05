@@ -333,58 +333,63 @@ export default function Skus() {
         </Card>
       )}
       <Card className="shadow-md">
-        <div className="p-3 lg:p-4 border-b border-gray-200">
-          <div className="space-y-3">
-            <div className="flex space-x-2">
+        <div className="p-2 sm:p-3 lg:p-4 border-b border-gray-200">
+          <div className="space-y-2 sm:space-y-3">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
                   placeholder="Search SKUs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 w-full"
+                  className="pl-10 w-full text-sm"
                 />
               </div>
-              <Button 
-                onClick={() => setIsModalOpen(true)} 
-                size="sm" 
-                className="whitespace-nowrap"
-              >
-                <Plus className="mr-1 h-4 w-4" />
-                Add SKU
-              </Button>
-              <Button 
-                variant="outline" 
-                onClick={() => setIsImportDialogOpen(true)} 
-                size="sm"
-                className="whitespace-nowrap"
-              >
-                <Upload className="mr-1 h-4 w-4" />
-                Import CSV
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => setIsModalOpen(true)} 
+                  size="sm" 
+                  className="flex-1 sm:flex-none whitespace-nowrap text-xs px-3 py-2"
+                >
+                  <Plus className="mr-1 h-4 w-4" />
+                  Add SKU
+                </Button>
+                <Button 
+                  variant="outline" 
+                  onClick={() => setIsImportDialogOpen(true)} 
+                  size="sm"
+                  className="flex-1 sm:flex-none whitespace-nowrap text-xs px-3 py-2"
+                >
+                  <Upload className="mr-1 h-4 w-4" />
+                  Import CSV
+                </Button>
+              </div>
             </div>
             {selectedSkus.size > 0 && (
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary">
+              <div className="flex items-center justify-between sm:justify-start gap-2 sm:space-x-2">
+                <Badge variant="secondary" className="text-xs">
                   {selectedSkus.size} selected
                 </Badge>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  onClick={handleBulkDelete}
-                  disabled={bulkDeleteMutation.isPending}
-                >
-                  <Trash2 className="mr-1 h-4 w-4" />
-                  {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setSelectedSkus(new Set())}
-                  className="bg-[#e5e7eb]"
-                >
-                  Clear
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={handleBulkDelete}
+                    disabled={bulkDeleteMutation.isPending}
+                    className="text-xs px-3 py-1"
+                  >
+                    <Trash2 className="mr-1 h-3 w-3" />
+                    {bulkDeleteMutation.isPending ? "Deleting..." : "Delete"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedSkus(new Set())}
+                    className="bg-[#e5e7eb] text-xs px-3 py-1"
+                  >
+                    Clear
+                  </Button>
+                </div>
               </div>
             )}
           </div>
@@ -430,41 +435,42 @@ export default function Skus() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="py-3 w-12">
+                    <TableHead className="py-2 w-8 sm:w-12">
                       <Checkbox
                         checked={selectedSkus.size === filteredSkus.length && filteredSkus.length > 0}
                         onCheckedChange={(checked) => handleSelectAll(checked as boolean)}
                         aria-label="Select all SKUs"
+                        className="h-4 w-4"
                       />
                     </TableHead>
-                    <TableHead className="py-3">
+                    <TableHead className="py-2">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        className="h-auto p-0 font-semibold hover:bg-transparent text-xs sm:text-sm"
                         onClick={() => handleSort('name')}
                       >
                         Name
                         {sortField === 'name' && (
                           sortDirection === 'asc' ? 
-                            <ChevronUp className="ml-1 h-4 w-4" /> : 
-                            <ChevronDown className="ml-1 h-4 w-4" />
+                            <ChevronUp className="ml-1 h-3 w-3" /> : 
+                            <ChevronDown className="ml-1 h-3 w-3" />
                         )}
                       </Button>
                     </TableHead>
 
-                    <TableHead className="py-3 text-right">
+                    <TableHead className="py-2 text-right">
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-auto p-0 font-semibold hover:bg-transparent"
+                        className="h-auto p-0 font-semibold hover:bg-transparent text-xs sm:text-sm"
                         onClick={() => handleSort('price')}
                       >
                         Unit Price
                         {sortField === 'price' && (
                           sortDirection === 'asc' ? 
-                            <ChevronUp className="ml-1 h-4 w-4" /> : 
-                            <ChevronDown className="ml-1 h-4 w-4" />
+                            <ChevronUp className="ml-1 h-3 w-3" /> : 
+                            <ChevronDown className="ml-1 h-3 w-3" />
                         )}
                       </Button>
                     </TableHead>
@@ -474,30 +480,31 @@ export default function Skus() {
                 <TableBody>
                   {filteredSkus.map((sku) => (
                     <TableRow key={sku.id} className="hover:bg-accent/50">
-                      <TableCell className="py-2">
+                      <TableCell className="py-1 sm:py-2">
                         <Checkbox
                           checked={selectedSkus.has(sku.id)}
                           onCheckedChange={(checked) => handleSelectSku(sku.id, checked as boolean)}
                           aria-label={`Select ${sku.name}`}
+                          className="h-4 w-4"
                         />
                       </TableCell>
-                      <TableCell className="py-2">
+                      <TableCell className="py-1 sm:py-2">
                         <div className="flex items-center">
                           {sku.imageUrl ? (
                             <img
                               src={sku.imageUrl}
                               alt={sku.name}
-                              className="h-8 w-8 rounded object-cover mr-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                              className="h-6 w-6 sm:h-8 sm:w-8 rounded object-cover mr-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
                               onClick={handleImageClick}
                               title="Click to manage SKU images"
                             />
                           ) : (
                             <button
                               onClick={handleImageClick}
-                              className="h-8 w-8 bg-muted rounded flex items-center justify-center mr-2 hover:bg-muted/80 cursor-pointer transition-colors flex-shrink-0"
+                              className="h-6 w-6 sm:h-8 sm:w-8 bg-muted rounded flex items-center justify-center mr-2 hover:bg-muted/80 cursor-pointer transition-colors flex-shrink-0"
                               title="Click to manage SKU images"
                             >
-                              <svg className="h-4 w-4 text-muted-foreground flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                               </svg>
                             </button>
@@ -505,24 +512,24 @@ export default function Skus() {
                           <div>
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
+                              className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
                             >
                               {sku.name}
                             </button>
-                            <div className="text-xs text-muted-foreground mt-1">
+                            <div className="text-xs text-muted-foreground mt-1 hidden sm:block">
                               {sku.description || "—"}
                             </div>
                           </div>
                         </div>
                       </TableCell>
 
-                      <TableCell className="py-2 text-right">
+                      <TableCell className="py-1 sm:py-2 text-right">
                         {sku.price ? (
-                          <span className="text-sm font-medium text-foreground">
+                          <span className="text-xs sm:text-sm font-medium text-foreground">
                             ₹{sku.price}
                           </span>
                         ) : (
-                          <span className="text-sm text-muted-foreground">—</span>
+                          <span className="text-xs sm:text-sm text-muted-foreground">—</span>
                         )}
                       </TableCell>
 
