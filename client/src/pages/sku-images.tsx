@@ -55,7 +55,7 @@ export default function SkuImages() {
         title: "Success",
         description: "SKU image updated successfully"
       });
-      // Keep dialog open after upload
+      setEditingSkuId(null); // Close dialog after upload
     },
     onError: (error: Error) => {
       console.error("Update SKU mutation error:", error);
@@ -131,17 +131,7 @@ export default function SkuImages() {
     }
   };
 
-  const handleImageUrlUpdate = (skuId: number, imageUrl: string) => {
-    if (!imageUrl.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid image URL",
-        variant: "destructive"
-      });
-      return;
-    }
-    updateSkuMutation.mutate({ id: skuId, imageUrl: imageUrl.trim() });
-  };
+
 
   const filteredSkus = skus.filter(sku =>
     sku.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -330,15 +320,13 @@ export default function SkuImages() {
             <DialogHeader>
               <DialogTitle>Edit SKU Image</DialogTitle>
               <DialogDescription>
-                Upload a new image or provide an image URL for this SKU.
+                Upload a new image for this SKU.
               </DialogDescription>
             </DialogHeader>
             <EditImageForm
               sku={skus.find(s => s.id === editingSkuId)!}
               onImageUpload={handleImageUpload}
-              onImageUrlUpdate={handleImageUrlUpdate}
               isUploading={uploadImageMutation.isPending}
-              isUpdating={updateSkuMutation.isPending}
             />
           </DialogContent>
         </Dialog>
@@ -350,13 +338,10 @@ export default function SkuImages() {
 interface EditImageFormProps {
   sku: Sku;
   onImageUpload: (file: File, skuId: number) => void;
-  onImageUrlUpdate: (skuId: number, imageUrl: string) => void;
   isUploading: boolean;
-  isUpdating: boolean;
 }
 
-function EditImageForm({ sku, onImageUpload, onImageUrlUpdate, isUploading, isUpdating }: EditImageFormProps) {
-  const [imageUrl, setImageUrl] = useState(sku.imageUrl || "");
+function EditImageForm({ sku, onImageUpload, isUploading }: EditImageFormProps) {
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -443,24 +428,7 @@ function EditImageForm({ sku, onImageUpload, onImageUrlUpdate, isUploading, isUp
         </div>
       </div>
 
-      {/* URL Input */}
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-foreground">Or enter image URL</label>
-        <div className="flex gap-2">
-          <Input
-            placeholder="https://example.com/image.jpg"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-            disabled={isUpdating}
-          />
-          <Button
-            onClick={() => onImageUrlUpdate(sku.id, imageUrl)}
-            disabled={isUpdating || !imageUrl.trim()}
-          >
-            {isUpdating ? "Updating..." : "Update"}
-          </Button>
-        </div>
-      </div>
+
     </div>
   );
 }
