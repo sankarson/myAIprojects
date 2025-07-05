@@ -1,10 +1,10 @@
-import Database from 'better-sqlite3';
-import { drizzle } from 'drizzle-orm/better-sqlite3';
+import { neon } from '@neondatabase/serverless';
+import { drizzle } from 'drizzle-orm/neon-http';
 import * as schema from "@shared/schema";
 
-// Use DATABASE_URL if provided, otherwise default to local SQLite file
-const databaseUrl = process.env.DATABASE_URL || 'sqlite:./database.sqlite';
-const sqliteUrl = databaseUrl.startsWith('sqlite:') ? databaseUrl.slice(7) : './database.sqlite';
+if (!process.env.DATABASE_URL) {
+  throw new Error("DATABASE_URL environment variable is required");
+}
 
-const sqlite = new Database(sqliteUrl);
-export const db = drizzle(sqlite, { schema });
+const sql = neon(process.env.DATABASE_URL);
+export const db = drizzle(sql, { schema });
