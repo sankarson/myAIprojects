@@ -17,7 +17,7 @@ This is a full-stack inventory management system built with a modern React front
 
 ### Backend Architecture
 - **Framework**: Express.js with TypeScript
-- **Database**: SQLite with local file storage
+- **Database**: PostgreSQL with Neon serverless hosting
 - **ORM**: Drizzle ORM for type-safe database operations
 - **API Design**: RESTful API with JSON responses
 - **Middleware**: Express middleware for logging and error handling
@@ -59,8 +59,8 @@ The system uses a hierarchical structure:
 ## External Dependencies
 
 ### Database
-- **SQLite**: Local file-based database
-- **Connection**: Direct file access via better-sqlite3
+- **PostgreSQL**: Neon serverless database
+- **Connection**: Network connection via @neondatabase/serverless
 
 ### UI Libraries
 - **Radix UI**: Accessible component primitives
@@ -87,9 +87,9 @@ The system uses a hierarchical structure:
 - Single-server deployment serving both API and static files
 
 ### Environment Configuration
-- `DATABASE_URL`: SQLite database file path (defaults to ./database.sqlite)
+- `DATABASE_URL`: PostgreSQL connection string for Neon serverless database
 - `NODE_ENV`: Environment mode (development/production)
-- Database file created automatically on first run
+- Database connection established automatically via environment variable
 
 ### Build Process
 1. `npm run build`: Builds both frontend and backend
@@ -98,6 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
+- July 5, 2025: Successfully migrated database from SQLite to PostgreSQL - converted all table schemas to use proper PostgreSQL types (serial, timestamp, text), updated database connection to use Neon serverless PostgreSQL, and restored core data structure with warehouse hierarchies and sample inventory
 - July 5, 2025: Added dedicated SKU image management page - comprehensive interface for viewing, editing, and deleting SKU images with drag-and-drop upload, URL input, statistics dashboard, full-screen image previews, and alphabetical sorting by SKU name in unified view
 - July 4, 2025: Successfully migrated database from PostgreSQL to SQLite - transferred all existing data (2 warehouses, 2 pallets, 2 bins, 112 SKUs, 3 inventory relationships, 126 activity log entries) from Neon serverless database to local SQLite file for improved simplicity and portability
 - July 4, 2025: Added warehouse detail view with Google Maps integration - warehouse names are now clickable and show detailed information including embedded map of warehouse address, pallet listings, and comprehensive warehouse data
