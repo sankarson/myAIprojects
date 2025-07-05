@@ -31,7 +31,8 @@ export default function SkuImages() {
 
   const updateSkuMutation = useMutation({
     mutationFn: async ({ id, imageUrl }: { id: number; imageUrl: string }) => {
-      const response = await apiRequest("PATCH", `/api/skus/${id}`, { imageUrl });
+      console.log("Updating SKU with:", { id, imageUrl });
+      const response = await apiRequest("PUT", `/api/skus/${id}`, { imageUrl });
       return response.json();
     },
     onSuccess: () => {
@@ -43,6 +44,7 @@ export default function SkuImages() {
       setEditingSkuId(null);
     },
     onError: (error: Error) => {
+      console.error("Update SKU mutation error:", error);
       toast({
         title: "Error",
         description: error.message,
@@ -53,7 +55,7 @@ export default function SkuImages() {
 
   const deleteImageMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await apiRequest("PATCH", `/api/skus/${id}`, { imageUrl: null });
+      const response = await apiRequest("PUT", `/api/skus/${id}`, { imageUrl: null });
       return response.json();
     },
     onSuccess: () => {
@@ -100,12 +102,18 @@ export default function SkuImages() {
   const handleImageUpload = async (file: File, skuId: number) => {
     try {
       const uploadResult = await uploadImageMutation.mutateAsync(file);
+      console.log("Upload result:", uploadResult);
       await updateSkuMutation.mutateAsync({ 
         id: skuId, 
         imageUrl: uploadResult.imageUrl 
       });
     } catch (error) {
       console.error("Image upload failed:", error);
+      toast({
+        title: "Upload Error",
+        description: error instanceof Error ? error.message : "Unknown error occurred",
+        variant: "destructive"
+      });
     }
   };
 
