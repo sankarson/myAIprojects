@@ -516,7 +516,7 @@ export default function Skus() {
                             >
                               {sku.name}
                             </button>
-                            <div className="text-xs text-muted-foreground mt-1 hidden sm:block">
+                            <div className="text-xs text-muted-foreground mt-1">
                               {sku.description || "—"}
                             </div>
                           </div>
