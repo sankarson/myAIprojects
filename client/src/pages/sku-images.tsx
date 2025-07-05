@@ -275,19 +275,7 @@ export default function SkuImages() {
                       </div>
                     )}
                   </div>
-                  {!sku.imageUrl && (
-                    <div className="space-y-1">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setEditingSkuId(sku.id)}
-                        className="w-full text-xs px-2 py-1"
-                      >
-                        <Upload className="h-3 w-3 mr-1" />
-                        Add Image
-                      </Button>
-                    </div>
-                  )}
+
                 </div>
               ))}
             </div>
