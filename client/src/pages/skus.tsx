@@ -516,8 +516,8 @@ export default function Skus() {
                             >
                               {sku.name}
                               {sku.description && (
-                                <span className="text-xs text-muted-foreground font-normal ml-2">
-                                  — {sku.description}
+                                <span className="text-xs text-muted-foreground font-normal ml-2 italic truncate">
+                                  {sku.description}
                                 </span>
                               )}
                             </button>
