@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,20 @@ export default function SkuImages() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [editingSkuId, setEditingSkuId] = useState<number | null>(null);
   const { toast } = useToast();
+
+  // Check for SKU query parameter and auto-open edit dialog
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const skuParam = urlParams.get('sku');
+    if (skuParam) {
+      const skuId = parseInt(skuParam);
+      if (!isNaN(skuId)) {
+        setEditingSkuId(skuId);
+        // Clear the URL parameter without reload
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+    }
+  }, []);
 
   const { data: skus = [], isLoading } = useQuery<SkuWithImageStatus[]>({
     queryKey: ["/api/skus"],

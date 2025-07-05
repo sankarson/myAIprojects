@@ -288,8 +288,8 @@ export default function Skus() {
     }
   };
 
-  const handleImageClick = () => {
-    setLocation("/sku-images");
+  const handleImageClick = (skuId: number) => {
+    setLocation(`/sku-images?sku=${skuId}`);
   };
 
   return (
@@ -495,12 +495,12 @@ export default function Skus() {
                               src={sku.imageUrl}
                               alt={sku.name}
                               className="h-6 w-6 sm:h-8 sm:w-8 rounded object-cover mr-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
-                              onClick={handleImageClick}
+                              onClick={() => handleImageClick(sku.id)}
                               title="Click to manage SKU images"
                             />
                           ) : (
                             <button
-                              onClick={handleImageClick}
+                              onClick={() => handleImageClick(sku.id)}
                               className="h-6 w-6 sm:h-8 sm:w-8 bg-muted rounded flex items-center justify-center mr-2 hover:bg-muted/80 cursor-pointer transition-colors flex-shrink-0"
                               title="Click to manage SKU images"
                             >
