@@ -515,10 +515,12 @@ export default function Skus() {
                               className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
                             >
                               {sku.name}
+                              {sku.description && (
+                                <span className="text-xs text-muted-foreground font-normal ml-2">
+                                  — {sku.description}
+                                </span>
+                              )}
                             </button>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {sku.description || "—"}
-                            </div>
                           </div>
                         </div>
                       </TableCell>
