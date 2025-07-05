@@ -226,7 +226,7 @@ export default function SkuImages() {
                       src={sku.imageUrl ?? ""}
                       alt={sku.name}
                       className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                      onClick={() => setSelectedImage(sku.imageUrl || "")}
+                      onClick={() => setEditingSkuId(sku.id)}
                     />
                   </div>
                   <div className="space-y-2">
@@ -297,7 +297,11 @@ export default function SkuImages() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {skusWithoutImages.map((sku) => (
                 <div key={sku.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="aspect-square mb-3 bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center">
+                  <div 
+                    className="aspect-square mb-3 bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                    onClick={() => setEditingSkuId(sku.id)}
+                    title="Click to add image"
+                  >
                     <Image className="h-12 w-12 text-gray-400" />
                   </div>
                   <div className="space-y-2">
