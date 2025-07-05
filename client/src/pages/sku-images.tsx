@@ -194,13 +194,7 @@ export default function SkuImages() {
 
       {/* All SKUs Sorted by Name */}
       <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <Image className="h-5 w-5 mr-2" />
-            All SKUs ({filteredSkus.length})
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+        <CardContent className="p-4">
           {filteredSkus.length === 0 ? (
             <div className="p-12 text-center">
               <div className="mx-auto h-24 w-24 text-muted-foreground">
@@ -215,6 +209,12 @@ export default function SkuImages() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {filteredSkus.map((sku) => (
                 <div key={sku.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="space-y-2 mb-3">
+                    <h3 className="font-bold text-foreground truncate" title={sku.name}>
+                      {sku.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
+                  </div>
                   <div className="aspect-square mb-3 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
                     {sku.imageUrl ? (
                       <img
@@ -234,10 +234,6 @@ export default function SkuImages() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    <h3 className="font-medium text-foreground truncate" title={sku.name}>
-                      {sku.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
                     {sku.imageUrl ? (
                       <div className="flex gap-2">
                         <Button
