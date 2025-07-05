@@ -55,7 +55,7 @@ export default function SkuImages() {
         title: "Success",
         description: "SKU image updated successfully"
       });
-      setEditingSkuId(null);
+      // Keep dialog open after upload
     },
     onError: (error: Error) => {
       console.error("Update SKU mutation error:", error);
