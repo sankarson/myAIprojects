@@ -168,40 +168,27 @@ export default function SkuImages() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Total SKUs</p>
-                <p className="text-2xl font-bold text-foreground">{filteredSkus.length}</p>
+                <p className="text-xl font-bold text-foreground">{filteredSkus.length}</p>
               </div>
-              <Image className="h-8 w-8 text-blue-500" />
+              <Image className="h-6 w-6 text-blue-500" />
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-3">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">With Images</p>
-                <p className="text-2xl font-bold text-green-600">{skusWithImages.length}</p>
+                <p className="text-xl font-bold text-green-600">{skusWithImages.length}</p>
               </div>
               <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
                 {filteredSkus.length > 0 ? Math.round((skusWithImages.length / filteredSkus.length) * 100) : 0}%
-              </Badge>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Without Images</p>
-                <p className="text-2xl font-bold text-amber-600">{skusWithoutImages.length}</p>
-              </div>
-              <Badge variant="outline" className="text-amber-600 border-amber-600">
-                Missing
               </Badge>
             </div>
           </CardContent>
