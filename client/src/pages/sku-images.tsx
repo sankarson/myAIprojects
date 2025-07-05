@@ -273,7 +273,7 @@ export default function SkuImages() {
                         src={sku.imageUrl}
                         alt={sku.name}
                         className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                        onClick={() => setSelectedImage(sku.imageUrl || "")}
+                        onClick={() => setEditingSkuId(sku.id)}
                       />
                     ) : (
                       <div 
