@@ -102,7 +102,7 @@ export default function SkuImages() {
       const uploadResult = await uploadImageMutation.mutateAsync(file);
       await updateSkuMutation.mutateAsync({ 
         id: skuId, 
-        imageUrl: uploadResult.url 
+        imageUrl: uploadResult.imageUrl 
       });
     } catch (error) {
       console.error("Image upload failed:", error);
@@ -338,6 +338,9 @@ export default function SkuImages() {
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Edit SKU Image</DialogTitle>
+              <DialogDescription>
+                Upload a new image or provide an image URL for this SKU.
+              </DialogDescription>
             </DialogHeader>
             <EditImageForm
               sku={skus.find(s => s.id === editingSkuId)!}
