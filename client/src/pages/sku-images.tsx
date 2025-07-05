@@ -19,7 +19,16 @@ export default function SkuImages() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [editingSkuId, setEditingSkuId] = useState<number | null>(null);
+  const [recentlyEditedSkuId, setRecentlyEditedSkuId] = useState<number | null>(null);
   const { toast } = useToast();
+
+  const { data: skus = [], isLoading } = useQuery<SkuWithImageStatus[]>({
+    queryKey: ["/api/skus"],
+    select: (data: Sku[]) => data.map(sku => ({
+      ...sku,
+      hasImage: !!sku.imageUrl
+    }))
+  });
 
   // Check for SKU query parameter and auto-open edit dialog
   useEffect(() => {
@@ -35,13 +44,17 @@ export default function SkuImages() {
     }
   }, []);
 
-  const { data: skus = [], isLoading } = useQuery<SkuWithImageStatus[]>({
-    queryKey: ["/api/skus"],
-    select: (data: Sku[]) => data.map(sku => ({
-      ...sku,
-      hasImage: !!sku.imageUrl
-    }))
-  });
+  // Scroll to recently edited SKU after data refresh
+  useEffect(() => {
+    if (recentlyEditedSkuId && !isLoading && skus.length > 0) {
+      const element = document.getElementById(`sku-${recentlyEditedSkuId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Clear the recently edited SKU ID after a short delay
+        setTimeout(() => setRecentlyEditedSkuId(null), 1000);
+      }
+    }
+  }, [recentlyEditedSkuId, isLoading, skus.length]);
 
   const updateSkuMutation = useMutation({
     mutationFn: async ({ id, imageUrl }: { id: number; imageUrl: string }) => {
@@ -49,13 +62,15 @@ export default function SkuImages() {
       const response = await apiRequest("PUT", `/api/skus/${id}`, { imageUrl });
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["/api/skus"] });
       toast({
         title: "Success",
         description: "SKU image updated successfully"
       });
-      setEditingSkuId(null); // Close dialog after upload
+      // Store the recently edited SKU ID and close dialog
+      setRecentlyEditedSkuId(variables.id);
+      setEditingSkuId(null);
     },
     onError: (error: Error) => {
       console.error("Update SKU mutation error:", error);
@@ -212,7 +227,7 @@ export default function SkuImages() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
               {filteredSkus.map((sku) => (
-                <div key={sku.id} className="border rounded-lg p-2 hover:shadow-md transition-shadow">
+                <div key={sku.id} id={`sku-${sku.id}`} className="border rounded-lg p-2 hover:shadow-md transition-shadow">
                   <div className="space-y-1 mb-2">
                     <div className="flex items-center justify-between">
                       <h3 className="font-bold text-sm text-foreground truncate" title={sku.name}>
