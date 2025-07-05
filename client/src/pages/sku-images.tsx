@@ -168,15 +168,12 @@ export default function SkuImages() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-4 mb-8">
         <Card>
           <CardContent className="p-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm text-muted-foreground">Total SKUs</p>
-                <p className="text-xl font-bold text-foreground">{filteredSkus.length}</p>
-              </div>
-              <Image className="h-6 w-6 text-blue-500" />
+            <div>
+              <p className="text-sm text-muted-foreground">Total SKUs</p>
+              <p className="text-xl font-bold text-foreground">{filteredSkus.length}</p>
             </div>
           </CardContent>
         </Card>
