@@ -98,7 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- July 5, 2025: Added dedicated SKU image management page - comprehensive interface for viewing, editing, and deleting SKU images with drag-and-drop upload, URL input, statistics dashboard, and full-screen image previews organized by SKUs with and without images
+- July 5, 2025: Added dedicated SKU image management page - comprehensive interface for viewing, editing, and deleting SKU images with drag-and-drop upload, URL input, statistics dashboard, full-screen image previews, and alphabetical sorting by SKU name in unified view
 - July 4, 2025: Successfully migrated database from PostgreSQL to SQLite - transferred all existing data (2 warehouses, 2 pallets, 2 bins, 112 SKUs, 3 inventory relationships, 126 activity log entries) from Neon serverless database to local SQLite file for improved simplicity and portability
 - July 4, 2025: Added warehouse detail view with Google Maps integration - warehouse names are now clickable and show detailed information including embedded map of warehouse address, pallet listings, and comprehensive warehouse data
 - July 4, 2025: Fixed comprehensive dark mode readability issues across all pages including SKUs table, dashboard icons, warehouses, pallets, bins, and CSV import dialog - replaced gray text colors with semantic theme colors for proper contrast in both light and dark modes

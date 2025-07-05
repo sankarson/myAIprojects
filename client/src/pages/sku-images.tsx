@@ -132,7 +132,7 @@ export default function SkuImages() {
   const filteredSkus = skus.filter(sku =>
     sku.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     sku.skuNumber.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  ).sort((a, b) => a.name.localeCompare(b.name));
 
   const skusWithImages = filteredSkus.filter(sku => sku.hasImage);
   const skusWithoutImages = filteredSkus.filter(sku => !sku.hasImage);
@@ -208,123 +208,113 @@ export default function SkuImages() {
         </Card>
       </div>
 
-      {/* SKUs with Images */}
-      {skusWithImages.length > 0 && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Image className="h-5 w-5 mr-2" />
-              SKUs with Images ({skusWithImages.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+      {/* All SKUs Sorted by Name */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Image className="h-5 w-5 mr-2" />
+            All SKUs ({filteredSkus.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {filteredSkus.length === 0 ? (
+            <div className="p-12 text-center">
+              <div className="mx-auto h-24 w-24 text-muted-foreground">
+                <Image className="h-24 w-24" />
+              </div>
+              <h3 className="mt-4 text-lg font-medium text-foreground">No SKUs found</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {searchTerm ? "Try adjusting your search terms." : "No SKUs available."}
+              </p>
+            </div>
+          ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {skusWithImages.map((sku) => (
+              {filteredSkus.map((sku) => (
                 <div key={sku.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
                   <div className="aspect-square mb-3 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
-                    <img
-                      src={sku.imageUrl ?? ""}
-                      alt={sku.name}
-                      className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
-                      onClick={() => setEditingSkuId(sku.id)}
-                    />
+                    {sku.imageUrl ? (
+                      <img
+                        src={sku.imageUrl}
+                        alt={sku.name}
+                        className="w-full h-full object-cover cursor-pointer hover:scale-105 transition-transform"
+                        onClick={() => setEditingSkuId(sku.id)}
+                      />
+                    ) : (
+                      <div 
+                        className="w-full h-full flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        onClick={() => setEditingSkuId(sku.id)}
+                        title="Click to add image"
+                      >
+                        <Image className="h-12 w-12 text-gray-400" />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <h3 className="font-medium text-foreground truncate" title={sku.name}>
                       {sku.name}
                     </h3>
                     <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
-                    <div className="flex gap-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => setSelectedImage(sku.imageUrl || "")}
-                        className="flex-1"
-                      >
-                        <Eye className="h-3 w-3 mr-1" />
-                        View
-                      </Button>
+                    {sku.imageUrl ? (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedImage(sku.imageUrl || "")}
+                          className="flex-1"
+                        >
+                          <Eye className="h-3 w-3 mr-1" />
+                          View
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingSkuId(sku.id)}
+                        >
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Image</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete the image for "{sku.name}"? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => deleteImageMutation.mutate(sku.id)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
+                    ) : (
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setEditingSkuId(sku.id)}
+                        className="w-full"
                       >
-                        <Edit className="h-3 w-3" />
+                        <Upload className="h-3 w-3 mr-1" />
+                        Add Image
                       </Button>
-                      <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Image</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              Are you sure you want to delete the image for "{sku.name}"? This action cannot be undone.
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => deleteImageMutation.mutate(sku.id)}
-                              className="bg-red-600 hover:bg-red-700"
-                            >
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog>
-                    </div>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* SKUs without Images */}
-      {skusWithoutImages.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Upload className="h-5 w-5 mr-2" />
-              SKUs without Images ({skusWithoutImages.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {skusWithoutImages.map((sku) => (
-                <div key={sku.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div 
-                    className="aspect-square mb-3 bg-gray-100 dark:bg-gray-800 rounded-md flex items-center justify-center cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    onClick={() => setEditingSkuId(sku.id)}
-                    title="Click to add image"
-                  >
-                    <Image className="h-12 w-12 text-gray-400" />
-                  </div>
-                  <div className="space-y-2">
-                    <h3 className="font-medium text-foreground truncate" title={sku.name}>
-                      {sku.name}
-                    </h3>
-                    <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setEditingSkuId(sku.id)}
-                      className="w-full"
-                    >
-                      <Upload className="h-3 w-3 mr-1" />
-                      Add Image
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+          )}
+        </CardContent>
+      </Card>
 
       {/* Full-screen Image Modal */}
       {selectedImage && (
