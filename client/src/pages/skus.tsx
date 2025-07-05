@@ -509,17 +509,19 @@ export default function Skus() {
                               </svg>
                             </button>
                           )}
-                          <div>
+                          <div className="min-w-0 flex-1">
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block"
+                              className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block w-full truncate"
                             >
-                              {sku.name}
-                              {sku.description && (
-                                <span className="text-xs text-muted-foreground font-normal ml-2 italic truncate">
-                                  {sku.description}
-                                </span>
-                              )}
+                              <span className="truncate">
+                                {sku.name}
+                                {sku.description && (
+                                  <span className="text-xs text-muted-foreground font-normal ml-2 italic">
+                                    {sku.description}
+                                  </span>
+                                )}
+                              </span>
                             </button>
                           </div>
                         </div>
