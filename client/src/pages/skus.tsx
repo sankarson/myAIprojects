@@ -488,8 +488,8 @@ export default function Skus() {
                           className="h-4 w-4"
                         />
                       </TableCell>
-                      <TableCell className="py-1 sm:py-2">
-                        <div className="flex items-center">
+                      <TableCell className="py-1 sm:py-2 max-w-0 w-full">
+                        <div className="flex items-center min-w-0 w-full">
                           {sku.imageUrl ? (
                             <img
                               src={sku.imageUrl}
@@ -509,19 +509,19 @@ export default function Skus() {
                               </svg>
                             </button>
                           )}
-                          <div className="min-w-0 flex-1">
+                          <div className="min-w-0 flex-1 overflow-hidden">
                             <button
                               onClick={() => handleEdit(sku)}
-                              className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block w-full truncate"
+                              className="text-xs sm:text-sm font-medium text-foreground hover:text-primary hover:underline cursor-pointer bg-transparent border-none p-0 text-left block w-full"
                             >
-                              <span className="truncate">
-                                {sku.name}
+                              <div className="truncate">
+                                <span className="font-medium">{sku.name}</span>
                                 {sku.description && (
-                                  <span className="text-xs text-muted-foreground font-normal ml-2 italic">
+                                  <span className="text-xs text-muted-foreground font-normal ml-1 italic">
                                     {sku.description}
                                   </span>
                                 )}
-                              </span>
+                              </div>
                             </button>
                           </div>
                         </div>
