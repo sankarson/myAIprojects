@@ -29,7 +29,7 @@ export default function Skus() {
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
   const [sortField, setSortField] = useState<'name' | 'description' | 'price'>('name');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toast } = useToast();
 
   // Extract bin filter from URL query parameters
@@ -215,8 +215,8 @@ export default function Skus() {
         bValue = (b.description || '').toLowerCase();
         break;
       case 'price':
-        aValue = parseFloat(a.price || '0');
-        bValue = parseFloat(b.price || '0');
+        aValue = parseFloat((a.price || 0).toString());
+        bValue = parseFloat((b.price || 0).toString());
         break;
       default:
         return 0;
@@ -286,6 +286,10 @@ export default function Skus() {
       bulkDeleteMutation.mutate(Array.from(selectedSkus));
       setBulkDeleteConfirmOpen(false);
     }
+  };
+
+  const handleImageClick = () => {
+    setLocation("/sku-images");
   };
 
   return (
@@ -483,13 +487,15 @@ export default function Skus() {
                             <img
                               src={sku.imageUrl}
                               alt={sku.name}
-                              className="h-8 w-8 rounded object-cover mr-2 flex-shrink-0"
+                              className="h-8 w-8 rounded object-cover mr-2 flex-shrink-0 cursor-pointer hover:opacity-80 transition-opacity"
+                              onClick={handleImageClick}
+                              title="Click to manage SKU images"
                             />
                           ) : (
                             <button
-                              onClick={() => handleEdit(sku)}
+                              onClick={handleImageClick}
                               className="h-8 w-8 bg-muted rounded flex items-center justify-center mr-2 hover:bg-muted/80 cursor-pointer transition-colors flex-shrink-0"
-                              title="Click to add image"
+                              title="Click to manage SKU images"
                             >
                               <svg className="h-4 w-4 text-muted-foreground flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
