@@ -11,6 +11,7 @@ import Bins from "@/pages/bins";
 import BinDetail from "@/pages/bin-detail";
 import PalletDetail from "@/pages/pallet-detail";
 import Skus from "@/pages/skus";
+import SkuImages from "@/pages/sku-images";
 import NotFound from "@/pages/not-found";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
@@ -33,6 +34,7 @@ function Router() {
               <Route path="/bin-detail" component={BinDetail} />
               <Route path="/pallet-detail" component={PalletDetail} />
               <Route path="/skus" component={Skus} />
+              <Route path="/sku-images" component={SkuImages} />
               <Route component={NotFound} />
             </Switch>
           </div>

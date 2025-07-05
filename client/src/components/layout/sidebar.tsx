@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
-import { Building, Package, Box, BarChart3, Warehouse, ChevronLeft, ChevronRight, Menu, X } from "lucide-react";
+import { Building, Package, Box, BarChart3, Warehouse, ChevronLeft, ChevronRight, Menu, X, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -10,6 +10,7 @@ const navigationItems = [
   { name: "Pallets", path: "/pallets", icon: Package },
   { name: "Bins", path: "/bins", icon: Box },
   { name: "SKUs", path: "/skus", icon: Warehouse },
+  { name: "SKU Images", path: "/sku-images", icon: Image },
 ];
 
 
