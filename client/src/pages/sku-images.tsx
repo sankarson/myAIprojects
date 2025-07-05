@@ -146,34 +146,34 @@ export default function SkuImages() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold text-foreground mb-1">SKU Image Management</h1>
-        <p className="text-sm text-muted-foreground">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4">
+      <div className="mb-3 sm:mb-4">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-1">SKU Image Management</h1>
+        <p className="text-xs sm:text-sm text-muted-foreground">
           Manage product images for all SKUs - view, edit, or delete images
         </p>
       </div>
 
       {/* Search */}
-      <div className="mb-6">
-        <div className="relative max-w-md">
+      <div className="mb-4 sm:mb-6">
+        <div className="relative max-w-full sm:max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search SKUs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
+            className="pl-10 text-sm"
           />
         </div>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-2 gap-2 sm:gap-4 mb-3 sm:mb-4">
         <Card>
           <CardContent className="p-2">
             <div>
               <p className="text-xs text-muted-foreground">Total SKUs</p>
-              <p className="text-lg font-bold text-foreground">{filteredSkus.length}</p>
+              <p className="text-base sm:text-lg font-bold text-foreground">{filteredSkus.length}</p>
             </div>
           </CardContent>
         </Card>
@@ -182,7 +182,7 @@ export default function SkuImages() {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-xs text-muted-foreground">With Images</p>
-                <p className="text-lg font-bold text-green-600">{skusWithImages.length}</p>
+                <p className="text-base sm:text-lg font-bold text-green-600">{skusWithImages.length}</p>
               </div>
               <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
                 {filteredSkus.length > 0 ? Math.round((skusWithImages.length / filteredSkus.length) * 100) : 0}%
@@ -206,7 +206,7 @@ export default function SkuImages() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3">
               {filteredSkus.map((sku) => (
                 <div key={sku.id} className="border rounded-lg p-2 hover:shadow-md transition-shadow">
                   <div className="space-y-1 mb-2">
@@ -240,7 +240,7 @@ export default function SkuImages() {
                           size="sm"
                           variant="outline"
                           onClick={() => setSelectedImage(sku.imageUrl || "")}
-                          className="flex-1"
+                          className="flex-1 text-xs px-2 py-1"
                         >
                           <Eye className="h-3 w-3 mr-1" />
                           View
@@ -249,12 +249,13 @@ export default function SkuImages() {
                           size="sm"
                           variant="outline"
                           onClick={() => setEditingSkuId(sku.id)}
+                          className="text-xs px-2 py-1"
                         >
                           <Edit className="h-3 w-3" />
                         </Button>
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
-                            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+                            <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700 text-xs px-2 py-1">
                               <Trash2 className="h-3 w-3" />
                             </Button>
                           </AlertDialogTrigger>
@@ -282,7 +283,7 @@ export default function SkuImages() {
                         size="sm"
                         variant="outline"
                         onClick={() => setEditingSkuId(sku.id)}
-                        className="w-full"
+                        className="w-full text-xs px-2 py-1"
                       >
                         <Upload className="h-3 w-3 mr-1" />
                         Add Image
@@ -299,11 +300,11 @@ export default function SkuImages() {
       {/* Full-screen Image Modal */}
       {selectedImage && (
         <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
-          <DialogContent className="max-w-4xl">
+          <DialogContent className="max-w-4xl w-[95vw] sm:w-auto">
             <DialogHeader>
               <DialogTitle>Image Preview</DialogTitle>
             </DialogHeader>
-            <div className="max-h-[80vh] overflow-auto">
+            <div className="max-h-[70vh] sm:max-h-[80vh] overflow-auto">
               <img
                 src={selectedImage}
                 alt="SKU Image"
@@ -317,7 +318,7 @@ export default function SkuImages() {
       {/* Edit Image Modal */}
       {editingSkuId && (
         <Dialog open={!!editingSkuId} onOpenChange={() => setEditingSkuId(null)}>
-          <DialogContent>
+          <DialogContent className="w-[95vw] sm:w-auto max-w-lg">
             <DialogHeader>
               <DialogTitle>Edit SKU Image</DialogTitle>
               <DialogDescription>
@@ -389,7 +390,7 @@ function EditImageForm({ sku, onImageUpload, onImageUrlUpdate, isUploading, isUp
       {sku.imageUrl && (
         <div className="space-y-2">
           <label className="text-sm font-medium text-foreground">Current Image</label>
-          <div className="w-32 h-32 border rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+          <div className="w-24 h-24 sm:w-32 sm:h-32 border rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
             <img
               src={sku.imageUrl}
               alt={sku.name}
@@ -403,7 +404,7 @@ function EditImageForm({ sku, onImageUpload, onImageUrlUpdate, isUploading, isUp
       <div className="space-y-2">
         <label className="text-sm font-medium text-foreground">Upload New Image</label>
         <div
-          className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+          className={`border-2 border-dashed rounded-lg p-4 sm:p-8 text-center transition-colors ${
             dragActive 
               ? "border-primary bg-primary/10" 
               : "border-muted-foreground/25 hover:border-muted-foreground/50"
