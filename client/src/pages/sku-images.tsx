@@ -146,10 +146,10 @@ export default function SkuImages() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">SKU Image Management</h1>
-        <p className="text-muted-foreground">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold text-foreground mb-1">SKU Image Management</h1>
+        <p className="text-sm text-muted-foreground">
           Manage product images for all SKUs - view, edit, or delete images
         </p>
       </div>
@@ -168,23 +168,23 @@ export default function SkuImages() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <Card>
-          <CardContent className="p-3">
+          <CardContent className="p-2">
             <div>
-              <p className="text-sm text-muted-foreground">Total SKUs</p>
-              <p className="text-xl font-bold text-foreground">{filteredSkus.length}</p>
+              <p className="text-xs text-muted-foreground">Total SKUs</p>
+              <p className="text-lg font-bold text-foreground">{filteredSkus.length}</p>
             </div>
           </CardContent>
         </Card>
         <Card>
-          <CardContent className="p-3">
+          <CardContent className="p-2">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">With Images</p>
-                <p className="text-xl font-bold text-green-600">{skusWithImages.length}</p>
+                <p className="text-xs text-muted-foreground">With Images</p>
+                <p className="text-lg font-bold text-green-600">{skusWithImages.length}</p>
               </div>
-              <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
+              <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400">
                 {filteredSkus.length > 0 ? Math.round((skusWithImages.length / filteredSkus.length) * 100) : 0}%
               </Badge>
             </div>
@@ -194,7 +194,7 @@ export default function SkuImages() {
 
       {/* All SKUs Sorted by Name */}
       <Card>
-        <CardContent className="p-4">
+        <CardContent className="p-2">
           {filteredSkus.length === 0 ? (
             <div className="p-12 text-center">
               <div className="mx-auto h-24 w-24 text-muted-foreground">
@@ -206,16 +206,16 @@ export default function SkuImages() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
               {filteredSkus.map((sku) => (
-                <div key={sku.id} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="space-y-2 mb-3">
-                    <h3 className="font-bold text-foreground truncate" title={sku.name}>
+                <div key={sku.id} className="border rounded-lg p-2 hover:shadow-md transition-shadow">
+                  <div className="space-y-1 mb-2">
+                    <h3 className="font-bold text-sm text-foreground truncate" title={sku.name}>
                       {sku.name}
                     </h3>
                     <p className="text-xs text-muted-foreground">{sku.skuNumber}</p>
                   </div>
-                  <div className="aspect-square mb-3 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
+                  <div className="aspect-square mb-2 overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800">
                     {sku.imageUrl ? (
                       <img
                         src={sku.imageUrl}
@@ -233,9 +233,9 @@ export default function SkuImages() {
                       </div>
                     )}
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     {sku.imageUrl ? (
-                      <div className="flex gap-2">
+                      <div className="flex gap-1">
                         <Button
                           size="sm"
                           variant="outline"
