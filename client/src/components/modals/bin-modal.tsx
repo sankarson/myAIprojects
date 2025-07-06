@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { insertBinSchema, type Bin, type InsertBin, type Pallet } from "@shared/schema";
@@ -33,17 +34,34 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
   const isEditing = !!bin;
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
+    setUploadProgress(0);
+    
     try {
       const formData = new FormData();
       formData.append('image', file);
+      
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + Math.random() * 30;
+        });
+      }, 200);
       
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
       
       if (!response.ok) {
         throw new Error('Upload failed');
@@ -60,6 +78,7 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
       });
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -261,8 +280,14 @@ export function BinModal({ isOpen, onClose, bin }: BinModalProps) {
                         </label>
                       </div>
                       {isUploading && (
-                        <div className="mt-2 text-sm text-blue-600">
-                          Uploading...
+                        <div className="mt-4 space-y-2">
+                          <div className="text-sm text-blue-600">
+                            Uploading...
+                          </div>
+                          <Progress value={uploadProgress} className="w-full" />
+                          <div className="text-xs text-gray-500 text-center">
+                            {Math.round(uploadProgress)}%
+                          </div>
                         </div>
                       )}
                     </div>

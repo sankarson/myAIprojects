@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Image, Search, Upload, Edit, Trash2, Eye, X } from "lucide-react";
@@ -20,6 +21,7 @@ export default function SkuImages() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [editingSkuId, setEditingSkuId] = useState<number | null>(null);
   const [recentlyEditedSkuId, setRecentlyEditedSkuId] = useState<number | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const { toast } = useToast();
 
   const { data: skus = [], isLoading } = useQuery<SkuWithImageStatus[]>({
@@ -129,9 +131,26 @@ export default function SkuImages() {
   });
 
   const handleImageUpload = async (file: File, skuId: number) => {
+    setUploadProgress(0);
+    
     try {
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + Math.random() * 30;
+        });
+      }, 200);
+
       const uploadResult = await uploadImageMutation.mutateAsync(file);
       console.log("Upload result:", uploadResult);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
       await updateSkuMutation.mutateAsync({ 
         id: skuId, 
         imageUrl: uploadResult.imageUrl 
@@ -143,6 +162,8 @@ export default function SkuImages() {
         description: error instanceof Error ? error.message : "Unknown error occurred",
         variant: "destructive"
       });
+    } finally {
+      setUploadProgress(0);
     }
   };
 
@@ -330,6 +351,7 @@ export default function SkuImages() {
               sku={skus.find(s => s.id === editingSkuId)!}
               onImageUpload={handleImageUpload}
               isUploading={uploadImageMutation.isPending}
+              uploadProgress={uploadProgress}
             />
           </DialogContent>
         </Dialog>
@@ -342,9 +364,10 @@ interface EditImageFormProps {
   sku: Sku;
   onImageUpload: (file: File, skuId: number) => void;
   isUploading: boolean;
+  uploadProgress: number;
 }
 
-function EditImageForm({ sku, onImageUpload, isUploading }: EditImageFormProps) {
+function EditImageForm({ sku, onImageUpload, isUploading, uploadProgress }: EditImageFormProps) {
   const [dragActive, setDragActive] = useState(false);
 
   const handleDrag = (e: React.DragEvent) => {
@@ -428,6 +451,17 @@ function EditImageForm({ sku, onImageUpload, isUploading }: EditImageFormProps) 
           >
             {isUploading ? "Uploading..." : "Select Image"}
           </label>
+          {isUploading && (
+            <div className="mt-4 space-y-2">
+              <div className="text-sm text-blue-600">
+                Uploading...
+              </div>
+              <Progress value={uploadProgress} className="w-full" />
+              <div className="text-xs text-gray-500 text-center">
+                {Math.round(uploadProgress)}%
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

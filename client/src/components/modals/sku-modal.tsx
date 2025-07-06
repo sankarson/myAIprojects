@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { insertSkuSchema, type Sku, type InsertSku } from "@shared/schema";
 import { queryClient } from "@/lib/queryClient";
@@ -33,17 +34,34 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
   const isEditing = !!sku;
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleImageUpload = async (file: File) => {
     setIsUploading(true);
+    setUploadProgress(0);
+    
     try {
       const formData = new FormData();
       formData.append('image', file);
+      
+      // Simulate progress updates
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return prev;
+          }
+          return prev + Math.random() * 30;
+        });
+      }, 200);
       
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
       
       if (!response.ok) {
         throw new Error('Upload failed');
@@ -65,6 +83,7 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
       });
     } finally {
       setIsUploading(false);
+      setUploadProgress(0);
     }
   };
 
@@ -298,8 +317,14 @@ export function SkuModal({ isOpen, onClose, sku }: SkuModalProps) {
                       />
                     </div>
                     {isUploading && (
-                      <div className="mt-2 text-sm text-blue-600">
-                        Uploading...
+                      <div className="mt-4 space-y-2">
+                        <div className="text-sm text-blue-600">
+                          Uploading...
+                        </div>
+                        <Progress value={uploadProgress} className="w-full" />
+                        <div className="text-xs text-gray-500 text-center">
+                          {Math.round(uploadProgress)}%
+                        </div>
                       </div>
                     )}
                   </div>
