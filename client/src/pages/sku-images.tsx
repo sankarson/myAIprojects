@@ -453,9 +453,6 @@ function EditImageForm({ sku, onImageUpload, isUploading, uploadProgress }: Edit
           </label>
           {isUploading && (
             <div className="mt-4 space-y-2">
-              <div className="text-sm text-blue-600">
-                Uploading...
-              </div>
               <Progress value={uploadProgress} className="w-full" />
               <div className="text-xs text-gray-500 text-center">
                 {Math.round(uploadProgress)}%
