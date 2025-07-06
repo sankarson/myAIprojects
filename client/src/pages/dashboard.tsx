@@ -25,50 +25,22 @@ interface ActivityLog {
 
 export default function Dashboard() {
   const activityRef = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
-  const [allActivities, setAllActivities] = useState<ActivityLog[]>([]);
-  const [hasMore, setHasMore] = useState(true);
-  
   const { data: stats, isLoading } = useQuery<Stats>({
     queryKey: ["/api/stats"],
   });
 
   const { data: activities, isLoading: activitiesLoading } = useQuery<ActivityLog[]>({
-    queryKey: ["/api/activity", offset],
+    queryKey: ["/api/activity"],
     queryFn: async () => {
-      const response = await fetch(`/api/activity?offset=${offset}&limit=20`);
+      const response = await fetch(`/api/activity?limit=20`);
       if (!response.ok) throw new Error("Failed to fetch activities");
-      const newActivities = await response.json();
-      
-      if (offset === 0) {
-        setAllActivities(newActivities);
-      } else {
-        setAllActivities(prev => [...prev, ...newActivities]);
-      }
-      
-      setHasMore(newActivities.length === 20);
-      return newActivities;
+      return response.json();
     },
   });
 
-  const displayActivities = allActivities;
+  const displayActivities = activities || [];
 
-  const handleScroll = useCallback(() => {
-    if (!activityRef.current || !hasMore || activitiesLoading) return;
-    
-    const { scrollTop, scrollHeight, clientHeight } = activityRef.current;
-    if (scrollTop + clientHeight >= scrollHeight - 5) {
-      setOffset(prev => prev + 20);
-    }
-  }, [hasMore, activitiesLoading]);
 
-  useEffect(() => {
-    const element = activityRef.current;
-    if (element) {
-      element.addEventListener('scroll', handleScroll);
-      return () => element.removeEventListener('scroll', handleScroll);
-    }
-  }, [handleScroll]);
 
   if (isLoading) {
     return (
@@ -246,24 +218,7 @@ export default function Dashboard() {
                   </div>
                 );
               })}
-              {hasMore && (
-                <div className="px-3 py-2 border-t border-border">
-                  {activitiesLoading && offset > 0 ? (
-                    <div className="flex items-center justify-center space-x-2 text-muted-foreground">
-                      <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
-                      <span className="text-xs">Loading more...</span>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() => setOffset(prev => prev + 20)}
-                      className="w-full py-1.5 text-xs text-primary hover:text-primary/80 font-medium"
-                      disabled={activitiesLoading}
-                    >
-                      Load More Activities
-                    </button>
-                  )}
-                </div>
-              )}
+
             </div>
           ) : (
             <div className="text-center py-8 text-muted-foreground flex-1 flex flex-col justify-center">
