@@ -25,6 +25,11 @@ interface ActivityLog {
 
 export default function Dashboard() {
   const activityRef = useRef<HTMLDivElement>(null);
+  const [allActivities, setAllActivities] = useState<ActivityLog[]>([]);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+
   const { data: stats, isLoading } = useQuery<Stats>({
     queryKey: ["/api/stats"],
   });
@@ -32,13 +37,35 @@ export default function Dashboard() {
   const { data: activities, isLoading: activitiesLoading } = useQuery<ActivityLog[]>({
     queryKey: ["/api/activity"],
     queryFn: async () => {
-      const response = await fetch(`/api/activity?limit=20`);
+      const response = await fetch(`/api/activity?limit=20&offset=0`);
       if (!response.ok) throw new Error("Failed to fetch activities");
-      return response.json();
+      const data = await response.json();
+      setAllActivities(data);
+      setHasMore(data.length === 20);
+      return data;
     },
   });
 
-  const displayActivities = activities || [];
+  const loadMoreActivities = async () => {
+    if (isLoadingMore || !hasMore) return;
+    
+    setIsLoadingMore(true);
+    try {
+      const newOffset = allActivities.length;
+      const response = await fetch(`/api/activity?limit=20&offset=${newOffset}`);
+      if (!response.ok) throw new Error("Failed to fetch more activities");
+      const moreActivities = await response.json();
+      
+      setAllActivities(prev => [...prev, ...moreActivities]);
+      setHasMore(moreActivities.length === 20);
+    } catch (error) {
+      console.error("Error loading more activities:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  const displayActivities = allActivities;
 
 
 
@@ -218,6 +245,25 @@ export default function Dashboard() {
                   </div>
                 );
               })}
+
+              {hasMore && (
+                <div className="px-3 py-2 border-t border-border">
+                  <button
+                    onClick={loadMoreActivities}
+                    disabled={isLoadingMore}
+                    className="w-full py-1.5 text-xs text-primary hover:text-primary/80 font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
+                  >
+                    {isLoadingMore ? (
+                      <>
+                        <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-primary"></div>
+                        <span>Loading more...</span>
+                      </>
+                    ) : (
+                      <span>Load More Activities</span>
+                    )}
+                  </button>
+                </div>
+              )}
 
             </div>
           ) : (
