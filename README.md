@@ -1,0 +1,175 @@
+# MI7
+
+## Overview
+
+This is a full-stack inventory management system built with a modern React frontend and Express.js backend. The application provides comprehensive warehouse management capabilities including warehouses, pallets, bins, and SKU tracking. It uses PostgreSQL for data persistence with Drizzle ORM for database operations.
+
+## System Architecture
+
+### Frontend Architecture
+- **Framework**: React 18 with TypeScript
+- **Routing**: Wouter for client-side routing
+- **State Management**: TanStack Query for server state management
+- **UI Components**: Radix UI with shadcn/ui component library
+- **Styling**: Tailwind CSS with CSS variables for theming
+- **Build Tool**: Vite for development and production builds
+- **Form Handling**: React Hook Form with Zod validation
+
+### Backend Architecture
+- **Framework**: Express.js with TypeScript
+- **Database**: PostgreSQL with Neon serverless hosting
+- **ORM**: Drizzle ORM for type-safe database operations
+- **API Design**: RESTful API with JSON responses
+- **Middleware**: Express middleware for logging and error handling
+
+## Key Components
+
+### Database Schema
+The system uses a hierarchical structure:
+- **Warehouses**: Top-level entities containing pallets
+- **Pallets**: Storage units within warehouses, containing bins
+- **Bins**: Individual storage containers holding SKUs
+- **SKUs**: Product information with pricing and descriptions
+- **BinSkus**: Junction table managing quantity relationships between bins and SKUs
+
+### Frontend Components
+- **Layout**: Sidebar navigation with header breadcrumbs
+- **Pages**: Dashboard, Warehouses, Pallets, Bins, and SKUs management
+- **Modals**: CRUD operations for each entity type
+- **UI Components**: Reusable components following shadcn/ui patterns
+
+### API Endpoints
+- `/api/stats` - System statistics
+- `/api/warehouses` - Warehouse CRUD operations
+- `/api/pallets` - Pallet management
+- `/api/bins` - Bin operations
+- `/api/skus` - SKU management
+- `/api/skus-with-trunks` - Returns all SKUs with their associated bins (called "trunks") as JSON
+- `/api/bin-skus` - Inventory quantity tracking
+
+## Data Flow
+
+1. **Client Requests**: React components make API calls using TanStack Query
+2. **API Processing**: Express routes handle requests and validate data
+3. **Database Operations**: Drizzle ORM executes type-safe database queries
+4. **Response Handling**: JSON responses returned to client
+5. **State Updates**: TanStack Query manages cache invalidation and updates
+6. **UI Updates**: React components re-render with fresh data
+
+## External Dependencies
+
+### Database
+- **PostgreSQL**: Neon serverless database
+- **Connection**: Network connection via @neondatabase/serverless
+
+### UI Libraries
+- **Radix UI**: Accessible component primitives
+- **Lucide React**: Icon library
+- **Tailwind CSS**: Utility-first CSS framework
+- **Class Variance Authority**: Component variant management
+
+### Development Tools
+- **Vite**: Build tool with HMR and development server
+- **TypeScript**: Type safety across the stack
+- **ESBuild**: Fast bundling for production builds
+
+## Deployment Strategy
+
+### Development
+- Vite development server for frontend
+- Express server with hot reload using tsx
+- Database migrations using Drizzle Kit
+
+### Production
+- Frontend: Vite builds static assets to `dist/public`
+- Backend: ESBuild bundles server code to `dist/index.js`
+- Database: PostgreSQL connection via environment variables
+- Single-server deployment serving both API and static files
+
+### Environment Configuration
+- `DATABASE_URL`: PostgreSQL connection string for Neon serverless database
+- `NODE_ENV`: Environment mode (development/production)
+- Database connection established automatically via environment variable
+
+### Build Process
+1. `npm run build`: Builds both frontend and backend
+2. Frontend assets compiled to `dist/public`
+3. Server code bundled to `dist/index.js`
+4. `npm start`: Runs production server
+
+## Changelog
+- July 10, 2025: Created user-driven Product Requirements Document (PRD) - documented all system capabilities based on actual user prompts and requests from development sessions, including direct quotes, implementation status, user behavior patterns, and technical architecture reflecting real development decisions
+- July 10, 2025: Implemented "Load More Activities" functionality - added pagination to activity log with manual load button, proper loading states, and sample data generation to demonstrate functionality with 35+ historical activities
+- July 5, 2025: Successfully migrated database from SQLite to PostgreSQL - converted all table schemas to use proper PostgreSQL types (serial, timestamp, text), updated database connection to use Neon serverless PostgreSQL, and restored core data structure with warehouse hierarchies and sample inventory
+- July 5, 2025: Added dedicated SKU image management page - comprehensive interface for viewing, editing, and deleting SKU images with drag-and-drop upload, URL input, statistics dashboard, full-screen image previews, and alphabetical sorting by SKU name in unified view
+- July 4, 2025: Successfully migrated database from PostgreSQL to SQLite - transferred all existing data (2 warehouses, 2 pallets, 2 bins, 112 SKUs, 3 inventory relationships, 126 activity log entries) from Neon serverless database to local SQLite file for improved simplicity and portability
+- July 4, 2025: Added warehouse detail view with Google Maps integration - warehouse names are now clickable and show detailed information including embedded map of warehouse address, pallet listings, and comprehensive warehouse data
+- July 4, 2025: Fixed comprehensive dark mode readability issues across all pages including SKUs table, dashboard icons, warehouses, pallets, bins, and CSV import dialog - replaced gray text colors with semantic theme colors for proper contrast in both light and dark modes
+- July 1, 2025: Added dark mode functionality with toggle button, localStorage persistence, and proper theme colors throughout the application
+- July 1, 2025: Created `/api/skus-with-trunks` endpoint that returns all SKUs with their associated bins (trunks) as JSON data for external integration
+- July 1, 2025: Fixed hamburger menu disappearing bug when collapsing sidebar in landscape then rotating to portrait - improved mobile state management to ensure hamburger menu always appears on mobile view
+- July 1, 2025: Implemented infinite scroll for activity log with manual "Load More" button - allows access to all historical activities beyond recent hour, supporting permanent log retention
+- July 1, 2025: Renamed application from "Mynx Inventory" to "MI7" - updated title, sidebar branding, and documentation
+- July 1, 2025: Improved responsive layout for mid-size screens (iPad) with expanded sidebar - optimized button grouping, search width, and column visibility for better tablet experience
+- July 1, 2025: Added sortable column headers to SKUs table - users can sort by name, description, or price in ascending/descending order with visual indicators
+- July 1, 2025: Added multi-select checkbox functionality to SKUs page with bulk delete capability - users can select multiple SKUs and delete them all at once with confirmation dialog
+- July 1, 2025: Changed CSV import behavior to update existing SKUs instead of skipping them - when SKU names match, description and price fields are updated with new CSV data
+- July 1, 2025: Added price field support to CSV import facility - allows importing SKUs with pricing information, validates numeric values, and handles optional price column
+- July 1, 2025: Made SKUs screen more compact by reducing row height, spacing between elements, and table padding for improved density
+- July 1, 2025: Added duplicate detection to CSV import - SKUs with matching names are automatically skipped to prevent duplicates (case insensitive comparison)
+- July 1, 2025: Enhanced CSV import to support case insensitive column headers for better usability (accepts "name"/"Name"/"NAME" and "description"/"Description"/"DESCRIPTION")
+- July 1, 2025: Added CSV import functionality for SKUs with drag-and-drop interface, template download, and auto-generated SKU numbers from name/description fields
+- June 30, 2025: Added automatic activity log refresh - dashboard activity section now updates in real-time when performing any CRUD operations without manual refresh
+- June 30, 2025: Improved activity logging to show meaningful field names and values instead of IDs (e.g., 'warehouse: "Aramex" → "DHL"', 'pallet: "First Pallet" → "Second Pallet"')
+- June 30, 2025: Enhanced activity logging to show original and changed values in update operations (e.g., 'name: "Old Name" → "New Name"', 'price: ₹100 → ₹150')
+- June 30, 2025: Added activity logging for all edit operations (UPDATE actions) across warehouses, pallets, bins, SKUs, and inventory movements
+- June 30, 2025: Replaced getting started section with comprehensive activity log showing last 20 CRUD operations with timestamps and icons
+- June 30, 2025: Made "Mynx Inventory" title clickable for dashboard navigation in both desktop and mobile views
+- June 30, 2025: Made SKU images clickable in bin detail view to show fullscreen image modal with proper accessibility
+- June 30, 2025: Replaced SKU number with description in bin detail view for better product information display
+- June 30, 2025: Made bin detail view more compact with reduced spacing, smaller images, condensed cards, and smaller buttons
+- June 30, 2025: Added Items column to bins page showing count of SKUs in each bin with badge display
+- June 30, 2025: Removed breadcrumbs from header, keeping only page titles for cleaner navigation
+- June 30, 2025: Made quantity badge larger with increased text size and padding for better visibility
+- June 30, 2025: Hidden amount/price field from bin detail view, displaying only quantity information
+- June 30, 2025: Removed tools section from sidebar, keeping only main navigation items (Dashboard, Warehouses, Pallets, Bins, SKUs)
+- June 30, 2025: Fixed accessibility errors by adding DialogTitle, DialogDescription, and proper ARIA attributes to modals
+- June 30, 2025: Made bin image icon clickable to show fullscreen image modal with close button
+- June 30, 2025: Moved bin image from large card to small icon beside bin name in header, removed dedicated image card
+- June 30, 2025: Removed "Back to Bins" navigation link from bin detail view for cleaner interface
+- June 30, 2025: Added "Add SKU" dialog on bin detail view with SKU selection and quantity input, leverages additive quantity logic
+- June 30, 2025: Implemented additive quantity logic - when adding an SKU that already exists in a bin, quantities are added together
+- June 30, 2025: Added edit and delete functionality for SKUs in bin detail view with quantity validation (must be >0)
+- June 30, 2025: Removed refresh button from header across all pages for cleaner interface
+- June 30, 2025: Removed "Inventory Tracker" title from all pages and simplified breadcrumbs to show only current section
+- June 30, 2025: Removed SKUs management section from edit bin dialogue for cleaner, focused interface
+- June 30, 2025: Implemented bin filtering system - bin names now link to filtered SKUs, completing the full hierarchical navigation
+- June 30, 2025: Fixed dashboard responsive layout for midsize screen resolutions with proper grid system
+- June 30, 2025: Fixed pallet filtering system - pallet names now correctly filter bins, navigation buttons work properly with URL parameter handling
+- June 30, 2025: Fixed mobile responsiveness for bin SKU management with card-based layout replacing table view on small screens
+- June 30, 2025: Extended image upload functionality to bins, replacing URL input with drag-and-drop interface for both SKUs and bins
+- June 30, 2025: Implemented image upload functionality replacing URL input with drag-and-drop file upload interface
+- June 30, 2025: Simplified SKU table to show only names (removed internal ID column) and fixed mobile hamburger menu positioning
+- June 30, 2025: Updated SKU pricing to use Indian rupees (₹) instead of dollars across forms and displays
+- June 30, 2025: Optimized pallets table for mobile with responsive columns and removed Status field for cleaner layout
+- June 30, 2025: Extended name field functionality to bins with editable names, search integration, and proper display in listings
+- June 30, 2025: Enhanced pallets and bins with user-friendly name fields that default to auto-generated numbers but can be customized
+- June 30, 2025: Implemented comprehensive mobile responsiveness with overlay sidebar, responsive grids, and touch-friendly interfaces
+- June 30, 2025: Made sidebar collapsible with smooth animations and icon-only collapsed state
+- June 29, 2025: Removed all quick add buttons from dashboard and header for cleaner interface
+- June 29, 2025: Fixed SelectItem error by replacing empty string values with "none" in dropdown components
+- June 29, 2025: Removed "Management" from all section titles for cleaner UI
+- June 29, 2025: Removed duplicate titles from all section pages for cleaner layout
+- June 29, 2025: Made dashboard panels clickable with navigation to appropriate sections
+- June 29, 2025: Updated application branding from "Inventory Tracker Pro" to "Mynx Inventory"
+- June 29, 2025: Simplified dashboard title from "Inventory Dashboard" to "Dashboard"
+- June 28, 2025: Initial setup
+
+## User Preferences
+Preferred communication style: Simple, everyday language.
+Project name: MI7 (should be reflected in git repository name)
+
+## Data Retention Policies
+- **Activity Logs**: Must be maintained forever with no automatic cleanup or deletion
+- All CRUD operations are permanently logged for audit trail purposes
+- The activity log uses infinite scroll pagination to handle large amounts of historical data efficiently
