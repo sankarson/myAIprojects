@@ -167,6 +167,7 @@ The system uses a hierarchical structure:
 
 ## User Preferences
 Preferred communication style: Simple, everyday language.
+Project name: MI7 (should be reflected in git repository name)
 
 ## Data Retention Policies
 - **Activity Logs**: Must be maintained forever with no automatic cleanup or deletion
