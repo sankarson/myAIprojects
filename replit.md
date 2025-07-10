@@ -98,7 +98,7 @@ The system uses a hierarchical structure:
 4. `npm start`: Runs production server
 
 ## Changelog
-- July 10, 2025: Created comprehensive Product Requirements Document (PRD) - documented all system capabilities, technical architecture, user experience requirements, integration specifications, and future enhancement roadmap for stakeholder communication and development planning
+- July 10, 2025: Created user-driven Product Requirements Document (PRD) - documented all system capabilities based on actual user prompts and requests from development sessions, including direct quotes, implementation status, user behavior patterns, and technical architecture reflecting real development decisions
 - July 10, 2025: Implemented "Load More Activities" functionality - added pagination to activity log with manual load button, proper loading states, and sample data generation to demonstrate functionality with 35+ historical activities
 - July 5, 2025: Successfully migrated database from SQLite to PostgreSQL - converted all table schemas to use proper PostgreSQL types (serial, timestamp, text), updated database connection to use Neon serverless PostgreSQL, and restored core data structure with warehouse hierarchies and sample inventory
 - July 5, 2025: Added dedicated SKU image management page - comprehensive interface for viewing, editing, and deleting SKU images with drag-and-drop upload, URL input, statistics dashboard, full-screen image previews, and alphabetical sorting by SKU name in unified view
